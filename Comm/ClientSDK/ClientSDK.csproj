@@ -2,9 +2,8 @@
 
   <PropertyGroup>
 	 	<OutputType>Library</OutputType>
-		<!--<TargetFramework>net8.0</TargetFramework>-->
-		<!--<TargetFramework>netstandard2.1</TargetFramework>-->
 		<TargetFrameworks>net8.0;net4.8;net462</TargetFrameworks>
+		<Platforms>x64</Platforms>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
@@ -12,11 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AsyncPipeTransport" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AsyncPipeTransport\AsyncPipeTransport.csproj" />
     <ProjectReference Include="..\CommTypes\CommTypes.csproj" />
   </ItemGroup>
 

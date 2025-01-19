@@ -2,9 +2,8 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<!--<TargetFramework>net8.0</TargetFramework>-->
-		<!--<TargetFramework>netstandard2.1</TargetFramework>-->
 		<TargetFrameworks>net8.0;net4.8;net462</TargetFrameworks>
+		<Platforms>x64</Platforms>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
