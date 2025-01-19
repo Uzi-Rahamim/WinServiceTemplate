@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace AsyncPipeTransport.Transport
+
+namespace AsyncPipeTransport.Channel
 {
-    public interface ITransportSender
+    public interface ISender
     {
         public Task SendAsync(string message);
     }

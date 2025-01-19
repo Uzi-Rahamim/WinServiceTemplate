@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO.Pipes;
 
-namespace AsyncPipe.Transport
+namespace AsyncPipeTransport.Channel
 {
-    public class ServerTransportPipe : BaseTransportPipe, IServerTransport
+    public class ServerPipeChannel : BasePipeChannel, IServerChannel
     {
         NamedPipeServerStream pipeServer;
-        public ServerTransportPipe(string pipeName)
+        public ServerPipeChannel(string pipeName)
         {
             pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         }

@@ -1,10 +1,9 @@
 ﻿using APIClient.commands.test;
-using ClientCLI;
 using Cocona;
 using Serilog;
 
 
-[HasSubCommands(typeof(TestSubcommand), "test", Description = "test comunucation with the server")]
+[HasSubCommands(typeof(DemoSubcommand), "demo", Description = "demo for testing server comunucation")]
 class Program
 {
     public static async Task Main(string[] args)
@@ -14,14 +13,7 @@ class Program
             .WriteTo.Console()
             .CreateLogger();
 
-
-        //Resolver.Init();
-        //var builder = CoconaLiteApp.CreateBuilder();
-        //var app = builder.Build();
-
         var app = CoconaLiteApp.Create();
-        //app.AddCommand("commit", (string message) => { });
-        //app.AddCommands<ShowServerCommand>();
         await app.RunAsync<Program>();
     }
 }

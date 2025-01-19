@@ -1,13 +1,10 @@
-﻿using AsyncPipe.Transport;
+﻿using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Extensions;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 
-namespace AsyncPipeTransport.RequestHandler
+namespace AsyncPipeTransport.ServerScheduler
 {
     public class ServerMessageScheduler
     {
@@ -38,7 +35,7 @@ namespace AsyncPipeTransport.RequestHandler
                 {
                     var clientId = Interlocked.Increment(ref m_clientId);
                     // Create a NamedPipeServerStream to listen for connections
-                    using (IServerTransport pipeServer = new ServerTransportPipe(pipeName))
+                    using (IServerChannel pipeServer = new ServerPipeChannel(pipeName))
                     {
                         _logger.LogInformation("Server {clientId}  Waiting for a client to connect...", clientId);
 
@@ -59,7 +56,7 @@ namespace AsyncPipeTransport.RequestHandler
             }
         }
 
-        async Task HandleClient(IServerTransport pipeServer, long clientId)
+        async Task HandleClient(IServerChannel pipeServer, long clientId)
         {
             while (true)
             {
@@ -88,7 +85,7 @@ namespace AsyncPipeTransport.RequestHandler
             }
         }
 
-        private IRequestHandler? GetCommand(TransportFrameHeader frame, long clientId)
+        private IRequestHandler? GetCommand(FrameHeader frame, long clientId)
         {
             if (!_commands.ContainsKey(frame.msgType))
             {

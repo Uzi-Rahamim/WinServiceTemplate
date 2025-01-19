@@ -1,8 +1,6 @@
-﻿using AsyncPipeTransport.ClientDistributer;
-using AsyncPipeTransport.CommonTypes;
-using CommunicationMessages;
-using CommunicationMessages.Massages;
-using AsyncPipeTransport.RequestHandler;
+﻿using CommunicationMessages.Massages;
+using AsyncPipeTransport.ServerScheduler;
+using CommTypes.Events;
 
 namespace App.WindowsService.API.Requests
 {
@@ -38,12 +36,18 @@ namespace App.WindowsService.API.Requests
 
         protected override async Task ExecuteInternal(RequestWiFiNetworksMessage requestMsg)
         {
+            Task.Delay(1000).Wait();
             Log.LogInformation("Server sent page 1" );
             await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            await SendEvent(new PulseEventMessage("PulseEvent"));
+            Task.Delay(1000).Wait();
             Log.LogInformation("Server sent page 2");
             await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            await SendEvent(new PulseEventMessage("PulseEvent"));
+            Task.Delay(1000).Wait();
             Log.LogInformation("Server sent page 3");
             await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            await SendEvent(new PulseEventMessage("PulseEvent"));
 
             // Send a response back to the client
             string replyPalyload = $"Request # {RequestId} ";

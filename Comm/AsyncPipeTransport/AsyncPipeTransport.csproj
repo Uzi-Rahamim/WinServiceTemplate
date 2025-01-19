@@ -8,16 +8,9 @@
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<FileVersion>1.0.1</FileVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/Uzi-Rahamim/CommPackages</RepositoryUrl>
 	</PropertyGroup>
-
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DebugType>full</DebugType>
-		<Optimize>False</Optimize>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DebugType>full</DebugType>
-		<Optimize>True</Optimize>
-	</PropertyGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />

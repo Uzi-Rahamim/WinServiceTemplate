@@ -7,7 +7,6 @@ namespace AsyncPipeTransport.Extensions
     {
         public static string ToJson<T>(this T obj)
         {
-            // Serialize the record to JSON
             return JsonConvert.SerializeObject(obj);
         }
 
@@ -21,12 +20,12 @@ namespace AsyncPipeTransport.Extensions
             return obj;
         }
 
-        public static TransportFrameHeader? ExtractFrameHeaders(this string messageJson)
+        public static FrameHeader? ExtractFrameHeaders(this string messageJson)
         {
-            return JsonConvert.DeserializeObject<TransportFrameHeader>(messageJson);
+            return JsonConvert.DeserializeObject<FrameHeader>(messageJson);
         }
 
-        public static T? ExtractMessageHeaders<T>(this TransportFrameHeader frame) where T : MessageHeader
+        public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : MessageHeader
         {
             return JsonConvert.DeserializeObject<T>(frame.payload);
         }
@@ -34,37 +33,33 @@ namespace AsyncPipeTransport.Extensions
 
         public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, TransportFrameHeaderOptions.LastFrame);
+            return message.BuildMessage(requestId, FrameHeaderOptions.LastFrame);
         }
 
         public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, TransportFrameHeaderOptions.LastFrame);
+            return message.BuildMessage(requestId, FrameHeaderOptions.LastFrame);
         }
 
         public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, TransportFrameHeaderOptions.None);
+            return message.BuildMessage(requestId, FrameHeaderOptions.None);
         }
 
         public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
         {
-            return message.BuildMessage(0, TransportFrameHeaderOptions.ServerMsg);
+            return message.BuildMessage(0, FrameHeaderOptions.EvantMsg);
         }
 
-        public static string BuildMessage<T>(this T message, long requestId, TransportFrameHeaderOptions options) where T : MessageHeader
+        public static string BuildMessage<T>(this T message, long requestId, FrameHeaderOptions options) where T : MessageHeader
         {
             string payload = message.ToJson();
-            return new TransportFrameHeader(requestId, options, message.msgType, payload).ToJson();
+            return new FrameHeader(requestId, options, message.msgType, payload).ToJson();
         }
 
-       
-
-        public static bool IsLastFrame(this TransportFrameHeader frame)
+        public static bool IsLastFrame(this FrameHeader frame)
         {
-            return frame.options.HasFlag(TransportFrameHeaderOptions.LastFrame);
+            return frame.options.HasFlag(FrameHeaderOptions.LastFrame);
         }
-
-
     }
 }

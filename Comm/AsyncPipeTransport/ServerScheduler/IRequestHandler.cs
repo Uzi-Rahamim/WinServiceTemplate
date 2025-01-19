@@ -1,14 +1,10 @@
-﻿
-using AsyncPipeTransport.CommonTypes;
-using AsyncPipeTransport.Transport;
-using System.Threading.Tasks;
+﻿using AsyncPipeTransport.Channel;
 
-
-namespace AsyncPipeTransport.RequestHandler
+namespace AsyncPipeTransport.ServerScheduler
 {
     public interface IRequestHandler
     {
-        Task Execute(ITransportSender sender, long requestId, string requestJson);
+        Task Execute(ISender sender, long requestId, string requestJson);
     }
 }
 

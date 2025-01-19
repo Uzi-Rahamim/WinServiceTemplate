@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO.Pipes;
 
-namespace AsyncPipe.Transport
+namespace AsyncPipeTransport.Channel
 {
-    public class ClientTransportPipe : BaseTransportPipe, IClientTransport
+    public class ClientPipeChannel : BasePipeChannel, IClientChannel
     {
         NamedPipeClientStream pipeClient;
-        public ClientTransportPipe(string pipeName)
+        public ClientPipeChannel(string pipeName)
         {
             pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
         }

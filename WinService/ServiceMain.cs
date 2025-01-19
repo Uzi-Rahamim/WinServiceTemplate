@@ -1,16 +1,14 @@
-using App.WindowsService.API;
+using AsyncPipeTransport.ServerScheduler;
 using CommunicationMessages;
-using Serilog;
-using AsyncPipeTransport.RequestHandler;
 
 namespace WinService;
 
-public class MyBackgroundService : BackgroundService
+public class ServiceMain : BackgroundService
 {
-    private readonly ILogger<MyBackgroundService> _logger;
+    private readonly ILogger<ServiceMain> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public MyBackgroundService(IServiceProvider serviceProvider,ILogger<MyBackgroundService> logger)
+    public ServiceMain(IServiceProvider serviceProvider,ILogger<ServiceMain> logger)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -21,9 +19,7 @@ public class MyBackgroundService : BackgroundService
         try
         {
             _logger.LogInformation("Worker Start running at: {time}", DateTimeOffset.Now);
-
-            var apiWorker = _serviceProvider.GetRequiredService<ServerMessageScheduler>();
-            _= apiWorker.Start(PipeApiConsts.PipeName);
+            _= StartApi();
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -51,5 +47,13 @@ public class MyBackgroundService : BackgroundService
             // recovery options, we need to terminate the process with a non-zero exit code.
             Environment.Exit(1);
         }
+    }
+
+    private async Task StartApi()
+    {
+        var apiWorker = _serviceProvider.GetRequiredService<ServerMessageScheduler>();
+        await apiWorker.Start(PipeApiConsts.PipeName);
+
+
     }
 }

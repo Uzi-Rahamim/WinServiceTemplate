@@ -1,7 +1,6 @@
 ﻿using AsyncPipeTransport.CommonTypes;
 namespace CommunicationMessages.Massages
 {
-
     //public record RequestEchoMessage : MessageHeader((Opcode)MessageType.Echo)
 
     public class RequestEchoMessage : MessageHeader

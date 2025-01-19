@@ -1,18 +1,15 @@
-﻿using AsyncPipeTransport.Transport;
-using System;
-using System.IO.Pipes;
+﻿using System.IO.Pipes;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace AsyncPipe.Transport
+namespace AsyncPipeTransport.Channel
 {
-    public abstract class BaseTransportPipe : ITransportSender
+    public abstract class BasePipeChannel : ISender
     {
 
         bool disposed = false;
         protected PipeStream PipeStream { get; set; }
 
-        protected BaseTransportPipe()
+        protected BasePipeChannel()
         {
             PipeStream = default!;
         }

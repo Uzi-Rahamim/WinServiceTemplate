@@ -1,24 +1,21 @@
-﻿using AsyncPipe.Transport;
+﻿using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.Events;
 using AsyncPipeTransport.Extensions;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace AsyncPipeTransport.ClientDistributer
+namespace AsyncPipeTransport.ClientScheduler
 {
     public class ClientMessageScheduler : IDisposable
     {
-        IClientTransport transport;
+        IClientChannel transport;
         Task? listenerTask;
         bool disposed = false;
-        ConcurrentDictionary<long, Request> pendingRequests = new ConcurrentDictionary<long, Request>();
+        ConcurrentDictionary<long, ClientRequest> pendingRequests = new ConcurrentDictionary<long, ClientRequest>();
         ConcurrentDictionary<Opcode, IEvent> events = new ConcurrentDictionary<Opcode, IEvent>();
         long requestId = 0;
 
-        public ClientMessageScheduler(IClientTransport transport)
+        public ClientMessageScheduler(IClientChannel transport)
         {
             this.transport = transport;
         }
@@ -47,11 +44,11 @@ namespace AsyncPipeTransport.ClientDistributer
                         Console.WriteLine($"Client receive an invalid response message");
                         continue;
                     }
-                    if (frame.options.HasFlag(TransportFrameHeaderOptions.ServerMsg))
+                    if (frame.options.HasFlag(FrameHeaderOptions.EvantMsg))
                     {
                         HandleEvent(frame);
                     }
-                    else if (pendingRequests.TryGetValue(frame.requestId, out Request? request))
+                    else if (pendingRequests.TryGetValue(frame.requestId, out ClientRequest? request))
                     {
                         request.PushResponse(frame);
                     }
@@ -74,7 +71,7 @@ namespace AsyncPipeTransport.ClientDistributer
             return events.TryRemove(messageType, out _);
         }
 
-        private void HandleEvent(TransportFrameHeader frame)
+        private void HandleEvent(FrameHeader frame)
         {
             if (!events.ContainsKey(frame.msgType))
             {
@@ -88,7 +85,7 @@ namespace AsyncPipeTransport.ClientDistributer
         public async IAsyncEnumerable<T> SendLongRequest<T>(Func<long, string> buildPayload) where T : MessageHeader
         {
             var requestId = await SendNonBlock(buildPayload);
-            TransportFrameHeader? reply = null;
+            FrameHeader? reply = null;
             do
             {
                 reply = await WaitForNextFrame(requestId);
@@ -113,26 +110,26 @@ namespace AsyncPipeTransport.ClientDistributer
         {
             long newRequestId = GetNextRequestId();
             var payload = buildPayload(newRequestId);
-            Request request = new Request(newRequestId, payload);
+            ClientRequest request = new ClientRequest(newRequestId, payload);
             await SendRequest(request, false);
             return newRequestId;
         }
 
-        public Task<TransportFrameHeader?> Send(Func<long, string> buildPayload)
+        public Task<FrameHeader?> Send(Func<long, string> buildPayload)
         {
             long newRequestId = GetNextRequestId();
             var payload = buildPayload(newRequestId);
-            Request request = new Request(newRequestId, payload);
+            ClientRequest request = new ClientRequest(newRequestId, payload);
             return SendRequest(request);
         }
 
-        public Task<TransportFrameHeader> WaitForNextFrame(long requestId)
+        public Task<FrameHeader> WaitForNextFrame(long requestId)
         {
             var request = pendingRequests[requestId];
             return request.WaitForResponse((isLastFrame) => { if (isLastFrame) RemoveRequest(requestId); });
         }
 
-        private Task<TransportFrameHeader?> SendRequest(Request request, bool waitForRespose = true)
+        private Task<FrameHeader?> SendRequest(ClientRequest request, bool waitForRespose = true)
         {
             if (pendingRequests.TryAdd(request.requestId, request))
             {
@@ -140,15 +137,15 @@ namespace AsyncPipeTransport.ClientDistributer
                 if (waitForRespose)
                 {
                     return WaitForNextFrame(request.requestId).
-                        ContinueWith(task => (TransportFrameHeader?)task.Result); //convert to task nullable
+                        ContinueWith(task => (FrameHeader?)task.Result); //convert to task nullable
                 }
             }
-            return Task.FromResult<TransportFrameHeader?>(null);
+            return Task.FromResult<FrameHeader?>(null);
         }
 
         private void RemoveRequest(long requestId)
         {
-            pendingRequests.TryRemove(requestId, out Request? request);
+            pendingRequests.TryRemove(requestId, out ClientRequest? request);
         }
 
         public void Dispose()

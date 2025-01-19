@@ -1,16 +1,8 @@
 
 using WinService;
 using Serilog;
-using Microsoft.Extensions.Logging.EventLog;
-using Microsoft.Extensions.Logging.Configuration;
-using System.Diagnostics;
 using App.WindowsService.API;
-using App.WindowsService.API.Requests;
-using AsyncPipeTransport.RequestHandler;
-using CommunicationMessages;
-using AsyncPipeTransport.CommonTypes;
-using Microsoft.Extensions.DependencyInjection;
-
+using AsyncPipeTransport.ServerScheduler;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddWindowsService(options =>
@@ -29,22 +21,11 @@ Log.Logger = new LoggerConfiguration()
 // add the provider
 builder.Logging.AddSerilog();
 
-//builder.Services.AddTransient<IRequestHandler, EchoRequestHandler>();
-//builder.Services.AddTransient<IRequestHandler, GetAPListRequestHandler>();
 
-//// Register IRequestHandlerBuilder using a factory
-//builder.Services.AddSingleton<IRequestHandlerBuilder>(serviceProvider =>
-//{
-//    var factory = () => (IRequestHandler)serviceProvider.GetRequiredService<EchoRequestHandler>();
-//    return new RequestHandlerBuilder((Opcode)MessageType.Echo, factory);
-//});
-
-RegisterCommand<EchoRequestHandler>(MessageType.Echo);
-RegisterCommand<GetAPListRequestHandler>(MessageType.APList);
-
+SetupRequestHandlers.Create(builder).Configure();
 
 builder.Services.AddSingleton<ServerMessageScheduler>();
-builder.Services.AddHostedService<MyBackgroundService>();
+builder.Services.AddHostedService<ServiceMain>();
 
 var host = builder.Build();
 host.Run();
@@ -52,14 +33,3 @@ host.Run();
 // Dispose of the logger when the application ends
 Log.CloseAndFlush();
 
-
-void RegisterCommand<T>(MessageType messageType) where T : class, IRequestHandler
-{
-    // Register the IRequestHandler implementation as Transient
-    builder.Services.AddTransient<T>();
-    builder.Services.AddSingleton<IRequestHandlerBuilder>(serviceProvider =>
-    {
-        var factory = () => serviceProvider.GetRequiredService<T>();
-        return new RequestHandlerBuilder((Opcode)messageType, factory);
-    });
-}
