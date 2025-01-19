@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "APIClient": {
+      "commandName": "Project",
+      "commandLineArgs": "test list"
+    },
+    "Profile 1": {
+      "commandName": "Executable"
+    }
+  }
+}
