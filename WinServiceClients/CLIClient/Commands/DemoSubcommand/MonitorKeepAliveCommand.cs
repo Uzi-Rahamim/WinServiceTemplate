@@ -1,4 +1,5 @@
-﻿using Cocona;
+﻿using ClientSDK.v1;
+using Cocona;
 using Serilog;
 
 namespace APIClient.commands.test
@@ -6,9 +7,25 @@ namespace APIClient.commands.test
     public class MonitorKeepAliveCommand
     {
         [Command]
-        public static void monitor()
+        public static async Task  monitor()
         {
-            Log.Information($"monitor");
+            var message = "test .Net Framework";
+
+            using (var channel = new ClientChannel())
+            {
+                if (!await channel.Connect())
+                {
+                    Console.WriteLine("Failed to connect to server");
+                    return;
+                }
+
+                var demoAPI = new DemoApi(channel);
+
+                demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
+
+                Console.WriteLine("Press any key to exit");
+                Console.ReadKey();
+            }
         }
     }
 }

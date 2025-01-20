@@ -1,10 +1,10 @@
 ﻿using CommunicationMessages.Massages;
-using AsyncPipeTransport.ServerScheduler;
+using AsyncPipeTransport.ServerHandlers;
 using CommTypes.Events;
 
 namespace App.WindowsService.API.Requests
 {
-    public class GetAPListRequestHandler : BaseRequestHandler<GetAPListRequestHandler, RequestWiFiNetworksMessage>
+    public class GetAPListRequestHandler : BaseRequestCommand<GetAPListRequestHandler, RequestWiFiNetworksMessage>
     {
 
         // Create a list of 100 mock WiFi networks
@@ -34,24 +34,23 @@ namespace App.WindowsService.API.Requests
 
         public GetAPListRequestHandler(ILogger<GetAPListRequestHandler> logger) : base(logger) { }
 
-        protected override async Task ExecuteInternal(RequestWiFiNetworksMessage requestMsg)
+        protected override async Task<bool> ExecuteInternal(RequestWiFiNetworksMessage requestMsg)
         {
-            Task.Delay(1000).Wait();
-            Log.LogInformation("Server sent page 1" );
-            await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
-            await SendEvent(new PulseEventMessage("PulseEvent"));
-            Task.Delay(1000).Wait();
-            Log.LogInformation("Server sent page 2");
-            await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
-            await SendEvent(new PulseEventMessage("PulseEvent"));
-            Task.Delay(1000).Wait();
-            Log.LogInformation("Server sent page 3");
+            for (int page = 0; page < 10; page++)
+            {
+                Task.Delay(1000).Wait();
+                Log.LogInformation($"Server sent page {page}");
+                await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            }
+          
+            Log.LogInformation("Server sent last page");
             await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
-            await SendEvent(new PulseEventMessage("PulseEvent"));
 
             // Send a response back to the client
             string replyPalyload = $"Request # {RequestId} ";
             Log.LogInformation("Server sent reply: {reply}", replyPalyload);
+
+            return true;
         }
     }
 }

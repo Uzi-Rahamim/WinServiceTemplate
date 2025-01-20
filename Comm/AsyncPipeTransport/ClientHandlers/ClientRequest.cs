@@ -2,7 +2,7 @@
 using AsyncPipeTransport.Extensions;
 using System.Threading.Channels;
 
-namespace AsyncPipeTransport.ClientScheduler
+namespace AsyncPipeTransport.ClientHandlers
 {
     public class ClientRequest
     {

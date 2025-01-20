@@ -1,6 +1,7 @@
 ﻿using App.WindowsService.API.Requests;
 using AsyncPipeTransport.CommonTypes;
-using AsyncPipeTransport.ServerScheduler;
+using AsyncPipeTransport.ServerHandlers;
+using CommTypes;
 using CommunicationMessages;
 
 namespace App.WindowsService.API;
@@ -11,8 +12,15 @@ internal class SetupRequestHandlers
     
     public void Configure()
     {
+        RegisterRequest<OpenSessionRequestHandler>(MessageType.OpenSession);
         RegisterRequest<EchoRequestHandler>(MessageType.Echo);
         RegisterRequest<GetAPListRequestHandler>(MessageType.APList);
+
+        
+        _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
+        _builder.Services.AddSingleton<IClientsBroadcast, ClientsBroadcast>();
+        _builder.Services.AddSingleton<IServerRequestHandler, ServerRequestHandler>();
+        _builder.Services.AddSingleton<ServerRequestListener>();
     }
 
     public static SetupRequestHandlers Create(IHostApplicationBuilder builder)
@@ -25,14 +33,14 @@ internal class SetupRequestHandlers
         this._builder = builder;
     }
 
-    private void RegisterRequest<T>( MessageType messageType) where T : class, IRequestHandler
+    private void RegisterRequest<T>(MessageType messageType) where T : class, IRequestCommand
     {
         // Register the IRequestHandler implementation as Transient
         _builder.Services.AddTransient<T>();
-        _builder.Services.AddSingleton<IRequestHandlerBuilder>(serviceProvider =>
+        _builder.Services.AddSingleton<IRequestCommandBuilder>(serviceProvider =>
         {
             var factory = () => serviceProvider.GetRequiredService<T>();
-            return new RequestHandlerBuilder((Opcode)messageType, factory);
+            return new RequestCommandBuilder((Opcode)messageType, factory);
         });
     }
 

@@ -1,18 +1,18 @@
 ﻿using AsyncPipeTransport.CommonTypes;
 
-namespace AsyncPipeTransport.ServerScheduler
+namespace AsyncPipeTransport.ServerHandlers
 {
-    public class RequestHandlerBuilder : IRequestHandlerBuilder
+    public class RequestCommandBuilder : IRequestCommandBuilder
     {
-        Func<IRequestHandler> _factory;
+        Func<IRequestCommand> _factory;
         private readonly Opcode _messageType;
 
-        public RequestHandlerBuilder(Opcode messageType, Func<IRequestHandler> factory)
+        public RequestCommandBuilder(Opcode messageType, Func<IRequestCommand> factory)
         {
             _factory = factory;
             _messageType = messageType;
         }
-        public IRequestHandler Build()
+        public IRequestCommand Build()
         {
             return _factory();
         }

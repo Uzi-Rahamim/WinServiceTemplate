@@ -1,4 +1,5 @@
-using AsyncPipeTransport.ServerScheduler;
+using AsyncPipeTransport.ServerHandlers;
+using CommTypes.Events;
 using CommunicationMessages;
 
 namespace WinService;
@@ -21,11 +22,12 @@ public class ServiceMain : BackgroundService
             _logger.LogInformation("Worker Start running at: {time}", DateTimeOffset.Now);
             _= StartApi();
 
+            var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsBroadcast>();
             while (!stoppingToken.IsCancellationRequested)
             {
-
+                clientBroadcaster.BroadcastEvent(new PulseEventMessage("BroadcastEvent"));
                 //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(5000, stoppingToken);
             }
         }
         catch (OperationCanceledException)
@@ -51,9 +53,7 @@ public class ServiceMain : BackgroundService
 
     private async Task StartApi()
     {
-        var apiWorker = _serviceProvider.GetRequiredService<ServerMessageScheduler>();
+        var apiWorker = _serviceProvider.GetRequiredService<ServerRequestListener>();
         await apiWorker.Start(PipeApiConsts.PipeName);
-
-
     }
 }

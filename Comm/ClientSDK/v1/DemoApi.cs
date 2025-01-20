@@ -20,7 +20,8 @@ namespace ClientSDK.v1
 
         public async Task GetAPListStream(Action<WiFiNetwork> setNextResult)
         {
-            var responses = _client.Scheduler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
+            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => 
+            (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
             await foreach (var response in responses)
             {
                 foreach (var network in response.list)
@@ -35,7 +36,8 @@ namespace ClientSDK.v1
 
         public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
         {
-            var responses = _client.Scheduler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
+            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => 
+            (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
             await foreach (var response in responses)
             {
                 foreach (var network in response.list)
@@ -49,7 +51,8 @@ namespace ClientSDK.v1
 
         public async Task<string?> GetEcho(string message)
         {
-            var reply = await _client.Scheduler.Send((requestId) => (new RequestEchoMessage(message)).BuildRequestMessage(requestId));
+            var reply = await _client.RequestHandler.Send((requestId) => 
+            (new RequestEchoMessage(message)).BuildRequestMessage(requestId));
             if (reply == null)
             {
                 return null;
@@ -59,9 +62,9 @@ namespace ClientSDK.v1
             return response?.message;
         }
 
-        public bool RegisterhPulsEvent(Action<string> action)
+        public bool RegisterPulsEvent(Action<string> action)
         {
-           return _client.Scheduler.RegisterEvent((Opcode)MessageType.PulseEvent, new EventToAction<PulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
+           return _client.EventHandler.RegisterEvent((Opcode)MessageType.PulseEvent, new EventToAction<PulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
         }
     }
 }

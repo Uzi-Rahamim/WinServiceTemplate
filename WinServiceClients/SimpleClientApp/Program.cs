@@ -12,12 +12,16 @@ namespace SimpleClientApp
 
             using (var channel = new ClientChannel())
             {
-                channel.Connect();
+                if (!await channel.Connect())
+                {
+                    Console.WriteLine("Failed to connect to server");
+                    return;
+                }
 
 
                 var demoAPI = new DemoApi(channel);
 
-                demoAPI.RegisterhPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
+                demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
 
                 var echoMsg = await demoAPI.GetEcho(message);
                 Console.WriteLine(($"Server 2 reply to {message} with: {echoMsg}"));

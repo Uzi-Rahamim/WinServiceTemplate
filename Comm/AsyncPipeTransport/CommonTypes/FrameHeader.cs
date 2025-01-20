@@ -5,10 +5,13 @@
     {
         None = 0x0,
         LastFrame = 0x1,
-        EvantMsg = 0x2 | LastFrame
+        Pulse = 0x2 | LastFrame,
+        EvantMsg = 0x4 | LastFrame
     }
 
-    public enum Opcode : int { }
+    public enum Opcode : int {
+        OpenSession = 0
+    }
 
     //public record struct TransportFrameHeader(long requestId, TransportFrameHeaderOptions options, Opcode msgType, string payload) { }
     public class FrameHeader

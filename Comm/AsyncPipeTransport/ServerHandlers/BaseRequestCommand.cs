@@ -3,25 +3,25 @@ using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace AsyncPipeTransport.ServerScheduler
+namespace AsyncPipeTransport.ServerHandlers
 {
-    public abstract class BaseRequestHandler<T, Q> : IRequestHandler where Q : MessageHeader
+    public abstract class BaseRequestCommand<T, Q> : IRequestCommand where Q : MessageHeader
     {
         protected ILogger<T> Log { get; private set; }
-        private ISender _transportSender = default!;
+        private ISender _sender = default!;
         protected long RequestId { get; private set; }
 
-        protected abstract Task ExecuteInternal(Q request);
+        protected abstract Task<bool> ExecuteInternal(Q request);
 
-        public BaseRequestHandler(ILogger<T> logger)
+        public BaseRequestCommand(ILogger<T> logger)
         {
             Log = logger;
             Log.LogInformation("Request Handler Created");
         }
 
-        public Task Execute(ISender sender, long requestId, string requestJson)
+        public Task<bool> Execute(ISender sender, long requestId, string requestJson)
         {
-            _transportSender = sender;
+            _sender = sender;
             RequestId = requestId;
 
             var requestMsg = requestJson.FromJson<Q>();
@@ -30,18 +30,17 @@ namespace AsyncPipeTransport.ServerScheduler
 
         protected Task SendLastResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _transportSender.SendAsync(responseMessage.BuildResponseMessage(RequestId));
+            return _sender.SendAsync(responseMessage.BuildResponseMessage(RequestId));
         }
 
         protected Task SendContinuingResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _transportSender.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId));
+            return _sender.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId));
         }
 
         protected Task SendEvent<R>(R eventMessage) where R : MessageHeader
         {
-            return _transportSender.SendAsync(eventMessage.BuildServerEventMessage());
+            return _sender.SendAsync(eventMessage.BuildServerEventMessage());
         }
-
     }
 }

@@ -11,8 +11,11 @@ public class ShowServerCommand
     {
         using (var channel = new ClientChannel())
         {
-            channel.Connect();
-
+            if (!await channel.Connect())
+            {
+                Console.WriteLine("Failed to connect to server");
+                return;
+            }
 
             var demoAPI = new DemoApi(channel);
             var echoMsg = await demoAPI.GetEcho(message);
