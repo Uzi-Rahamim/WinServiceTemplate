@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AsyncPipeTransport.ServerHandlers.BaseRequestCommand&lt;T, Q&gt;" BaseTypeListCollapsed="true">
+    <Position X="11" Y="7.75" Width="2.5" />
+    <Members>
+      <Field Name="_sender" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEIAAAAAAQAAAAgAAAAAAgAAAAAAAAAAAAABAI=</HashCode>
+      <FileName>ServerHandlers\BaseRequestCommand.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_sender" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AsyncPipeTransport.ServerHandlers.ClientsBroadcast" BaseTypeListCollapsed="true">
+    <Position X="4" Y="9.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAJAAAAAAABAACAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\ClientsBroadcast.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_activeClients" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AsyncPipeTransport.ServerHandlers.RequestCommandFactory" BaseTypeListCollapsed="true">
+    <Position X="8" Y="5.75" Width="2.5" />
+    <Members>
+      <Field Name="_factory" Hidden="true" />
+      <Field Name="_messageType" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAIAAAAAAAAEAAAAACAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\RequestCommandFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AsyncPipeTransport.ServerHandlers.ServerRequestHandler" BaseTypeListCollapsed="true">
+    <Position X="4" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AoAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAABBAAAA=</HashCode>
+      <FileName>ServerHandlers\ServerRequestHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_activeClients" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_commands" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AsyncPipeTransport.ServerHandlers.ServerRequestListener">
+    <Position X="0.75" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAACAAAAAAAAAAAAAAIAAAACAAAAAIAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\ServerRequestListener.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_serverRequestHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IClientsBroadcast">
+    <Position X="4" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAACAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\ClientsBroadcast.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IRequestCommand">
+    <Position X="11" Y="6.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\IRequestCommand.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IRequestCommandFactory">
+    <Position X="8" Y="4.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\IRequestCommandFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IServerRequestHandler">
+    <Position X="4" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\IServerRequestHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AsyncPipeTransport.Channel.IServerChannel" Collapsed="true">
+    <Position X="7.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAACAABAAAAAAAAA=</HashCode>
+      <FileName>Channel\IServerChannel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -12,10 +12,10 @@ namespace ClientSDK.v1
 {
     public class DemoApi
     {
-        private readonly ILogger<DemoApi> _logger;
+        ///private readonly ILogger<DemoApi> _logger;
         private readonly ClientChannel _client;
 
-        public DemoApi(ClientChannel client, ILogger<DemoApi> logger) => (_logger, _client) = (logger, client);
+        //public DemoApi(ClientChannel client, ILogger<DemoApi> logger) => (_logger, _client) = (logger, client);
         public DemoApi(ClientChannel client) => (_client) = (client);
 
         public async Task GetAPListStream(Action<WiFiNetwork> setNextResult)

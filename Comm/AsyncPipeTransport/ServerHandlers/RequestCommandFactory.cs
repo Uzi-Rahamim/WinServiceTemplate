@@ -2,17 +2,17 @@
 
 namespace AsyncPipeTransport.ServerHandlers
 {
-    public class RequestCommandBuilder : IRequestCommandBuilder
+    public class RequestCommandFactory : IRequestCommandFactory
     {
         Func<IRequestCommand> _factory;
         private readonly Opcode _messageType;
 
-        public RequestCommandBuilder(Opcode messageType, Func<IRequestCommand> factory)
+        public RequestCommandFactory(Opcode messageType, Func<IRequestCommand> factory)
         {
             _factory = factory;
             _messageType = messageType;
         }
-        public IRequestCommand Build()
+        public IRequestCommand Create()
         {
             return _factory();
         }

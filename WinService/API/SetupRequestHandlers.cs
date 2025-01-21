@@ -37,10 +37,10 @@ internal class SetupRequestHandlers
     {
         // Register the IRequestHandler implementation as Transient
         _builder.Services.AddTransient<T>();
-        _builder.Services.AddSingleton<IRequestCommandBuilder>(serviceProvider =>
+        _builder.Services.AddSingleton<IRequestCommandFactory>(serviceProvider =>
         {
             var factory = () => serviceProvider.GetRequiredService<T>();
-            return new RequestCommandBuilder((Opcode)messageType, factory);
+            return new RequestCommandFactory((Opcode)messageType, factory);
         });
     }
 

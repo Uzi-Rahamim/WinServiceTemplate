@@ -1,9 +1,9 @@
 ﻿using AsyncPipeTransport.CommonTypes;
 namespace AsyncPipeTransport.ServerHandlers
 {
-    public interface IRequestCommandBuilder
+    public interface IRequestCommandFactory
     {
-        public IRequestCommand Build();
+        public IRequestCommand Create();
         public Opcode GetMessageType();
     }
 }

@@ -13,12 +13,12 @@ namespace AsyncPipeTransport.ServerHandlers
 {
     public  class ServerRequestHandler : IServerRequestHandler
     {
-        private readonly Dictionary<Opcode, IRequestCommandBuilder> _commands = new Dictionary<Opcode, IRequestCommandBuilder>();
+        private readonly Dictionary<Opcode, IRequestCommandFactory> _commands = new Dictionary<Opcode, IRequestCommandFactory>();
         private readonly ILogger<ServerRequestListener> _logger;
         private readonly IClientsBroadcast _activeClients;
         public ServerRequestHandler(ILogger<ServerRequestListener> logger, 
             IClientsBroadcast activeClients, 
-            IEnumerable<IRequestCommandBuilder> cmdList)
+            IEnumerable<IRequestCommandFactory> cmdList)
         {
             _logger = logger;
             _activeClients = activeClients;
@@ -86,7 +86,7 @@ namespace AsyncPipeTransport.ServerHandlers
                 _logger.LogInformation("Server {clientId} command not found {frame.msgType}", clientId, requestId);
                 return null;
             }
-            return _commands[msgType].Build();
+            return _commands[msgType].Create();
         }
 
 
