@@ -1,8 +1,9 @@
 ﻿using App.WindowsService.API.Requests;
+using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.ServerHandlers;
-using CommTypes;
 using CommunicationMessages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace App.WindowsService.API;
 
@@ -20,7 +21,9 @@ internal class SetupRequestHandlers
         _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
         _builder.Services.AddSingleton<IClientsBroadcast, ClientsBroadcast>();
         _builder.Services.AddSingleton<IServerRequestHandler, ServerRequestHandler>();
-        _builder.Services.AddSingleton<ServerRequestListener>();
+        _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(PipeApiConsts.PipeName));
+       
+        _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
     }
 
     public static SetupRequestHandlers Create(IHostApplicationBuilder builder)

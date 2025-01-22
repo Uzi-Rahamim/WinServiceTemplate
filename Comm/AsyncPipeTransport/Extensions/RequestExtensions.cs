@@ -30,28 +30,7 @@ namespace AsyncPipeTransport.Extensions
             return JsonConvert.DeserializeObject<T>(frame.payload);
         }
 
-
-        public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader
-        {
-            return message.BuildMessage(requestId, FrameHeaderOptions.LastFrame);
-        }
-
-        public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
-        {
-            return message.BuildMessage(requestId, FrameHeaderOptions.LastFrame);
-        }
-
-        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
-        {
-            return message.BuildMessage(requestId, FrameHeaderOptions.None);
-        }
-
-        public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
-        {
-            return message.BuildMessage(0, FrameHeaderOptions.EvantMsg);
-        }
-
-        public static string BuildMessage<T>(this T message, long requestId, FrameHeaderOptions options) where T : MessageHeader
+        public static string BuildMessage<T>(this T message, long requestId, FrameOptions options) where T : MessageHeader
         {
             string payload = message.ToJson();
             return new FrameHeader(requestId, options, message.msgType, payload).ToJson();
@@ -59,7 +38,32 @@ namespace AsyncPipeTransport.Extensions
 
         public static bool IsLastFrame(this FrameHeader frame)
         {
-            return frame.options.HasFlag(FrameHeaderOptions.LastFrame);
+            return frame.options.HasFlag(FrameOptions.LastFrame);
+        }
+
+        public static string BuildSecurityRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        {
+            return message.BuildMessage(requestId, FrameOptions.Security | FrameOptions.Request);
+        }
+
+        public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        {
+            return message.BuildMessage(requestId, FrameOptions.Request);
+        }
+
+        public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
+        {
+            return message.BuildMessage(requestId, FrameOptions.Response | FrameOptions.LastFrame);
+        }
+
+        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
+        {
+            return message.BuildMessage(requestId, FrameOptions.Response);
+        }
+
+        public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
+        {
+            return message.BuildMessage(0, FrameOptions.EvantMsg);
         }
     }
 }

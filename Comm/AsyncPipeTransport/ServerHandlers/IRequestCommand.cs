@@ -4,7 +4,7 @@ namespace AsyncPipeTransport.ServerHandlers
 {
     public interface IRequestCommand
     {
-        Task<bool> Execute(ISender sender, long requestId, string requestJson);
+        Task<bool> Execute(IChannelSender sender, long requestId, string requestJson);
     }
 }
 

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace AsyncPipeTransport.Channel
 {
-    public abstract class BasePipeChannel : ISender
+    public abstract class BasePipeChannel : IChannelSender
     {
 
         bool disposed = false;

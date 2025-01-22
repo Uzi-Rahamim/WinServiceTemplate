@@ -21,9 +21,9 @@ namespace AsyncPipeTransport.ClientHandlers
             return _pendingRequests.TryGetValue(requestId, out request);
         }
 
-        public async IAsyncEnumerable<T> SendLongRequest<T>(Func<long, string> buildPayload) where T : MessageHeader
+        public async IAsyncEnumerable<T> SendLongRequest<T,R>(R message) where T : MessageHeader where R : MessageHeader
         {
-            var requestId = await SendNonBlock(buildPayload);
+            var requestId = await SendNonBlock((requestId) => message.BuildRequestMessage(requestId));
             FrameHeader? reply = null;
             do
             {
@@ -45,7 +45,22 @@ namespace AsyncPipeTransport.ClientHandlers
 
         }
 
-        public Task<FrameHeader?> Send(Func<long, string> buildPayload)
+
+        public async Task<T?> SendRequest<T,R>(R message) where T : MessageHeader where R : MessageHeader
+        {
+            var reply = await Send((requestId) => message.BuildRequestMessage(requestId));
+            var response = reply?.ExtractMessageHeaders<T>() ?? null;
+            return response;
+        }
+
+        public async Task<T?> SendSecurityRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        {
+            var reply = await Send((requestId) => message.BuildSecurityRequestMessage(requestId));
+            var response = reply?.ExtractMessageHeaders<T>() ?? null;
+            return response;
+        }
+
+        private Task<FrameHeader?> Send(Func<long, string> buildPayload)
         {
             long newRequestId = _requestIdGenerator.GetNextId();
             var payload = buildPayload(newRequestId);

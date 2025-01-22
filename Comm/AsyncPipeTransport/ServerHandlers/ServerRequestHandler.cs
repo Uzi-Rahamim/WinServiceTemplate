@@ -14,9 +14,9 @@ namespace AsyncPipeTransport.ServerHandlers
     public  class ServerRequestHandler : IServerRequestHandler
     {
         private readonly Dictionary<Opcode, IRequestCommandFactory> _commands = new Dictionary<Opcode, IRequestCommandFactory>();
-        private readonly ILogger<ServerRequestListener> _logger;
+        private readonly ILogger<ServerIncomingConnectionListener> _logger;
         private readonly IClientsBroadcast _activeClients;
-        public ServerRequestHandler(ILogger<ServerRequestListener> logger, 
+        public ServerRequestHandler(ILogger<ServerIncomingConnectionListener> logger, 
             IClientsBroadcast activeClients, 
             IEnumerable<IRequestCommandFactory> cmdList)
         {

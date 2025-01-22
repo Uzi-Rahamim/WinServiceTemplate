@@ -53,7 +53,7 @@ public class ServiceMain : BackgroundService
 
     private async Task StartApi()
     {
-        var apiWorker = _serviceProvider.GetRequiredService<ServerRequestListener>();
-        await apiWorker.Start(PipeApiConsts.PipeName);
+        var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
+        await apiWorker.Start();
     }
 }

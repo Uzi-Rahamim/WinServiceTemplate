@@ -45,6 +45,7 @@ namespace AsyncPipeTransport.ServerHandlers
             }
         }
 
+
         public void AddClient(long clientId, IServerChannel client)
         {
             _activeClients.TryAdd(clientId, client);

@@ -2,7 +2,6 @@
 using AsyncPipeTransport.ClientHandlers;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Events;
-using AsyncPipeTransport.Extensions;
 using CommTypes.Massages;
 using CommunicationMessages;
 
@@ -39,14 +38,7 @@ namespace ClientSDK.v1
 
         private async Task<bool> SendSecurityMessage()
         {
-            var reply = await _clientRequestHnadler.Send((requestId) =>
-            (new RequestSecurityMessage(string.Empty)).BuildRequestMessage(requestId));
-            if (reply == null)
-            {
-                return false;
-            }
-
-            var response = reply.ExtractMessageHeaders<ResponseSecurityMessage>();
+            var response = await _clientRequestHnadler.SendSecurityRequest<ResponseSecurityMessage, RequestSecurityMessage>(new RequestSecurityMessage(string.Empty));
             return response?.isValid ?? false;
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace AsyncPipeTransport.Channel
 {
-    public interface IServerChannel : IDisposable, ISender
+    public interface IServerChannel : IDisposable, IChannelSender
     {
         void WaitForConnection();
         new Task SendAsync(string message);

@@ -41,11 +41,11 @@ namespace AsyncPipeTransport.ClientHandlers
                         Console.WriteLine($"Client receive an invalid response message");
                         continue;
                     }
-                    if (frame.options.HasFlag(FrameHeaderOptions.EvantMsg))
+                    else if (frame.options.HasFlag(FrameOptions.EvantMsg))
                     {
                         _clientEventHandler.HandleEvent(frame);
                     }
-                    else if (_clientRequestHandler.GetPendingRequest(frame.requestId, out ClientRequest? request))
+                    else if (frame.options.HasFlag(FrameOptions.Response) && _clientRequestHandler.GetPendingRequest(frame.requestId, out ClientRequest? request))
                     {
                         request?.PushResponse(frame);
                     }

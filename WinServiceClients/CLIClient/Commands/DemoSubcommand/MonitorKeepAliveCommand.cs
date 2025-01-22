@@ -9,8 +9,6 @@ namespace APIClient.commands.test
         [Command]
         public static async Task  monitor()
         {
-            var message = "test .Net Framework";
-
             using (var channel = new ClientChannel())
             {
                 if (!await channel.Connect())

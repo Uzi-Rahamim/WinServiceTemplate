@@ -20,8 +20,8 @@ namespace ClientSDK.v1
 
         public async Task GetAPListStream(Action<WiFiNetwork> setNextResult)
         {
-            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => 
-            (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
+            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+                new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
                 foreach (var network in response.list)
@@ -36,8 +36,8 @@ namespace ClientSDK.v1
 
         public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
         {
-            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage>((requestId) => 
-            (new RequestWiFiNetworksMessage()).BuildRequestMessage(requestId));
+            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+                new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
                 foreach (var network in response.list)
@@ -51,14 +51,8 @@ namespace ClientSDK.v1
 
         public async Task<string?> GetEcho(string message)
         {
-            var reply = await _client.RequestHandler.Send((requestId) => 
-            (new RequestEchoMessage(message)).BuildRequestMessage(requestId));
-            if (reply == null)
-            {
-                return null;
-            }
-
-            var response = reply.ExtractMessageHeaders<ResponseEchoMessage>();
+            var response = await _client.RequestHandler.SendRequest<ResponseEchoMessage, RequestEchoMessage>(
+                new RequestEchoMessage(message));
             return response?.message;
         }
 

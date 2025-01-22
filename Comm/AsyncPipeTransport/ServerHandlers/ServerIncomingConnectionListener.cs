@@ -6,26 +6,29 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncPipeTransport.ServerHandlers
 {
-    public class ServerRequestListener
+    public class ServerIncomingConnectionListener
     {
-        private readonly ILogger<ServerRequestListener> _logger;
+        private readonly ILogger<ServerIncomingConnectionListener> _logger;
         private readonly IServerRequestHandler _serverRequestHandler;
+        private readonly IServerChannelFactory _serverChannelFactory;
         private readonly ISequenceGenerator _clientIdGenerator;
-        public ServerRequestListener(ILogger<ServerRequestListener> logger, 
+        public ServerIncomingConnectionListener(ILogger<ServerIncomingConnectionListener> logger,
+                                     IServerChannelFactory serverChannelFactory,
                                      IServerRequestHandler serverRequestHandler,
                                      ISequenceGenerator clientIdGenerator)
         {
             _logger = logger;
+            _serverChannelFactory = serverChannelFactory;
             _serverRequestHandler = serverRequestHandler;
             _clientIdGenerator = clientIdGenerator;
         }
 
-        public Task Start(string pipeName)
+        public Task Start()
         {
-            return Task.Run(() => StartListen(pipeName));
+            return Task.Run(() => StartListen());
         }
 
-        private void StartListen(string pipeName)
+        private void StartListen()
         {
             while (true)
             {
@@ -34,7 +37,7 @@ namespace AsyncPipeTransport.ServerHandlers
                 {
                     var clientId = _clientIdGenerator.GetNextId();
                     // Create a NamedPipeServerStream to listen for connections
-                    using (IServerChannel pipeServer = new ServerPipeChannel(pipeName))
+                    using (IServerChannel pipeServer = _serverChannelFactory.Create())
                     {
                         _logger.LogInformation("Server {clientId}  Waiting for a client to connect...", clientId);
 

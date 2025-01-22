@@ -6,8 +6,9 @@ namespace AsyncPipeTransport.ClientHandlers
     {
         public bool GetPendingRequest(long requestId, out ClientRequest? request);
 
-        public  IAsyncEnumerable<T> SendLongRequest<T>(Func<long, string> buildPayload) where T : MessageHeader;
+        public IAsyncEnumerable<T> SendLongRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader;
 
-        public Task<FrameHeader?> Send(Func<long, string> buildPayload);
+        public Task<T?> SendRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader;
+        public Task<T?> SendSecurityRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader;
     }
 }

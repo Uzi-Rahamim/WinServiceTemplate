@@ -3,7 +3,7 @@
 
 namespace AsyncPipeTransport.Channel
 {
-    public interface ISender
+    public interface IChannelSender
     {
         public Task SendAsync(string message);
     }

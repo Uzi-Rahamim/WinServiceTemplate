@@ -8,7 +8,7 @@ namespace AsyncPipeTransport.ServerHandlers
     public abstract class BaseRequestCommand<T, Q> : IRequestCommand where Q : MessageHeader
     {
         protected ILogger<T> Log { get; private set; }
-        private ISender _sender = default!;
+        private IChannelSender _sender = default!;
         protected long RequestId { get; private set; }
 
         protected abstract Task<bool> ExecuteInternal(Q request);
@@ -19,7 +19,7 @@ namespace AsyncPipeTransport.ServerHandlers
             Log.LogInformation("Request Handler Created");
         }
 
-        public Task<bool> Execute(ISender sender, long requestId, string requestJson)
+        public Task<bool> Execute(IChannelSender sender, long requestId, string requestJson)
         {
             _sender = sender;
             RequestId = requestId;
