@@ -3,7 +3,6 @@ using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.ServerHandlers;
 using CommunicationMessages;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace App.WindowsService.API;
 
@@ -13,14 +12,15 @@ internal class SetupRequestHandlers
     
     public void Configure()
     {
-        RegisterRequest<OpenSessionRequestHandler>(MessageType.OpenSession);
-        RegisterRequest<EchoRequestHandler>(MessageType.Echo);
-        RegisterRequest<GetAPListRequestHandler>(MessageType.APList);
+        RegisterRequest<SchemaRequestHandler>(FrameworkMessageTypes.RequestSchema, SchemaRequestHandler.GetSchema);
+        RegisterRequest<OpenSessionRequestHandler>(FrameworkMessageTypes.OpenSession, OpenSessionRequestHandler.GetSchema);
+        RegisterRequest<EchoRequestHandler>(MessageType.Echo, EchoRequestHandler.GetSchema);
+        RegisterRequest<GetAPListRequestHandler>(MessageType.APList,GetAPListRequestHandler.GetSchema);
 
         
         _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
-        _builder.Services.AddSingleton<IClientsBroadcast, ClientsBroadcast>();
-        _builder.Services.AddSingleton<IServerRequestHandler, ServerRequestHandler>();
+        _builder.Services.AddSingleton<IClientsManager, ClientsManager>();
+        _builder.Services.AddSingleton<IServerRequestsManager, ServerRequestsManager>();
         _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(PipeApiConsts.PipeName));
        
         _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
@@ -36,14 +36,19 @@ internal class SetupRequestHandlers
         this._builder = builder;
     }
 
-    private void RegisterRequest<T>(MessageType messageType) where T : class, IRequestCommand
+    private void RegisterRequest<T>(string messageType,Func<string > getSchema) where T : class, IRequestExecuter
     {
-        // Register the IRequestHandler implementation as Transient
+        _builder.Services.AddTransient<IRequestSchemaProvider>(serviceProvider =>
+        {
+            return new RequestSchemaProvider(messageType, getSchema);
+        });
+
+        // Register the IRequestExecuter implementation as Transient
         _builder.Services.AddTransient<T>();
-        _builder.Services.AddSingleton<IRequestCommandFactory>(serviceProvider =>
+        _builder.Services.AddSingleton<IRequestExecuterFactory>(serviceProvider =>
         {
             var factory = () => serviceProvider.GetRequiredService<T>();
-            return new RequestCommandFactory((Opcode)messageType, factory);
+            return new RequestExecuterFactory(messageType, factory);
         });
     }
 

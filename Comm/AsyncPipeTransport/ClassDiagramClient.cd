@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="AsyncPipeTransport.ClientHandlers.ClientEventHandler">
+  <Class Name="AsyncPipeTransport.ClientHandlers.ClientEventManager">
     <Position X="6.75" Y="8" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAQAAAAIAACAAAAAAAAA=</HashCode>
-      <FileName>ClientHandlers\ClientEventHandler.cs</FileName>
+      <FileName>ClientHandlers\ClientEventManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="events" />
@@ -12,7 +12,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AsyncPipeTransport.ClientHandlers.ClientRequest">
-    <Position X="11" Y="2.5" Width="3" />
+    <Position X="11.5" Y="3.25" Width="3" />
     <Members>
       <Field Name="responseFrames" Hidden="true" />
       <Field Name="timeout" Hidden="true" />
@@ -23,21 +23,25 @@
       <FileName>ClientHandlers\ClientRequest.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="AsyncPipeTransport.ClientHandlers.ClientRequestHandler" BaseTypeListCollapsed="true">
+  <Class Name="AsyncPipeTransport.ClientHandlers.ClientRequestsManager" BaseTypeListCollapsed="true">
     <Position X="6.75" Y="3.25" Width="2.75" />
     <Members>
-      <Field Name="_pendingRequests" Hidden="true" />
-      <Field Name="_requestIdGenerator" Hidden="true" />
-      <Field Name="_transport" Hidden="true" />
+      <Method Name="RemoveRequest" Hidden="true" />
+      <Method Name="Send" Hidden="true" />
+      <Method Name="SendNonBlock" Hidden="true" />
+      <Method Name="SendRequest" Hidden="true" />
+      <Method Name="WaitForNextFrame" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>gAAAAAYAAAAAAAAAAEAAAADAAAAAoAABAAAAAAACAAA=</HashCode>
-      <FileName>ClientHandlers\ClientRequestHandler.cs</FileName>
+      <HashCode>gAAAAAYAAACAAAAAAEAAAADAAAAAoAABAAAAAAACAAA=</HashCode>
+      <FileName>ClientHandlers\ClientRequestsManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_transport" />
-      <Field Name="_pendingRequests" />
     </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_pendingRequests" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="AsyncPipeTransport.ClientHandlers.ClientResponseListener" BaseTypeListCollapsed="true">
@@ -47,9 +51,9 @@
       <FileName>ClientHandlers\ClientResponseListener.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="_clientRequestHandler" />
-      <Field Name="_clientEventHandler" />
       <Field Name="_transport" />
+      <Field Name="_clientEventHandler" />
+      <Field Name="_clientRequestHandler" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -61,18 +65,18 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="AsyncPipeTransport.ClientHandlers.IClientEventHandler">
+  <Interface Name="AsyncPipeTransport.ClientHandlers.IClientEventManager">
     <Position X="6.75" Y="6.25" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAAACAAAAAAAAA=</HashCode>
-      <FileName>ClientHandlers\IClientEventHandler.cs</FileName>
+      <FileName>ClientHandlers\IClientEventManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="AsyncPipeTransport.ClientHandlers.IClientRequestHandler">
+  <Interface Name="AsyncPipeTransport.ClientHandlers.IClientRequestManager">
     <Position X="6.75" Y="1.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAACAAA=</HashCode>
-      <FileName>ClientHandlers\IClientRequestHandler.cs</FileName>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAADAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>ClientHandlers\IClientRequestManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="AsyncPipeTransport.Channel.IClientChannel">

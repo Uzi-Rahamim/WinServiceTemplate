@@ -4,7 +4,7 @@ using CommTypes.Events;
 
 namespace App.WindowsService.API.Requests
 {
-    public class GetAPListRequestHandler : BaseRequestCommand<GetAPListRequestHandler, RequestWiFiNetworksMessage>
+    public class GetAPListRequestHandler : BaseRequestExecuter<GetAPListRequestHandler, RequestWiFiNetworksMessage>
     {
 
         // Create a list of 100 mock WiFi networks

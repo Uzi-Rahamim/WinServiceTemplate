@@ -10,19 +10,19 @@ namespace ClientSDK.v1
     public class ClientChannel : IDisposable
     {
         internal ClientResponseListener Listener { get => _clientResponseListener; }
-        internal ClientEventHandler EventHandler { get => _clientEventHandler; }
-        internal ClientRequestHandler RequestHandler { get => _clientRequestHnadler; }
+        internal ClientEventManager EventHandler { get => _clientEventHandler; }
+        internal ClientRequestsManager RequestHandler { get => _clientRequestHnadler; }
 
         private readonly ClientResponseListener _clientResponseListener;
-        private readonly ClientEventHandler _clientEventHandler;
-        private readonly ClientRequestHandler _clientRequestHnadler;
+        private readonly ClientEventManager _clientEventHandler;
+        private readonly ClientRequestsManager _clientRequestHnadler;
         private readonly IClientChannel _channel;
 
         public ClientChannel()
         {
             _channel = new ClientPipeChannel(PipeApiConsts.PipeName);
-            _clientEventHandler = new ClientEventHandler();
-            _clientRequestHnadler = new ClientRequestHandler(new SequenceGenerator(), _channel);
+            _clientEventHandler = new ClientEventManager();
+            _clientRequestHnadler = new ClientRequestsManager(new SequenceGenerator(), _channel);
 
             _clientResponseListener = new ClientResponseListener(
                _channel,
@@ -38,11 +38,11 @@ namespace ClientSDK.v1
 
         private async Task<bool> SendSecurityMessage()
         {
-            var response = await _clientRequestHnadler.SendSecurityRequest<ResponseSecurityMessage, RequestSecurityMessage>(new RequestSecurityMessage(string.Empty));
+            var response = await _clientRequestHnadler.SendOpenSessionRequest<ResponseSecurityMessage, RequestSecurityMessage>(new RequestSecurityMessage(string.Empty));
             return response?.isValid ?? false;
         }
 
-        public bool RegisterEvent(Opcode messageType, IEvent eventAction)
+        public bool RegisterEvent(string messageType, IEvent eventAction)
         {
             return _clientEventHandler.RegisterEvent(messageType, eventAction);
         }

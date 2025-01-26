@@ -7,6 +7,7 @@ using CommTypes.Events;
 using CommunicationMessages;
 using AsyncPipeTransport.Events;
 using AsyncPipeTransport.CommonTypes;
+using System.Net;
 
 namespace ClientSDK.v1
 {
@@ -49,6 +50,18 @@ namespace ClientSDK.v1
             }
         }
 
+        public async IAsyncEnumerable<string> GetSchema()
+        {
+            var responses = _client.RequestHandler.SendLongRequest<ResponseSchemaMessage, RequestSchemaMessage>(
+                new RequestSchemaMessage());
+            await foreach (var response in responses)
+            {
+                if (response == null)
+                    continue;
+                yield return response.schema;
+            }
+        }
+
         public async Task<string?> GetEcho(string message)
         {
             var response = await _client.RequestHandler.SendRequest<ResponseEchoMessage, RequestEchoMessage>(
@@ -58,7 +71,7 @@ namespace ClientSDK.v1
 
         public bool RegisterPulsEvent(Action<string> action)
         {
-           return _client.EventHandler.RegisterEvent((Opcode)MessageType.PulseEvent, new EventToAction<PulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
+           return _client.EventHandler.RegisterEvent(MessageType.PulseEvent, new EventToAction<PulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
         }
     }
 }

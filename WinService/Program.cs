@@ -6,6 +6,11 @@ using AsyncPipeTransport.ServerHandlers;
 
 string mutexName = "MyWinServiceUniqeName";
 
+//https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service
+//sc.exe create "MyService" binpath= "C:\Path\To\App.WindowsService.exe"
+//sc.exe start "MyService"
+//sc.exe stop "MyService"
+//sc.exe delete "MyService"
 using (Mutex mutex = new Mutex(true, mutexName, out bool isNewInstance))
 {
     if (!isNewInstance)

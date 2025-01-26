@@ -1,92 +1,82 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="AsyncPipeTransport.ServerHandlers.BaseRequestCommand&lt;T, Q&gt;" BaseTypeListCollapsed="true">
+  <Class Name="AsyncPipeTransport.ServerHandlers.BaseRequestExecuter&lt;T, C&gt;" BaseTypeListCollapsed="true">
     <Position X="11" Y="7.75" Width="2.5" />
     <Members>
       <Field Name="_sender" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAEIAAAAAAQAAAAgAAAAAAgAAAAAAAAAAAAABAI=</HashCode>
-      <FileName>ServerHandlers\BaseRequestCommand.cs</FileName>
+      <HashCode>AAAAAAEIAAAAAAQAAAAgAAAAAAhAAAAAAAAAAAAABAI=</HashCode>
+      <FileName>ServerHandlers\BaseRequestExecuter.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_sender" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="AsyncPipeTransport.ServerHandlers.ClientsBroadcast" BaseTypeListCollapsed="true">
+  <Class Name="AsyncPipeTransport.ServerHandlers.ClientsManager" BaseTypeListCollapsed="true">
     <Position X="4" Y="9.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAJAAAAAAABAACAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\ClientsBroadcast.cs</FileName>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAJAAAAAAABAACAAEAAAA=</HashCode>
+      <FileName>ServerHandlers\ClientsManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Field Name="_activeClients" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="AsyncPipeTransport.ServerHandlers.RequestCommandFactory" BaseTypeListCollapsed="true">
+  <Class Name="AsyncPipeTransport.ServerHandlers.RequestExecuterFactory" BaseTypeListCollapsed="true">
     <Position X="8" Y="5.75" Width="2.5" />
     <Members>
       <Field Name="_factory" Hidden="true" />
       <Field Name="_messageType" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAIAAAAAAAAEAAAAACAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\RequestCommandFactory.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAIAAAAgAAAEAAAAACAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\RequestExecuterFactory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="AsyncPipeTransport.ServerHandlers.ServerRequestHandler" BaseTypeListCollapsed="true">
+  <Class Name="AsyncPipeTransport.ServerHandlers.ServerRequestsManager" BaseTypeListCollapsed="true">
     <Position X="4" Y="4.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AoAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAABBAAAA=</HashCode>
-      <FileName>ServerHandlers\ServerRequestHandler.cs</FileName>
+      <HashCode>AgBAAAAAAAAAAAQAAAABAAAAJAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\ServerRequestsManager.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_activeClients" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Field Name="_commands" />
+      <Field Name="_executers" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="AsyncPipeTransport.ServerHandlers.ServerRequestListener">
+  <Class Name="AsyncPipeTransport.ServerHandlers.ServerIncomingConnectionListener">
     <Position X="0.75" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAAAAACAAAAAAAAAAAAAAIAAAACAAAAAIAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\ServerRequestListener.cs</FileName>
+      <HashCode>AQAAAAAAACAAAAAAAAAAAAEAIAAAACAAAAAIAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\ServerIncomingConnectionListener.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_serverRequestHandler" />
     </ShowAsAssociation>
   </Class>
-  <Interface Name="AsyncPipeTransport.ServerHandlers.IClientsBroadcast">
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IClientsManager">
     <Position X="4" Y="8" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAACAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\ClientsBroadcast.cs</FileName>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAACAAEAAAA=</HashCode>
+      <FileName>ServerHandlers\ClientsManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="AsyncPipeTransport.ServerHandlers.IRequestCommand">
-    <Position X="11" Y="6.25" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\IRequestCommand.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="AsyncPipeTransport.ServerHandlers.IRequestCommandFactory">
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IRequestExecuterFactory">
     <Position X="8" Y="4.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\IRequestCommandFactory.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAEAQAAAAAAAAAAA=</HashCode>
+      <FileName>ServerHandlers\IRequestExecuterFactory.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="AsyncPipeTransport.ServerHandlers.IServerRequestHandler">
+  <Interface Name="AsyncPipeTransport.ServerHandlers.IServerRequestsManager">
     <Position X="4" Y="3.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ServerHandlers\IServerRequestHandler.cs</FileName>
+      <FileName>ServerHandlers\IServerRequestsManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="AsyncPipeTransport.Channel.IServerChannel" Collapsed="true">

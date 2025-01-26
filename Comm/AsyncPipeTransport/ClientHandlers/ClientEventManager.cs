@@ -4,16 +4,16 @@ using System.Collections.Concurrent;
 
 namespace AsyncPipeTransport.ClientHandlers
 {
-    public class ClientEventHandler: IClientEventHandler
+    public class ClientEventManager: IClientEventManager
     {
-        private readonly ConcurrentDictionary<Opcode, IEvent> events = new ConcurrentDictionary<Opcode, IEvent>();
+        private readonly ConcurrentDictionary<string, IEvent> events = new ConcurrentDictionary<string, IEvent>();
 
-        public bool RegisterEvent(Opcode messageType, IEvent eventAction)
+        public bool RegisterEvent(string messageType, IEvent eventAction)
         {
             return events.TryAdd(messageType, eventAction);
         }
 
-        public bool UnregisterEvent(Opcode messageType)
+        public bool UnregisterEvent(string messageType)
         {
             return events.TryRemove(messageType, out _);
         }

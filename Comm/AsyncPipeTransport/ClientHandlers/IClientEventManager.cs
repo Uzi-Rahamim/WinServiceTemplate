@@ -3,12 +3,12 @@ using AsyncPipeTransport.Events;
 
 namespace AsyncPipeTransport.ClientHandlers
 {
-    public interface IClientEventHandler
+    public interface IClientEventManager
     {
-        public bool RegisterEvent(Opcode messageType, IEvent eventAction);
+        public bool RegisterEvent(string messageType, IEvent eventAction);
 
 
-        public bool UnregisterEvent(Opcode messageType);
+        public bool UnregisterEvent(string messageType);
 
         public void HandleEvent(FrameHeader frame);
     }

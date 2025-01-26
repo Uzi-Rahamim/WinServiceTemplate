@@ -6,7 +6,7 @@ namespace CommunicationMessages.Massages
 
     public class RequestWiFiNetworksMessage : MessageHeader
     {
-        public RequestWiFiNetworksMessage() : base((Opcode)MessageType.APList) { }
+        public RequestWiFiNetworksMessage() : base(MessageType.APList) { }
     }
 
     public class WiFiNetworkItem
@@ -23,6 +23,6 @@ namespace CommunicationMessages.Massages
     public class RespnseWiFiNetworksMessage : MessageHeader
     {
         public IEnumerable<WiFiNetworkItem> list { get; set; }
-        public RespnseWiFiNetworksMessage(IEnumerable<WiFiNetworkItem> list) : base((Opcode)MessageType.APList) => this.list = list;
+        public RespnseWiFiNetworksMessage(IEnumerable<WiFiNetworkItem> list) : base(MessageType.APList) => this.list = list;
     }
 }

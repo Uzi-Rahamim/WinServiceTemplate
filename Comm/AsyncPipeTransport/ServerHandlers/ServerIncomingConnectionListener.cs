@@ -9,12 +9,12 @@ namespace AsyncPipeTransport.ServerHandlers
     public class ServerIncomingConnectionListener
     {
         private readonly ILogger<ServerIncomingConnectionListener> _logger;
-        private readonly IServerRequestHandler _serverRequestHandler;
+        private readonly IServerRequestsManager _serverRequestHandler;
         private readonly IServerChannelFactory _serverChannelFactory;
         private readonly ISequenceGenerator _clientIdGenerator;
         public ServerIncomingConnectionListener(ILogger<ServerIncomingConnectionListener> logger,
                                      IServerChannelFactory serverChannelFactory,
-                                     IServerRequestHandler serverRequestHandler,
+                                     IServerRequestsManager serverRequestHandler,
                                      ISequenceGenerator clientIdGenerator)
         {
             _logger = logger;

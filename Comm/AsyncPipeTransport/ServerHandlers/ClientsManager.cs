@@ -2,28 +2,24 @@
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Extensions;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AsyncPipeTransport.ServerHandlers
 {
-    public interface IClientsBroadcast
+    public interface IClientsManager
     {
         public void AddClient(long clientId, IServerChannel client);
         public void RemoveClient(long clientId);
-        public void BroadcastEvent<R>(R eventMessage) where R : MessageHeader;
+        void BroadcastEvent<R>(R eventMessage) where R : MessageHeader;
+        IServerChannel? TryGetClient(long clientId);
     }
 
-    public class ClientsBroadcast: IClientsBroadcast
+    public class ClientsManager : IClientsManager
     {
 
         private readonly ConcurrentDictionary<long, IServerChannel> _activeClients = new ConcurrentDictionary<long, IServerChannel>();
-        private readonly ILogger<ClientsBroadcast> _logger;
-        public ClientsBroadcast(ILogger<ClientsBroadcast> logger)
+        private readonly ILogger<ClientsManager> _logger;
+        public ClientsManager(ILogger<ClientsManager> logger)
         {
             _logger = logger;
         }
@@ -45,6 +41,11 @@ namespace AsyncPipeTransport.ServerHandlers
             }
         }
 
+        public IServerChannel? TryGetClient(long clientId)
+        {
+            _activeClients.TryGetValue(clientId, out var client);
+            return client;
+        }
 
         public void AddClient(long clientId, IServerChannel client)
         {

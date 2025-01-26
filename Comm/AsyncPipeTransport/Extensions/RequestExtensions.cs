@@ -41,9 +41,19 @@ namespace AsyncPipeTransport.Extensions
             return frame.options.HasFlag(FrameOptions.LastFrame);
         }
 
-        public static string BuildSecurityRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        public static bool IsOpenSessionFrame(this FrameHeader frame)
         {
-            return message.BuildMessage(requestId, FrameOptions.Security | FrameOptions.Request);
+            return frame.options.HasFlag(FrameOptions.OpenSession);
+        }
+
+        public static bool IsDiscoveryFrame(this FrameHeader frame)
+        {
+            return frame.options.HasFlag(FrameOptions.Discovery);
+        }
+
+        public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        {
+            return message.BuildMessage(requestId, FrameOptions.OpenSession | FrameOptions.Request);
         }
 
         public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader

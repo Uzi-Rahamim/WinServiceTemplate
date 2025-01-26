@@ -4,10 +4,10 @@ using Serilog;
 
 namespace APIClient.commands.test;
 
-public class ShowServerCommand
+public class SendEchoCommand
 {
     [Command]
-    public static async Task echo([Argument(Description = "Your message")] string message)
+    public static async Task SentEcho([Argument(Description = "Your message")] string message)
     {
         using (var channel = new ClientChannel())
         {

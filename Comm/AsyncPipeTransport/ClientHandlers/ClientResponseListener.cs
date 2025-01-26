@@ -7,15 +7,15 @@ namespace AsyncPipeTransport.ClientHandlers
     public class ClientResponseListener : IDisposable
     {
         private readonly IClientChannel _transport;
-        private readonly IClientEventHandler _clientEventHandler;
-        private readonly IClientRequestHandler _clientRequestHandler;
+        private readonly IClientEventManager _clientEventHandler;
+        private readonly IClientRequestManager _clientRequestHandler;
         Task? _listenerTask;
         bool _disposed = false;
         
 
         public ClientResponseListener(IClientChannel transport,
-            IClientRequestHandler _clientRequestHandler,
-            IClientEventHandler clientEventHandler)
+            IClientRequestManager _clientRequestHandler,
+            IClientEventManager clientEventHandler)
         {
             this._clientRequestHandler = _clientRequestHandler; 
             this._clientEventHandler= clientEventHandler;

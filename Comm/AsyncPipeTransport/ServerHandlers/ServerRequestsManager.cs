@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 
 namespace AsyncPipeTransport.ServerHandlers
 {
-    public  class ServerRequestHandler : IServerRequestHandler
+    public  class ServerRequestsManager : IServerRequestsManager
     {
-        private readonly Dictionary<Opcode, IRequestCommandFactory> _commands = new Dictionary<Opcode, IRequestCommandFactory>();
+        private readonly Dictionary<string, IRequestExecuterFactory> _executers = new Dictionary<string, IRequestExecuterFactory>();
         private readonly ILogger<ServerIncomingConnectionListener> _logger;
-        private readonly IClientsBroadcast _activeClients;
-        public ServerRequestHandler(ILogger<ServerIncomingConnectionListener> logger, 
-            IClientsBroadcast activeClients, 
-            IEnumerable<IRequestCommandFactory> cmdList)
+        private readonly IClientsManager _activeClients;
+        public ServerRequestsManager(ILogger<ServerIncomingConnectionListener> logger, 
+            IClientsManager activeClients, 
+            IEnumerable<IRequestExecuterFactory> cmdList)
         {
             _logger = logger;
             _activeClients = activeClients;
             foreach (var cmd in cmdList)
             {
-                _commands.Add(cmd.GetMessageType(), cmd);
+                _executers.Add(cmd.GetMessageType(), cmd);
             }
         }
 
@@ -47,17 +47,20 @@ namespace AsyncPipeTransport.ServerHandlers
                 //Expect the first request to be a security request
                 if (!channelIsSecure)
                 {
-                    channelIsSecure = await ExecuteCommand(pipeServer, Opcode.OpenSession , frame.requestId, frame.payload, clientId);
-                    if (!channelIsSecure)
-                        break;
-                    _activeClients.AddClient(clientId, pipeServer);
+                    if (frame.IsOpenSessionFrame())
+                    {
+                        channelIsSecure = await Execute(pipeServer, FrameworkMessageTypes.OpenSession, frame.requestId, frame.payload, clientId);
+                        if (!channelIsSecure)
+                            break;
+
+                        _activeClients.AddClient(clientId, pipeServer);
+                    }
                     continue;
                 }
 
-
                 _ = Task.Run(async () =>
                 {
-                    await ExecuteCommand(pipeServer, frame.msgType, frame.requestId, frame.payload, clientId);
+                    await Execute(pipeServer, frame.msgType, frame.requestId, frame.payload, clientId);
                 });
 
                 _logger.LogInformation("Server {clientId} received request: {frame.requestId} ", clientId, frame.requestId);
@@ -67,9 +70,9 @@ namespace AsyncPipeTransport.ServerHandlers
      
       
 
-        private async Task<bool> ExecuteCommand(IServerChannel pipeServer, Opcode msgType, long requestId, string payload, long clientId)
+        private async Task<bool> Execute(IServerChannel pipeServer, string msgType, long requestId, string payload, long clientId)
         {
-            var cmd = GetCommand(msgType, requestId, clientId);
+            var cmd = CreateExecuter(msgType, requestId, clientId);
             if (cmd == null)
             {
                 _logger.LogInformation("Server {clientId} command handler not found {frame.requestId} ", clientId, requestId);
@@ -79,16 +82,15 @@ namespace AsyncPipeTransport.ServerHandlers
         }
 
 
-        private IRequestCommand? GetCommand(Opcode msgType, long requestId, long clientId)
+        private IRequestExecuter? CreateExecuter(string msgType, long requestId, long clientId)
         {
-            if (!_commands.ContainsKey(msgType))
+            if (!_executers.ContainsKey(msgType))
             {
                 _logger.LogInformation("Server {clientId} command not found {frame.msgType}", clientId, requestId);
                 return null;
             }
-            return _commands[msgType].Create();
+            return _executers[msgType].Create();
         }
-
 
     }
 }

@@ -1,11 +1,10 @@
 ﻿
 namespace CommunicationMessages
 {
-    public enum MessageType : int
+    public class MessageType 
     {
-        OpenSession =0,
-        Echo = 1,
-        APList = 2,
-        PulseEvent =3
+        public static readonly string Echo = "Echo";
+        public static readonly string APList = "APList";
+        public static readonly string PulseEvent = "PulseEvent";
     }
 }

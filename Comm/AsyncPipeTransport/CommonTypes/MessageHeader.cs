@@ -3,9 +3,9 @@
     //public record struct MessageHeader(Opcode msgType) { }
     public class MessageHeader
     {
-        public Opcode msgType { get; set; }
+        public string msgType { get; set; }
 
-        public MessageHeader(Opcode msgType) =>
+        public MessageHeader(string msgType) =>
             this.msgType = msgType;
     }
 }

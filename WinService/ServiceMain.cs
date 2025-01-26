@@ -22,7 +22,7 @@ public class ServiceMain : BackgroundService
             _logger.LogInformation("Worker Start running at: {time}", DateTimeOffset.Now);
             _= StartApi();
 
-            var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsBroadcast>();
+            var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsManager>();
             while (!stoppingToken.IsCancellationRequested)
             {
                 clientBroadcaster.BroadcastEvent(new PulseEventMessage("BroadcastEvent"));

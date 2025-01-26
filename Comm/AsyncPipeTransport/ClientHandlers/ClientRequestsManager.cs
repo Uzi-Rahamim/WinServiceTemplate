@@ -5,12 +5,12 @@ using System.Collections.Concurrent;
 
 namespace AsyncPipeTransport.ClientHandlers
 {
-    public class ClientRequestHandler : IClientRequestHandler
+    public class ClientRequestsManager : IClientRequestManager
     {
         private readonly ConcurrentDictionary<long, ClientRequest> _pendingRequests = new ConcurrentDictionary<long, ClientRequest>();
         private readonly ISequenceGenerator _requestIdGenerator;
         private readonly IClientChannel _transport;
-        public ClientRequestHandler(ISequenceGenerator requestIdGenerator, IClientChannel transport)
+        public ClientRequestsManager(ISequenceGenerator requestIdGenerator, IClientChannel transport)
         {
             this._requestIdGenerator = requestIdGenerator;
             this._transport = transport;
@@ -45,7 +45,6 @@ namespace AsyncPipeTransport.ClientHandlers
 
         }
 
-
         public async Task<T?> SendRequest<T,R>(R message) where T : MessageHeader where R : MessageHeader
         {
             var reply = await Send((requestId) => message.BuildRequestMessage(requestId));
@@ -53,9 +52,9 @@ namespace AsyncPipeTransport.ClientHandlers
             return response;
         }
 
-        public async Task<T?> SendSecurityRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async Task<T?> SendOpenSessionRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
-            var reply = await Send((requestId) => message.BuildSecurityRequestMessage(requestId));
+            var reply = await Send((requestId) => message.BuildOpenSessionRequestMessage(requestId));
             var response = reply?.ExtractMessageHeaders<T>() ?? null;
             return response;
         }

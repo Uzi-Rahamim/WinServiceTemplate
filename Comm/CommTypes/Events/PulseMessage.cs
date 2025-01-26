@@ -7,6 +7,6 @@ namespace CommTypes.Events
     {
         public string message { get; set; }
 
-        public PulseEventMessage(string message) : base((Opcode)MessageType.PulseEvent) => this.message = message;
+        public PulseEventMessage(string message) : base(MessageType.PulseEvent) => this.message = message;
     }
 }

@@ -5,7 +5,7 @@ using CommunicationMessages.Massages;
 namespace App.WindowsService.API.Requests
 {
 
-    public class EchoRequestHandler : BaseRequestCommand<EchoRequestHandler, RequestEchoMessage>
+    public class EchoRequestHandler : BaseRequestExecuter<EchoRequestHandler, RequestEchoMessage>
     {
         public EchoRequestHandler(ILogger<EchoRequestHandler> logger) : base(logger){}
 

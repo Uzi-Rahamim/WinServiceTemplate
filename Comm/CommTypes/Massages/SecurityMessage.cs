@@ -8,11 +8,11 @@ namespace CommTypes.Massages
     {
         public string token { get; set; }
 
-        public RequestSecurityMessage(string token) : base((Opcode)0) => this.token = token;
+        public RequestSecurityMessage(string token) : base(String.Empty) => this.token = token;
     }
     public class ResponseSecurityMessage : MessageHeader
     {
         public bool isValid { get; set; }
-        public ResponseSecurityMessage(bool isValid) : base((Opcode)0) => this.isValid = isValid;
+        public ResponseSecurityMessage(bool isValid) : base(String.Empty) => this.isValid = isValid;
     }
 }
