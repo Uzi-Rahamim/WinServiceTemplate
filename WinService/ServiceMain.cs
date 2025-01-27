@@ -54,6 +54,7 @@ public class ServiceMain : BackgroundService
     private async Task StartApi()
     {
         var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
-        await apiWorker.Start();
+        CancellationToken cancellationToken = new CancellationToken();
+        await apiWorker.Start(cancellationToken);
     }
 }

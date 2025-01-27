@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Cocona;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace APIClient.commands.test;

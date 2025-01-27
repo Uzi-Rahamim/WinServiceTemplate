@@ -1,4 +1,5 @@
 ﻿using AsyncPipeTransport.Channel;
+using AsyncPipeTransport.ClientHandlers;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Extensions;
 using Microsoft.Extensions.Logging;
@@ -9,52 +10,41 @@ namespace AsyncPipeTransport.ServerHandlers
     public class ServerIncomingConnectionListener
     {
         private readonly ILogger<ServerIncomingConnectionListener> _logger;
-        private readonly IServerRequestsManager _serverRequestHandler;
+        private readonly IServerMessageListener _serverMessageListener;
         private readonly IServerChannelFactory _serverChannelFactory;
         private readonly ISequenceGenerator _clientIdGenerator;
         public ServerIncomingConnectionListener(ILogger<ServerIncomingConnectionListener> logger,
                                      IServerChannelFactory serverChannelFactory,
-                                     IServerRequestsManager serverRequestHandler,
+                                     IServerMessageListener serverMessageListener,
                                      ISequenceGenerator clientIdGenerator)
         {
             _logger = logger;
             _serverChannelFactory = serverChannelFactory;
-            _serverRequestHandler = serverRequestHandler;
+            _serverMessageListener = serverMessageListener;
             _clientIdGenerator = clientIdGenerator;
         }
 
-        public Task Start()
+        public Task Start(CancellationToken cancellationToken)
         {
-            return Task.Run(() => StartListen());
+            return Task.Run(() => StartListen(cancellationToken));
         }
 
-        private void StartListen()
+        private async Task StartListen(CancellationToken cancellationToken)
         {
             while (true)
             {
                 ManualResetEvent signal = new ManualResetEvent(false);
-                _ = Task.Run(async () =>
-                {
-                    var clientId = _clientIdGenerator.GetNextId();
-                    // Create a NamedPipeServerStream to listen for connections
-                    using (IServerChannel pipeServer = _serverChannelFactory.Create())
-                    {
-                        _logger.LogInformation("Server {clientId}  Waiting for a client to connect...", clientId);
 
-                        // Wait for a client to connect
-                        pipeServer.WaitForConnection();
-                        _logger.LogInformation("Server {clientId}  Client connected.", clientId);
+                var clientId = _clientIdGenerator.GetNextId();
 
-                        if (pipeServer == null)
-                            return;
+                // Create a NamedPipeServerStream to listen for connections
+                IServerChannel pipeServer = _serverChannelFactory.Create();
+                _logger.LogInformation("Server {clientId}  Waiting for a client to connect...", clientId);
 
-                        signal.Set();
-                        await _serverRequestHandler.HandleClient(pipeServer, clientId);
-
-                        _logger.LogInformation("Server {clientId}  Exit.", clientId);
-                    }
-                });
-                signal.WaitOne(); // Block until signaled
+                // Wait for a client 
+                if (!await _serverMessageListener.StartAsync(cancellationToken, pipeServer, TimeSpan.FromSeconds(10), clientId))
+                    return;
+                
             }
         }
     }

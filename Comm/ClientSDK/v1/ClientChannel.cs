@@ -4,28 +4,36 @@ using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Events;
 using CommTypes.Massages;
 using CommunicationMessages;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 
 namespace ClientSDK.v1
 {
     public class ClientChannel : IDisposable
     {
-        internal MessageListener Listener { get => _clientResponseListener; }
+        internal IClientMessageListener Listener { get => _clientMessageListener; }
         internal ClientEventManager EventHandler { get => _clientEventHandler; }
         internal ClientRequestsManager RequestHandler { get => _clientRequestHnadler; }
 
-        private readonly MessageListener _clientResponseListener;
+        private readonly IClientMessageListener _clientMessageListener;
         private readonly ClientEventManager _clientEventHandler;
         private readonly ClientRequestsManager _clientRequestHnadler;
         private readonly IClientChannel _channel;
 
         public ClientChannel()
         {
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                //builder.AddConsole(); // This will log to the console
+            });
+            var logger = loggerFactory.CreateLogger<ClientMessageListener>();
+
             _channel = new ClientPipeChannel(PipeApiConsts.PipeName);
             _clientEventHandler = new ClientEventManager();
             _clientRequestHnadler = new ClientRequestsManager(new SequenceGenerator(), _channel);
 
-            _clientResponseListener = new MessageListener(
+            _clientMessageListener = new ClientMessageListener(
+                 logger,
                _channel,
                _clientRequestHnadler,
                _clientEventHandler);
@@ -33,8 +41,9 @@ namespace ClientSDK.v1
 
         public Task<bool> Connect()
         {
-            //Blocking call
-            var success = _clientResponseListener.StartAsync(
+            CancellationToken cancellationToken = new CancellationToken();
+            var success = _clientMessageListener.StartAsync(
+                cancellationToken,
                 TimeSpan.FromSeconds(PipeApiConsts.ConnectTimeoutInSec)).Result;
             if (success)
             {
@@ -59,7 +68,7 @@ namespace ClientSDK.v1
 
         public void Dispose()
         {
-            _clientResponseListener.Dispose();
+            _clientMessageListener.Dispose();
         }
     }
 }

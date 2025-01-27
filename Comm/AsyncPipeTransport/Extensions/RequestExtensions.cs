@@ -46,6 +46,21 @@ namespace AsyncPipeTransport.Extensions
             return frame.options.HasFlag(FrameOptions.OpenSession);
         }
 
+        public static bool IsEventFrame(this FrameHeader frame)
+        {
+            return frame.options.HasFlag(FrameOptions.EvantMsg);
+        }
+
+        public static bool IsRequestFrame(this FrameHeader frame)
+        {
+            return frame.options.HasFlag(FrameOptions.Request);
+        }
+
+        public static bool IsResponseFrame(this FrameHeader frame)
+        {
+            return frame.options.HasFlag(FrameOptions.Response);
+        }
+
         public static bool IsDiscoveryFrame(this FrameHeader frame)
         {
             return frame.options.HasFlag(FrameOptions.Discovery);

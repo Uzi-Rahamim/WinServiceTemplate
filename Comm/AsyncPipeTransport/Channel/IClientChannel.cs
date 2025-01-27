@@ -1,10 +1,8 @@
 ﻿namespace AsyncPipeTransport.Channel
 {
-    public interface IClientChannel : IDisposable
+    public interface IClientChannel : IChannel, IDisposable
     {
         Task ConnectAsync(TimeSpan timeout);
-        Task SendAsync(string message);
-        Task<string?> ReceiveAsync();
     }
 }
 

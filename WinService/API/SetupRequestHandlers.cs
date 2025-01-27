@@ -20,7 +20,8 @@ internal class SetupRequestHandlers
         
         _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
         _builder.Services.AddSingleton<IClientsManager, ClientsManager>();
-        _builder.Services.AddSingleton<IServerRequestsManager, ServerRequestsManager>();
+        _builder.Services.AddSingleton<IExecuterManager, ExecuterManager>();
+        _builder.Services.AddSingleton<IServerMessageListener, ServerMessageListener>();
         _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(PipeApiConsts.PipeName));
        
         _builder.Services.AddSingleton<ServerIncomingConnectionListener>();

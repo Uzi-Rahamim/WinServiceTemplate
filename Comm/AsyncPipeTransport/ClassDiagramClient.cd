@@ -44,19 +44,6 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="AsyncPipeTransport.ClientHandlers.ClientResponseListener" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="0.5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAgAAAAAACAEACAAAAAAAAAAAAAAgAAAAAAAAAAAAgA=</HashCode>
-      <FileName>ClientHandlers\ClientResponseListener.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_transport" />
-      <Field Name="_clientEventHandler" />
-      <Field Name="_clientRequestHandler" />
-    </ShowAsAssociation>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="AsyncPipeTransport.Events.EventToAction&lt;T&gt;" Collapsed="true">
     <Position X="11" Y="9.25" Width="1.5" />
     <TypeIdentifier>
@@ -82,7 +69,7 @@
   <Interface Name="AsyncPipeTransport.Channel.IClientChannel">
     <Position X="11" Y="0.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAAAAAAAAAAIAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Channel\IClientChannel.cs</FileName>
     </TypeIdentifier>
   </Interface>

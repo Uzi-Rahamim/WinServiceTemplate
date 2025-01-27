@@ -5,7 +5,5 @@ namespace AsyncPipeTransport.ServerHandlers
     {
         public IRequestExecuter Create();
         public string GetMessageType();
-
-        //public string GetRequsetScechma();
     }
 }

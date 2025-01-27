@@ -10,12 +10,12 @@ namespace AsyncPipeTransport.Channel
             pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         }
 
-        public void WaitForConnection()
+        public Task WaitForConnectionAsync()
         {
 
             PipeStream = pipeServer;
             // Wait for a client to connect
-            pipeServer.WaitForConnection();
+            return pipeServer.WaitForConnectionAsync();
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using CommunicationMessages.Massages;
 using ServerSDK.CommonTypes;
 using ServerSDK.Convertors;
-using AsyncPipeTransport.Extensions;
-using Microsoft.Extensions.Logging;
 using CommTypes.Events;
 using CommunicationMessages;
 using AsyncPipeTransport.Events;
 using AsyncPipeTransport.CommonTypes;
-using System.Net;
 
 namespace ClientSDK.v1
 {

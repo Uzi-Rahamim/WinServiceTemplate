@@ -37,7 +37,7 @@ using (Mutex mutex = new Mutex(true, mutexName, out bool isNewInstance))
     // add the provider
     builder.Logging.AddSerilog();
 
-
+  
     PluginManager.Create(builder).LoadPlugins();
     SetupRequestHandlers.Create(builder).Configure();
 

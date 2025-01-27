@@ -1,4 +1,5 @@
 ﻿using ClientSDK.v1;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -8,8 +9,6 @@ namespace SimpleClientApp
     {
         static async Task Main(string[] args)
         {
-            var message = "test .Net Framework";
-
             using (var channel = new ClientChannel())
             {
                 if (!await channel.Connect())
@@ -22,7 +21,7 @@ namespace SimpleClientApp
                 var demoAPI = new DemoApi(channel);
 
                 demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
-
+                var message = "Hello from client";
                 var echoMsg = await demoAPI.GetEcho(message);
                 Console.WriteLine(($"Server 2 reply to {message} with: {echoMsg}"));
 
