@@ -2,7 +2,7 @@
 {
     public interface IClientChannel : IDisposable
     {
-        void Connect();
+        Task ConnectAsync(TimeSpan timeout);
         Task SendAsync(string message);
         Task<string?> ReceiveAsync();
     }

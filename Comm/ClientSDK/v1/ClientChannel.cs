@@ -4,16 +4,17 @@ using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Events;
 using CommTypes.Massages;
 using CommunicationMessages;
+using System.Threading;
 
 namespace ClientSDK.v1
 {
     public class ClientChannel : IDisposable
     {
-        internal ClientResponseListener Listener { get => _clientResponseListener; }
+        internal MessageListener Listener { get => _clientResponseListener; }
         internal ClientEventManager EventHandler { get => _clientEventHandler; }
         internal ClientRequestsManager RequestHandler { get => _clientRequestHnadler; }
 
-        private readonly ClientResponseListener _clientResponseListener;
+        private readonly MessageListener _clientResponseListener;
         private readonly ClientEventManager _clientEventHandler;
         private readonly ClientRequestsManager _clientRequestHnadler;
         private readonly IClientChannel _channel;
@@ -24,7 +25,7 @@ namespace ClientSDK.v1
             _clientEventHandler = new ClientEventManager();
             _clientRequestHnadler = new ClientRequestsManager(new SequenceGenerator(), _channel);
 
-            _clientResponseListener = new ClientResponseListener(
+            _clientResponseListener = new MessageListener(
                _channel,
                _clientRequestHnadler,
                _clientEventHandler);
@@ -32,8 +33,17 @@ namespace ClientSDK.v1
 
         public Task<bool> Connect()
         {
-            _clientResponseListener.Start();
-            return SendSecurityMessage();
+            //Blocking call
+            var success = _clientResponseListener.StartAsync(
+                TimeSpan.FromSeconds(PipeApiConsts.ConnectTimeoutInSec)).Result;
+            if (success)
+            {
+                return SendSecurityMessage();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
         }
 
         private async Task<bool> SendSecurityMessage()

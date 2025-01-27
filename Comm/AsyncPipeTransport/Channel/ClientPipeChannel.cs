@@ -10,13 +10,11 @@ namespace AsyncPipeTransport.Channel
         {
             pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
         }
-        public void Connect()
+        public Task ConnectAsync(TimeSpan timeout)
         {
             // Connect to the server
-            Console.WriteLine("Client connecting...");
-            pipeClient.Connect();
             PipeStream = pipeClient;
-            Console.WriteLine("Client Connected.");
+            return pipeClient.ConnectAsync((int)timeout.TotalMilliseconds);
         }
     }
 

@@ -14,7 +14,7 @@ internal class SetupRequestHandlers
     {
         RegisterRequest<SchemaRequestHandler>(FrameworkMessageTypes.RequestSchema, SchemaRequestHandler.GetSchema);
         RegisterRequest<OpenSessionRequestHandler>(FrameworkMessageTypes.OpenSession, OpenSessionRequestHandler.GetSchema);
-        RegisterRequest<EchoRequestHandler>(MessageType.Echo, EchoRequestHandler.GetSchema);
+        //RegisterRequest<EchoRequestHandler>(MessageType.Echo, EchoRequestHandler.GetSchema);
         RegisterRequest<GetAPListRequestHandler>(MessageType.APList,GetAPListRequestHandler.GetSchema);
 
         

@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncPipeTransportUnitTest"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServiceClients", "WinServiceClients", "{6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_ExecuterPlugin", "ServerPlugin\Service_ExecuterPlugin.csproj", "{256FADCF-7A6B-4312-8275-ED25FBB24EF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -74,6 +76,10 @@ Global
 		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Debug|x64.Build.0 = Debug|x64
 		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Release|x64.ActiveCfg = Release|x64
 		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Release|x64.Build.0 = Release|x64
+		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.ActiveCfg = Debug|x64
+		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.Build.0 = Debug|x64
+		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.ActiveCfg = Release|x64
+		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

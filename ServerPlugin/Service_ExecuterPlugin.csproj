@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+	  <Platforms>x64</Platforms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+	<!--<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<OutputPath>..\bin\Debug\WinServicePlugin\</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<OutputPath>..\bin\Release\WinServicePlugin\</OutputPath>
+	</PropertyGroup>-->
+
+	<ItemGroup>
+		<ProjectReference Include="..\Comm\AsyncPipeTransport\AsyncPipeTransport.csproj" />
+		<ProjectReference Include="..\Comm\CommTypes\CommTypes.csproj" />
+	</ItemGroup>
+</Project>
