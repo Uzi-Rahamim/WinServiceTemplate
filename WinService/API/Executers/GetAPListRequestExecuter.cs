@@ -3,7 +3,7 @@ using AsyncPipeTransport.Executer;
 
 namespace App.WindowsService.API.Executers
 {
-    public class GetAPListRequestExecuter : BaseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage>
+    public class GetAPListRequestExecuter : BaseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
     {
 
         // Create a list of 100 mock WiFi networks

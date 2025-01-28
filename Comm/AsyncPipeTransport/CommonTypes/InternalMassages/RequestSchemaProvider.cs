@@ -12,7 +12,13 @@
 
         public string GetSchema()
         {
-            return $"{{\r\n type : {_messageType},\r\n schema : {_getSchema()} \r\n}}";
+            var schema = _getSchema();
+            if (schema.StartsWith("{") && schema.EndsWith("}"))
+            {
+                // Remove the first '{' and last '}'
+                schema = schema.Substring(1, schema.Length - 2);
+            }
+            return $"{{\r\n  \"type\" : {_messageType},{schema}}}";
         }
     }
 }

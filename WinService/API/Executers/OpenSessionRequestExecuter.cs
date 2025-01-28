@@ -3,7 +3,7 @@ using CommTypes.Massages;
 
 namespace App.WindowsService.API.Executers
 {
-    public class OpenSessionRequestExecuter : BaseRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage>
+    public class OpenSessionRequestExecuter : BaseRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage, ResponseSecurityMessage>
     {
         public OpenSessionRequestExecuter(ILogger<OpenSessionRequestExecuter> logger, IServiceProvider serviceProvider) : base(logger) { }
 

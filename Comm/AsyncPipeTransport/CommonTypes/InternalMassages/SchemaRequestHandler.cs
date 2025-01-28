@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AsyncPipeTransport.CommonTypes
 {
-    public class SchemaRequestHandler : BaseRequestExecuter<SchemaRequestHandler, RequestSchemaMessage>
+    public class SchemaRequestHandler : BaseRequestExecuter<SchemaRequestHandler, RequestSchemaMessage,ResponseSchemaMessage>
     {
         IEnumerable<IRequestSchemaProvider> _schemaProviderList;
         public SchemaRequestHandler(ILogger<SchemaRequestHandler> logger, IEnumerable<IRequestSchemaProvider> schemaProviderList) : base(logger) 

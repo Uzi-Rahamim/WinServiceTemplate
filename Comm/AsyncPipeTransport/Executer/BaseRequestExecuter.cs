@@ -7,24 +7,36 @@ using System.Reflection;
 
 namespace AsyncPipeTransport.Executer
 {
-    public abstract class BaseRequestExecuter<T, C> : IRequestExecuter where C : MessageHeader
+    public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : MessageHeader
     {
         protected ILogger<T> Log { get; private set; }
         private IChannelSender _sender = default!;
         protected long RequestId { get; private set; }
 
-        protected abstract Task<bool> Execute(C request);
+        protected abstract Task<bool> Execute(Rq request);
 
         public static string GetSchema()
         {
             var properties = new
             {
-                Type = typeof(C).Name,
-                Properties = typeof(C).GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new
+                request = new
                 {
-                    p.Name,
-                    PropertyType = p.PropertyType.Name
-                }).ToList() // Convert PropertyInfo to a simple structure
+                    name = typeof(Rq).Name,
+                    properties = typeof(Rq).GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new
+                    {
+                        name = p.Name,
+                        type = p.PropertyType.Name
+                    }).ToList() // Convert PropertyInfo to a simple structure
+                },
+                response = new
+                {
+                    name = typeof(Rs).Name,
+                    properties = typeof(Rs).GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new
+                    {
+                        name = p.Name,
+                        type = p.PropertyType.Name
+                    }).ToList() // Convert PropertyInfo to a simple structure
+                }
             };
 
             // Convert the type information (properties) to JSON
@@ -42,7 +54,7 @@ namespace AsyncPipeTransport.Executer
             _sender = sender;
             RequestId = requestId;
 
-            var requestMsg = requestJson.FromJson<C>();
+            var requestMsg = requestJson.FromJson<Rq>();
             return Execute(requestMsg);
         }
 

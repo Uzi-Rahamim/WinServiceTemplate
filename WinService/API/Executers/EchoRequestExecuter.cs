@@ -4,7 +4,7 @@ using CommTypes.Massages;
 namespace App.WindowsService.API.Executers
 {
 
-    public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage>
+    public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
         public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger) : base(logger) { }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Service_ExecuterPlugin.Worker;
 using Types.Types;
 
 namespace Service_ExecuterPlugin
@@ -13,6 +14,12 @@ namespace Service_ExecuterPlugin
         public void Configure()
         {
             _logger.LogInformation("Configure");
+            _builder.Services.AddSingleton<SimpleWorker>();
+
+
+            var serviceProvider = _builder.Services.BuildServiceProvider();
+            var worker = serviceProvider.GetRequiredService<SimpleWorker>();
+            worker.Start();
         }
 
         public PluginSetup(IHostApplicationBuilder builder)
