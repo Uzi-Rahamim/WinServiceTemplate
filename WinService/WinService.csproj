@@ -38,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Types\Types.csproj" />
+    <ProjectReference Include="..\Common\Utils\Utilities.csproj" />
     <ProjectReference Include="..\Comm\AsyncPipeTransport\AsyncPipeTransport.csproj" />
     <ProjectReference Include="..\Comm\CommTypes\CommTypes.csproj" />
   </ItemGroup>

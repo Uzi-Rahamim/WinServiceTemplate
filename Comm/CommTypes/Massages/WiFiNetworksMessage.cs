@@ -1,11 +1,15 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-using System.Collections.Generic;
 
-namespace CommunicationMessages.Massages
+namespace CommTypes.Massages
 {
+    public partial class MessageType
+    {
+        public static readonly string APList = "APList";
+    }
 
     public class RequestWiFiNetworksMessage : MessageHeader
     {
+        public int interval { get; set; }
         public RequestWiFiNetworksMessage() : base(MessageType.APList) { }
     }
 

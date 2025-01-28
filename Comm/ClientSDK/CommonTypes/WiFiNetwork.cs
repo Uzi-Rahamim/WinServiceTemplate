@@ -1,7 +1,4 @@
-﻿using AsyncPipeTransport.CommonTypes;
-using CommunicationMessages;
-
-namespace ServerSDK.CommonTypes
+﻿namespace ServerSDK.CommonTypes
 {
     //public class WiFiNetwork(string ssid, int signalStrength, string securityType) { 
     //}

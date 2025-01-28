@@ -1,4 +1,4 @@
-﻿using AsyncPipeTransport.ServerHandlers;
+﻿using AsyncPipeTransport.Executer;
 using Microsoft.Extensions.Logging;
 using System.Text;
 
@@ -10,7 +10,7 @@ namespace AsyncPipeTransport.CommonTypes
         public SchemaRequestHandler(ILogger<SchemaRequestHandler> logger, IEnumerable<IRequestSchemaProvider> schemaProviderList) : base(logger) 
             => _schemaProviderList = schemaProviderList;
 
-        protected override async Task<bool> ExecuteInternal(RequestSchemaMessage requestMsg)
+        protected override async Task<bool> Execute(RequestSchemaMessage requestMsg)
         {
             StringBuilder sb = new();
             await SendContinuingResponse<ResponseSchemaMessage>(new ResponseSchemaMessage("{ commands : ["));

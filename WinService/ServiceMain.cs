@@ -1,6 +1,6 @@
-using AsyncPipeTransport.ServerHandlers;
-using CommTypes.Events;
-using CommunicationMessages;
+using AsyncPipeTransport.Clients;
+using AsyncPipeTransport.Listeners;
+using CommTypes.Massages;
 
 namespace WinService;
 

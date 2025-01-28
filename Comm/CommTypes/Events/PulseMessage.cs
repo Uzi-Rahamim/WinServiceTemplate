@@ -1,8 +1,12 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-using CommunicationMessages;
 
-namespace CommTypes.Events
+namespace CommTypes.Massages
 {
+    public partial class MessageType
+    {
+        public static readonly string PulseEvent = "PulseEvent";
+    }
+
     public class PulseEventMessage : MessageHeader
     {
         public string message { get; set; }

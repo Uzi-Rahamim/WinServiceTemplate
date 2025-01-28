@@ -5,7 +5,7 @@ namespace ServerSDK.Convertors
 {
     public static class ConvertWiFiNetwork
     {
-        public static WiFiNetwork ToWiFiNetwork(this CommunicationMessages.Massages.WiFiNetworkItem obj)
+        public static WiFiNetwork ToWiFiNetwork(this CommTypes.Massages.WiFiNetworkItem obj)
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));

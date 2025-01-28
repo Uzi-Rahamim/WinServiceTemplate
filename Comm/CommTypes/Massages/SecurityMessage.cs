@@ -1,9 +1,9 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-using CommunicationMessages;
 
 
 namespace CommTypes.Massages
-{ 
+{
+
     public class RequestSecurityMessage : MessageHeader
     {
         public string token { get; set; }

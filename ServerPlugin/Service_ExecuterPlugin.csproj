@@ -17,7 +17,12 @@
 	</PropertyGroup>-->
 
 	<ItemGroup>
+		<ProjectReference Include="..\Common\Types\Types.csproj" />
 		<ProjectReference Include="..\Comm\AsyncPipeTransport\AsyncPipeTransport.csproj" />
 		<ProjectReference Include="..\Comm\CommTypes\CommTypes.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
 	</ItemGroup>
 </Project>

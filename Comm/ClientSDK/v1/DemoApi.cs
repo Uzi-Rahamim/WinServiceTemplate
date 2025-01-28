@@ -1,10 +1,9 @@
-﻿using CommunicationMessages.Massages;
-using ServerSDK.CommonTypes;
+﻿using ServerSDK.CommonTypes;
 using ServerSDK.Convertors;
-using CommTypes.Events;
-using CommunicationMessages;
 using AsyncPipeTransport.Events;
 using AsyncPipeTransport.CommonTypes;
+using CommTypes.Massages;
+
 
 namespace ClientSDK.v1
 {

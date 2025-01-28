@@ -20,7 +20,7 @@ namespace SimpleClientApp
 
                 var demoAPI = new DemoApi(channel);
 
-                demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
+                //demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
                 var message = "Hello from client";
                 var echoMsg = await demoAPI.GetEcho(message);
                 Console.WriteLine(($"Server 2 reply to {message} with: {echoMsg}"));

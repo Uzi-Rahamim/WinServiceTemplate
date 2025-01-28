@@ -36,35 +36,7 @@ namespace AsyncPipeTransport.Extensions
             return new FrameHeader(requestId, options, message.msgType, payload).ToJson();
         }
 
-        public static bool IsLastFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.LastFrame);
-        }
-
-        public static bool IsOpenSessionFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.OpenSession);
-        }
-
-        public static bool IsEventFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.EvantMsg);
-        }
-
-        public static bool IsRequestFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.Request);
-        }
-
-        public static bool IsResponseFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.Response);
-        }
-
-        public static bool IsDiscoveryFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.Discovery);
-        }
+       
 
         public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {
