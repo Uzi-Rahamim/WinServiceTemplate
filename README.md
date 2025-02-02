@@ -1,6 +1,7 @@
 # WinServiceTemplate
-Template For windows service using .Net8
-Comm Infra using .Net8, .Net4.8, .Net4.6
+WinService : Template For windows service using .Net8
+Service_ExecuterPlugin : Example for WinService Plugin DLL 
+AsyncPipeTransport : Comm Infra using .Net8, .Net4.8, .Net4.6
 
 
 Client Examples :
