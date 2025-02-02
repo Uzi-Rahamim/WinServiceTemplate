@@ -1,17 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Loader;
-using AsyncPipeTransport.CommonTypes;
+﻿using App.WindowsService.API;
 using AsyncPipeTransport.Executer;
-using Microsoft.Extensions.Logging;
 using Types.Types;
 using Utilities.PluginUtils;
 
-namespace App.WindowsService.API
+namespace App.WindowsService
 {
     internal class SetupPlugins
     {
-        private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\ServerPlugin\bin\x64\Debug\net8.0\"; }
+        private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\ServerPlugin\bin\x64\Debug\net8.0-windows\"; }
         private IHostApplicationBuilder _builder;
         private ILogger<SetupPlugins> _logger;
         private SetupPlugins(IHostApplicationBuilder builder)

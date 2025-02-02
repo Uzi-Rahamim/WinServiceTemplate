@@ -32,7 +32,7 @@ namespace AsyncPipeTransport.Clients
                 try
                 {
                     _logger.LogDebug("Server sending event");
-                    await client.SendAsync(eventMessage.BuildServerEventMessage());
+                    await client.SendAsync(eventMessage.BuildServerEventMessage(), CancellationToken.None);
                 }
                 catch (Exception)
                 {

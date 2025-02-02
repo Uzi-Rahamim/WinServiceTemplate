@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServiceClients", "WinSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_ExecuterPlugin", "ServerPlugin\Service_ExecuterPlugin.csproj", "{256FADCF-7A6B-4312-8275-ED25FBB24EF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComWrapper", "ComWrapper\ComWrapper.csproj", "{5D319D3B-35DA-4383-A398-1B7888DC3258}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -80,6 +82,10 @@ Global
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.Build.0 = Debug|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.ActiveCfg = Release|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.Build.0 = Release|x64
+		{5D319D3B-35DA-4383-A398-1B7888DC3258}.Debug|x64.ActiveCfg = Debug|x64
+		{5D319D3B-35DA-4383-A398-1B7888DC3258}.Debug|x64.Build.0 = Debug|x64
+		{5D319D3B-35DA-4383-A398-1B7888DC3258}.Release|x64.ActiveCfg = Release|x64
+		{5D319D3B-35DA-4383-A398-1B7888DC3258}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

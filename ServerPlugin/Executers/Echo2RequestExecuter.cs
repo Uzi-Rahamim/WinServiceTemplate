@@ -1,6 +1,7 @@
 ﻿using AsyncPipeTransport.Executer;
 using CommTypes.Massages;
 using Microsoft.Extensions.Logging;
+using Service_ExecuterPlugin.Types;
 using Service_ExecuterPlugin.Worker;
 
 namespace Service_ExecuterPlugin.Executers
@@ -8,8 +9,10 @@ namespace Service_ExecuterPlugin.Executers
     public class Echo2RequestExecuter : BaseRequestExecuter<Echo2RequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
         Worker.SimpleWorker _simpleWorker;
-        public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, SimpleWorker simpleWorker) : base(logger) {
+        public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker, IXtuSdkWrapper xtuSdkWrapper) : 
+            base(logger, cts) {
             _simpleWorker = simpleWorker;
+            //Log.LogInformation(xtuSdkWrapper.Activate("Echo2RequestExecuter"));
         }
 
         public static string Plugin_GetSchema()

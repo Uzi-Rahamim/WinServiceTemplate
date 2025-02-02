@@ -31,7 +31,7 @@ namespace App.WindowsService.API.Executers
                 new WiFiNetworkItem ("Network_20", -80,"WPA2"),
             };
 
-        public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger) : base(logger) { }
+        public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
 
         protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
         {

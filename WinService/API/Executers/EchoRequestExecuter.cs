@@ -6,7 +6,7 @@ namespace App.WindowsService.API.Executers
 
     public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
-        public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger) : base(logger) { }
+        public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger,CancellationTokenSource cts) : base(logger,cts) { }
 
         protected override async Task<bool> Execute(RequestEchoMessage requestMsg)
         {

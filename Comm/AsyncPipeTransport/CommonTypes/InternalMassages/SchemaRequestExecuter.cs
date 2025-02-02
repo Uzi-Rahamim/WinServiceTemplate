@@ -4,10 +4,11 @@ using System.Text;
 
 namespace AsyncPipeTransport.CommonTypes
 {
-    public class SchemaRequestHandler : BaseRequestExecuter<SchemaRequestHandler, RequestSchemaMessage,ResponseSchemaMessage>
+    public class SchemaRequestExecuter : BaseRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
     {
         IEnumerable<IRequestSchemaProvider> _schemaProviderList;
-        public SchemaRequestHandler(ILogger<SchemaRequestHandler> logger, IEnumerable<IRequestSchemaProvider> schemaProviderList) : base(logger) 
+        public SchemaRequestExecuter(ILogger<SchemaRequestExecuter> logger, CancellationTokenSource cts, IEnumerable<IRequestSchemaProvider> schemaProviderList) : 
+            base(logger,cts) 
             => _schemaProviderList = schemaProviderList;
 
         protected override async Task<bool> Execute(RequestSchemaMessage requestMsg)

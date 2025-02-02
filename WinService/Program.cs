@@ -2,6 +2,7 @@
 using WinService;
 using Serilog;
 using App.WindowsService.API;
+using App.WindowsService;
 
 internal class Program
 {
@@ -39,6 +40,7 @@ internal class Program
 
             // add the provider
             builder.Logging.AddSerilog();
+            builder.Services.AddSingleton<CancellationTokenSource>();
 
             SetupPlugins.Create(builder).LoadPlugins();
             SetupExecuters.Create(builder).Configure();

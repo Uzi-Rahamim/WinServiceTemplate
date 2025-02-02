@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	 	<OutputType>Library</OutputType>
-		<TargetFrameworks>net8.0;net4.8;net462</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows;net4.8;net462</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

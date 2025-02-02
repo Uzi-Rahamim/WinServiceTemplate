@@ -15,7 +15,7 @@ internal class SetupExecuters
     
     public void Configure()
     {
-        RegisterRequest<SchemaRequestHandler>(FrameworkMessageTypes.RequestSchema, SchemaRequestHandler.GetSchema);
+        RegisterRequest<SchemaRequestExecuter>(FrameworkMessageTypes.RequestSchema, SchemaRequestExecuter.GetSchema);
         RegisterRequest<OpenSessionRequestExecuter>(FrameworkMessageTypes.OpenSession, OpenSessionRequestExecuter.GetSchema);
         //RegisterRequest<EchoRequestHandler>(MessageType.Echo, EchoRequestHandler.GetSchema);
         RegisterRequest<GetAPListRequestExecuter>(MessageType.APList,GetAPListRequestExecuter.GetSchema);
@@ -26,7 +26,6 @@ internal class SetupExecuters
         _builder.Services.AddSingleton<IExecuterManager, ExecuterManager>();
         _builder.Services.AddSingleton<IServerMessageListener, ServerMessageListener>();
         _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(PipeApiConsts.PipeName));
-       
         _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
     }
 

@@ -29,22 +29,38 @@ namespace AsyncPipeTransport.Listeners
 
         private async Task StartListen(CancellationToken cancellationToken)
         {
-            while (true)
+            try
             {
-                ManualResetEvent signal = new ManualResetEvent(false);
+                while (true)
+                {
+                    ManualResetEvent signal = new ManualResetEvent(false);
 
-                var clientId = _clientIdGenerator.GetNextId();
+                    var clientId = _clientIdGenerator.GetNextId();
 
-                // Create a NamedPipeServerStream to listen for connections
-                IServerChannel pipeServer = _serverChannelFactory.Create();
-                _logger.LogInformation("Server {clientId}  Waiting for a client to connect...", clientId);
+                    // Create a NamedPipeServerStream to listen for connections
+                    IServerChannel pipeServer = _serverChannelFactory.Create();
+                    _logger.LogInformation("Server {clientId} Waiting for a client to connect...", clientId);
 
-                // Wait for a client 
-                if (!await _serverMessageListener.StartAsync(cancellationToken, pipeServer, TimeSpan.FromSeconds(10), clientId))
-                    return;
+                    // Wait for a client 
+                    if (!await _serverMessageListener.StartAsync(cancellationToken, pipeServer, TimeSpan.FromSeconds(10), clientId))
+                        return;
+
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogDebug("Listener was canceled");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ServerIncomingConnectionListener");
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("Listener was stopped");
 
             }
         }
     }
-
 }

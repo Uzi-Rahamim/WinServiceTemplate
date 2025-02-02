@@ -47,7 +47,7 @@ namespace AsyncPipeTransport.Listeners
                 bool channelIsSecure = false;
                 while (!_disposed)
                 {
-                    string? messageStr = await _channel.ReceiveAsync();
+                    string? messageStr = await _channel.ReceiveAsync(_cancellationToken);
                     if (messageStr == null)
                         break;
 

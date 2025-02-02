@@ -5,7 +5,7 @@ namespace App.WindowsService.API.Executers
 {
     public class OpenSessionRequestExecuter : BaseRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage, ResponseSecurityMessage>
     {
-        public OpenSessionRequestExecuter(ILogger<OpenSessionRequestExecuter> logger, IServiceProvider serviceProvider) : base(logger) { }
+        public OpenSessionRequestExecuter(ILogger<OpenSessionRequestExecuter> logger, CancellationTokenSource cts, IServiceProvider serviceProvider) : base(logger, cts) { }
 
         protected override async Task<bool> Execute(RequestSecurityMessage requestMsg)
         {

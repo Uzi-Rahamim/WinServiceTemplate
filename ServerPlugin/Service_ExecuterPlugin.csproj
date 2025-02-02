@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+	  <OutputType>Library</OutputType>
+	  <TargetFrameworks>net8.0-windows</TargetFrameworks>
 	  <Platforms>x64</Platforms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	<EnableDynamicLoading>true</EnableDynamicLoading>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <FileVersion>1.0.1</FileVersion>
+	 <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
 	<!--<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -20,6 +23,7 @@
 		<ProjectReference Include="..\Common\Types\Types.csproj" />
 		<ProjectReference Include="..\Comm\AsyncPipeTransport\AsyncPipeTransport.csproj" />
 		<ProjectReference Include="..\Comm\CommTypes\CommTypes.csproj" />
+		<ProjectReference Include="..\ComWrapper\ComWrapper.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

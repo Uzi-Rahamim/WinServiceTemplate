@@ -1,6 +1,7 @@
 using AsyncPipeTransport.Clients;
 using AsyncPipeTransport.Listeners;
 using CommTypes.Massages;
+using System.Threading;
 
 namespace WinService;
 
@@ -8,10 +9,12 @@ public class ServiceMain : BackgroundService
 {
     private readonly ILogger<ServiceMain> _logger;
     private readonly IServiceProvider _serviceProvider;
+    private readonly CancellationTokenSource _cts;
 
-    public ServiceMain(IServiceProvider serviceProvider,ILogger<ServiceMain> logger)
+    public ServiceMain(CancellationTokenSource cts, IServiceProvider serviceProvider,ILogger<ServiceMain> logger)
     {
         _logger = logger;
+        _cts = cts;
         _serviceProvider = serviceProvider;
     }
 
@@ -29,6 +32,8 @@ public class ServiceMain : BackgroundService
                 //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(5000, stoppingToken);
             }
+            _cts.Cancel();
+            _logger.LogInformation("Worker Stop running at: {time}", DateTimeOffset.Now);
         }
         catch (OperationCanceledException)
         {
@@ -54,7 +59,19 @@ public class ServiceMain : BackgroundService
     private async Task StartApi()
     {
         var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
-        CancellationToken cancellationToken = new CancellationToken();
-        await apiWorker.Start(cancellationToken);
+        await apiWorker.Start(_cts.Token);
     }
+
+    //public void StartService()
+    //{
+    //    _cancellationTokenSource = new CancellationTokenSource();
+    //    Task.Run(() => ExecuteAsync(_cancellationTokenSource.Token));
+    //    _logger.LogInformation("Service Started Manually.");
+    //}
+
+    //public void StopService()
+    //{
+    //    _cancellationTokenSource?.Cancel();
+    //    _logger.LogInformation("Service Stopped Manually.");
+    //}
 }

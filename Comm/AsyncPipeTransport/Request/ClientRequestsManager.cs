@@ -86,7 +86,7 @@ namespace AsyncPipeTransport.Request
         {
             if (_pendingRequests.TryAdd(request.requestId, request))
             {
-                _transport.SendAsync(request.payload).Wait();
+                _transport.SendAsync(request.payload,CancellationToken.None).Wait();
                 if (waitForRespose)
                 {
                     return WaitForNextFrame(request.requestId).

@@ -43,7 +43,7 @@ namespace AsyncPipeTransport.Executer
             return JsonConvert.SerializeObject(properties, Formatting.Indented);
         }
 
-        public BaseRequestExecuter(ILogger<T> logger)
+        public BaseRequestExecuter(ILogger<T> logger, CancellationTokenSource cts)
         {
             Log = logger;
             Log.LogInformation("Request Handler Created");
@@ -60,17 +60,17 @@ namespace AsyncPipeTransport.Executer
 
         protected Task SendLastResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(responseMessage.BuildResponseMessage(RequestId));
+            return _sender.SendAsync(responseMessage.BuildResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendContinuingResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId));
+            return _sender.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendEvent<R>(R eventMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(eventMessage.BuildServerEventMessage());
+            return _sender.SendAsync(eventMessage.BuildServerEventMessage(), CancellationToken.None);
         }
     }
 }

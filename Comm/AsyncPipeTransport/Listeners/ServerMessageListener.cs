@@ -39,7 +39,7 @@ namespace AsyncPipeTransport.Listeners
         public async Task<bool> StartAsync(CancellationToken cancellationToken, IServerChannel channel, TimeSpan timeout, long endpointId)
         {
             // Wait for a client to connect
-            await channel.WaitForConnectionAsync();
+            await channel.WaitForConnectionAsync(cancellationToken);
             _logger.LogInformation("Server {clientId}  Client connected.", endpointId);
 
             if (channel == null)

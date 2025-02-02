@@ -1,17 +1,12 @@
 ﻿using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.Executer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.WindowsService.API
 {
     internal class ExecuterRegister
     {
         public static void RegisterRequest<T>(IHostApplicationBuilder builder, string messageType, Func<string> getSchema) where T : class, IRequestExecuter
-        {
+        {   
             builder.Services.AddTransient<IRequestSchemaProvider>(serviceProvider =>
             {
                 return new RequestSchemaProvider(messageType, getSchema);
