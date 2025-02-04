@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <OutputType>Library</OutputType>
+	  <TargetFrameworks>net4.8</TargetFrameworks>
+	  <Platforms>x64</Platforms>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <FileVersion>1.0.1</FileVersion>
+	 <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>..\..\..\bin\Plugin\Debug\</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>..\..\..\bin\Plugin\Release\</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Types\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Common\Types\Types.csproj" />
+	  <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
+	  <ProjectReference Include="..\CommTypes\Service_48_ExecuterPlugin.CommTypes.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="IntelBenchmarkSDK">
+	    <HintPath>..\Externals\IntelBenchmarkSDK.dll</HintPath>
+	  </Reference>
+	  <Reference Include="IntelOverclockingSDK">
+	    <HintPath>..\Externals\IntelOverclockingSDK.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Microsoft.Practices.Unity">
+	    <HintPath>..\Externals\Microsoft.Practices.Unity.dll</HintPath>
+	  </Reference>
+	  <Reference Include="OverClockingManager">
+	    <HintPath>..\Externals\OverClockingManager.dll</HintPath>
+	  </Reference>
+	  <Reference Include="ProfileHelperModel">
+	    <HintPath>..\Externals\ProfileHelperModel.dll</HintPath>
+	  </Reference>
+	  <Reference Include="XtuCommon">
+	    <HintPath>..\Externals\XtuCommon.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+</Project>

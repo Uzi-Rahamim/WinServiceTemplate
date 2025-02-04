@@ -17,7 +17,7 @@ internal class SetupExecuters
     {
         RegisterRequest<SchemaRequestExecuter>(FrameworkMessageTypes.RequestSchema, SchemaRequestExecuter.GetSchema);
         RegisterRequest<OpenSessionRequestExecuter>(FrameworkMessageTypes.OpenSession, OpenSessionRequestExecuter.GetSchema);
-        //RegisterRequest<EchoRequestHandler>(MessageType.Echo, EchoRequestHandler.GetSchema);
+        RegisterRequest<EchoRequestExecuter>(MessageType.Echo, EchoRequestExecuter.GetSchema);
         RegisterRequest<GetAPListRequestExecuter>(MessageType.APList,GetAPListRequestExecuter.GetSchema);
 
         

@@ -101,7 +101,7 @@
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Comm\ClientSDK\ClientSDK.csproj">
+    <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj">
       <Project>{aa4f73d0-9a68-4261-8e8e-99e12621d1fa}</Project>
       <Name>ClientSDK</Name>
     </ProjectReference>

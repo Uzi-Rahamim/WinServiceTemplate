@@ -1,5 +1,6 @@
 ﻿using AsyncPipeTransport.Executer;
 using CommTypes.Massages;
+using System.Reflection;
 
 namespace App.WindowsService.API.Executers
 {
@@ -9,13 +10,14 @@ namespace App.WindowsService.API.Executers
 
         protected override async Task<bool> Execute(RequestSecurityMessage requestMsg)
         {
+            var hostVersion = Assembly.GetEntryAssembly()!.GetName().Version;
+           
+            var responseMsg = $"Security Request #{RequestId} version {hostVersion} Client Message : {requestMsg.token} ";
+            
+            bool isValid = (hostVersion != null);
             // Send a response back to the client
-            var responseMsg = $"Security Request #{RequestId} Client Message : {requestMsg.token}";
-
-            bool isValid = true;
-
-
-            await SendLastResponse(new ResponseSecurityMessage(isValid));
+            await SendLastResponse(new ResponseSecurityMessage(isValid, 
+                hostVersion?.ToString()??"Unknown host version"));
             return isValid;
         }
     }

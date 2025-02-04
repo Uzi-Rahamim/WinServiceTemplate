@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <OutputType>Library</OutputType>
+	  <TargetFrameworks>net8.0-windows;net4.8;net462</TargetFrameworks>
+	  <Platforms>x64</Platforms>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <FileVersion>1.0.1</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Consts\" />
+    <Folder Include="Events\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -58,7 +58,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Comm\AsyncPipeTransport\AsyncPipeTransport.csproj">
+    <ProjectReference Include="..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj">
       <Project>{745c5661-c7b4-439d-be1c-dc272dd54007}</Project>
       <Name>AsyncPipeTransport</Name>
     </ProjectReference>

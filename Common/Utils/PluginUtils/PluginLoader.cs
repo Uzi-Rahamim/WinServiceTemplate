@@ -1,43 +1,44 @@
-﻿using System.Reflection;
+﻿using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.Loader;
 
 namespace Utilities.PluginUtils
 {
     public class PluginLoader
     {
-        //public void LoadPlugins()
-        //{
-        //    try
-        //    {
-        //        var assemblyPath = @"C:\Repo\MyRepos\WinServiceTemplate\ServerPlugin\bin\x64\Debug\net8.0\";
-        //        ////var exePath = Assembly.GetExecutingAssembly().Location;
-        //        //var files = Directory.GetFiles(exePath, "*ExecuterPlugin.dll").ToList();
-        //        //var types = files.SelectMany(pluginPath =>
-        //        //{
-        //        //    var pluginAssembly = LoadPlugin(pluginPath);
-        //        //    return GetTypes(typeof(IRequestExecuter), pluginAssembly);
-        //        //}).ToList();
+        public static IEnumerable<string> GetReferencedAssemblies(string assemblyPath, Assembly assembly)
+        {
+            //Alerdy loaded assemblies
+            var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(asm => !asm.IsDynamic && File.Exists(asm.Location));
+            var currentAssemblyMap = new ConcurrentDictionary<string, Assembly>(currentAssemblies.ToDictionary(asm => asm.FullName ?? string.Empty));
+            
+            //get the list of referenced assemblies
+            AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
+            foreach (var referencedAssembly in referencedAssemblies)
+            {
+                if (currentAssemblyMap.ContainsKey(referencedAssembly.FullName))
+                    continue;
+           
+                var dependentAssemblyFileName = Directory.GetFiles(assemblyPath, referencedAssembly.Name + ".dll").FirstOrDefault();
+                if (dependentAssemblyFileName is not null)
+                {   
+                    yield return dependentAssemblyFileName;
+                }
+            }
+        }
 
-        //        foreach (var pluginAssembly in LoadPlugin(assemblyPath, "*ExecuterPlugin.dll"))
-        //        {
-        //            foreach (var type in GetTypes(typeof(IRequestExecuter), pluginAssembly){
-
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex);
-        //    }
-        //}
         public static IEnumerable<Assembly> LoadPlugin(string assemblyPath, string assemblyExtention)
         {
-            var loadContext = new AssemblyLoadContext("PluginLoadContext", isCollectible: true);
-
-            var files = Directory.GetFiles(assemblyPath, assemblyExtention).ToList();
-            foreach (var file in files)
+            var loadContext = new AssemblyLoadContext("PluginLoadContext"+Guid.NewGuid(), isCollectible: true);
+            var pluginFiles = Directory.GetFiles(assemblyPath, assemblyExtention).ToList();
+            foreach (var pluginFile in pluginFiles)
             {
-                var pluginAssembly = loadContext.LoadFromAssemblyPath(file);
+                var pluginAssembly = loadContext.LoadFromAssemblyPath(pluginFile);
+                foreach (var dependentAssembly in GetReferencedAssemblies(assemblyPath, pluginAssembly))
+                {
+                   loadContext.LoadFromAssemblyPath(dependentAssembly);
+                }
+
                 yield return pluginAssembly;
             }
         }
@@ -57,3 +58,6 @@ namespace Utilities.PluginUtils
         }
     }
 }
+
+
+

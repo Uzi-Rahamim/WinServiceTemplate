@@ -6,8 +6,19 @@
 	<Platforms>x64</Platforms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>..\bin</BaseOutputPath>
   </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>..\..\bin\CLI\Debug\</OutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>..\..\bin\CLI\Release\</OutputPath>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Cocona.Lite" Version="2.2.0" />
@@ -16,7 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Comm\ClientSDK\ClientSDK.csproj" />
+    <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj" />
+    <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_48_ExecuterPlugin.ClientSDK.csproj" />
+    <ProjectReference Include="..\..\WinServicePlugins\PluginB\ClientSDK\Service_ExecuterPlugin.ClientSDK.csproj" />
   </ItemGroup>
 
 </Project>

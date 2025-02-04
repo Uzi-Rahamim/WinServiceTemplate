@@ -7,7 +7,9 @@ namespace App.WindowsService
 {
     internal class SetupPlugins
     {
-        private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\ServerPlugin\bin\x64\Debug\net8.0-windows\"; }
+        private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\bin\Plugin\Debug\"; }
+
+        //private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\WinServicePlugins\PluginA\ServerPlugin48\bin\x64\Debug\net4.8\"; }
         private IHostApplicationBuilder _builder;
         private ILogger<SetupPlugins> _logger;
         private SetupPlugins(IHostApplicationBuilder builder)
@@ -26,10 +28,11 @@ namespace App.WindowsService
 
         public void LoadPlugins()
         {
-            try
+
+            _logger.LogInformation("Loading plugin from - {AssemblyPath}", AssemblyPath);
+            foreach (var pluginAssembly in PluginLoader.LoadPlugin(AssemblyPath, "*ExecuterPlugin.dll"))
             {
-                _logger.LogInformation("Loading plugin from - {AssemblyPath}", AssemblyPath);
-                foreach (var pluginAssembly in PluginLoader.LoadPlugin(AssemblyPath, "*ExecuterPlugin.dll"))
+                try
                 {
                     _logger.LogInformation("Loading plugin Assembly - {pluginAssembly.FullName}", pluginAssembly.FullName);
                     foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
@@ -46,11 +49,12 @@ namespace App.WindowsService
                         setupObj?.Configure();
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+
         }
 
         public void LoadExecuters(Type type)

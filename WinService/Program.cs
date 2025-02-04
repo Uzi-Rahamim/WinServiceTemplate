@@ -17,18 +17,12 @@ internal class Program
         //sc.exe delete "MyService"
         using (Mutex mutex = new Mutex(true, mutexName, out bool isNewInstance))
         {
-            if (!isNewInstance)
-            {
-                // If the mutex is already acquired, terminate the application
-                Console.WriteLine("Another instance is already running.");
-                return; // Exit the application
-            }
-
             var builder = Host.CreateApplicationBuilder(args);
             builder.Services.AddWindowsService(options =>
             {
                 options.ServiceName = "Uzi 123 Service";
             });
+            Environment.SetEnvironmentVariable("WinDerviceLogDir", AppContext.BaseDirectory);
 
             //Clear Providers 
             builder.Logging.ClearProviders();
@@ -37,6 +31,15 @@ internal class Program
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)
                 .CreateLogger();
+
+            if (!isNewInstance)
+            {
+                // If the mutex is already acquired, terminate the application
+                Log.Error("Another instance is already running.");
+                return; // Exit the application
+            }
+
+            Log.Information("\n\r Starting ... \n\r");
 
             // add the provider
             builder.Logging.AddSerilog();
@@ -51,6 +54,7 @@ internal class Program
             var host = builder.Build();
             host.Run();
 
+            Log.Information("\r\n Stoped !!! \r\n\r\n");
             // Dispose of the logger when the application ends
             Log.CloseAndFlush();
         }

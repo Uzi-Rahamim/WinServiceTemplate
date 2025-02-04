@@ -61,17 +61,4 @@ public class ServiceMain : BackgroundService
         var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
         await apiWorker.Start(_cts.Token);
     }
-
-    //public void StartService()
-    //{
-    //    _cancellationTokenSource = new CancellationTokenSource();
-    //    Task.Run(() => ExecuteAsync(_cancellationTokenSource.Token));
-    //    _logger.LogInformation("Service Started Manually.");
-    //}
-
-    //public void StopService()
-    //{
-    //    _cancellationTokenSource?.Cancel();
-    //    _logger.LogInformation("Service Stopped Manually.");
-    //}
 }
