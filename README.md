@@ -1,7 +1,7 @@
 <div align="center">
 <h1>Win Service Template</h1>
 <p align="center">
-    <img src="logo.png" width="1024" height="512">
+    <img src="logo.jpg" width="1000" height="600">
 </p>
 <br>
 
