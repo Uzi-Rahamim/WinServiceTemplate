@@ -36,7 +36,7 @@ namespace App.WindowsService.API.Executers
         protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
         {
 
-            for (int page = 0; page < 10; page++)
+            for (int page = 0; page < 100; page++)
             {
                 Task.Delay(1000).Wait();
                 Log.LogInformation($"Server sent page {page}");

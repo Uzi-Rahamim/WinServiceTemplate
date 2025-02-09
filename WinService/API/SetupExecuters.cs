@@ -6,6 +6,7 @@ using AsyncPipeTransport.Executer;
 using AsyncPipeTransport.Listeners;
 using CommTypes.Consts;
 using CommTypes.Massages;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace App.WindowsService.API;
 
@@ -20,12 +21,13 @@ internal class SetupExecuters
         RegisterRequest<EchoRequestExecuter>(MessageType.Echo, EchoRequestExecuter.GetSchema);
         RegisterRequest<GetAPListRequestExecuter>(MessageType.APList,GetAPListRequestExecuter.GetSchema);
 
-        
         _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
         _builder.Services.AddSingleton<IClientsManager, ClientsManager>();
         _builder.Services.AddSingleton<IExecuterManager, ExecuterManager>();
         _builder.Services.AddSingleton<IServerMessageListener, ServerMessageListener>();
-        _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(PipeApiConsts.PipeName));
+        _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(
+            provider.GetRequiredService<ILogger<ClientPipeChannel>>(), 
+            PipeApiConsts.PipeName));
         _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
     }
 

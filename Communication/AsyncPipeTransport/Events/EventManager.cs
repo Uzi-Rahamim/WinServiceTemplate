@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace AsyncPipeTransport.Events
 {
-    public class ClientEventManager : IClientEventManager
+    public class EventManager : IEventManager
     {
         private readonly ConcurrentDictionary<string, IEvent> events = new ConcurrentDictionary<string, IEvent>();
 

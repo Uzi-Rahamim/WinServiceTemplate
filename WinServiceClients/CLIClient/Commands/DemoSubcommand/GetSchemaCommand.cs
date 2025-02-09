@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Cocona;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using System.Text;
 
@@ -10,7 +11,7 @@ public class GetSchemaCommand
     [Command]
     public static async Task GetSchema()
     {
-        using (var channel = new ClientChannel())
+        using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
             if (!await channel.Connect())
             {

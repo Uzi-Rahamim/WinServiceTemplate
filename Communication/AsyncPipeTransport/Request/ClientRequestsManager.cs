@@ -5,15 +5,19 @@ using System.Collections.Concurrent;
 
 namespace AsyncPipeTransport.Request
 {
+    public delegate ClientRequest ClientRequestFactory(long requestId, string payload);
+
     public class ClientRequestsManager : IClientRequestManager
     {
         private readonly ConcurrentDictionary<long, ClientRequest> _pendingRequests = new ConcurrentDictionary<long, ClientRequest>();
         private readonly ISequenceGenerator _requestIdGenerator;
-        private readonly IClientChannel _transport;
-        public ClientRequestsManager(ISequenceGenerator requestIdGenerator, IClientChannel transport)
+        private readonly IChannel _channel;
+        private ClientRequestFactory _requestFactory;
+        public ClientRequestsManager(ISequenceGenerator requestIdGenerator, IClientChannel transport, ClientRequestFactory requestFactory)
         {
             _requestIdGenerator = requestIdGenerator;
-            _transport = transport;
+            _channel = transport;
+            _requestFactory = requestFactory;
         }
 
         public bool GetPendingRequest(long requestId, out ClientRequest? request)
@@ -63,7 +67,7 @@ namespace AsyncPipeTransport.Request
         {
             long newRequestId = _requestIdGenerator.GetNextId();
             var payload = buildPayload(newRequestId);
-            ClientRequest request = new ClientRequest(newRequestId, payload);
+            ClientRequest request = _requestFactory(newRequestId, payload); //new ClientRequest(newRequestId, payload);
             return SendRequest(request);
         }
 
@@ -77,7 +81,7 @@ namespace AsyncPipeTransport.Request
         {
             long newRequestId = _requestIdGenerator.GetNextId();
             var payload = buildPayload(newRequestId);
-            ClientRequest request = new ClientRequest(newRequestId, payload);
+            ClientRequest request = _requestFactory(newRequestId, payload); //new ClientRequest(newRequestId, payload);
             await SendRequest(request, false);
             return newRequestId;
         }
@@ -86,7 +90,7 @@ namespace AsyncPipeTransport.Request
         {
             if (_pendingRequests.TryAdd(request.requestId, request))
             {
-                _transport.SendAsync(request.payload,CancellationToken.None).Wait();
+                _channel.SendAsync(request.payload,CancellationToken.None).Wait();
                 if (waitForRespose)
                 {
                     return WaitForNextFrame(request.requestId).

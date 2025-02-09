@@ -12,38 +12,49 @@ namespace ClientSDK.v1
     public class ClientChannel : IDisposable
     {
         internal IClientMessageListener Listener { get => _clientMessageListener; }
-        public ClientEventManager EventHandler { get => _clientEventHandler; }
+        public EventManager EventHandler { get => _clientEventHandler; }
         public ClientRequestsManager RequestHandler { get => _clientRequestHnadler; }
 
         private readonly IClientMessageListener _clientMessageListener;
-        private readonly ClientEventManager _clientEventHandler;
+        private readonly EventManager _clientEventHandler;
         private readonly ClientRequestsManager _clientRequestHnadler;
         private readonly IClientChannel _channel;
+        private readonly CancellationToken _cancellationToken;
 
-        public ClientChannel()
+        public ClientChannel(ILoggerFactory loggerFactory)
         {
-            var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                //builder.AddConsole(); // This will log to the console
-            });
-            var logger = loggerFactory.CreateLogger<ClientMessageListener>();
-
-            _channel = new ClientPipeChannel(PipeApiConsts.PipeName);
-            _clientEventHandler = new ClientEventManager();
-            _clientRequestHnadler = new ClientRequestsManager(new SequenceGenerator(), _channel);
-
+            
+            var logger = loggerFactory.CreateLogger<ClientChannel>();
+            var cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = cancellationTokenSource.Token;
+            ClientRequestFactory _requestFactory = (newRequestId, payload) => new ClientRequest(newRequestId, payload, _cancellationToken);
+            _channel = new ClientPipeChannel(loggerFactory.CreateLogger<ClientPipeChannel>(), PipeApiConsts.PipeName);
+            _clientEventHandler = new EventManager();
+            _clientRequestHnadler = new ClientRequestsManager(new SequenceGenerator(), _channel, _requestFactory);
             _clientMessageListener = new ClientMessageListener(
-                 logger,
+                 loggerFactory.CreateLogger<ClientMessageListener>(),
                _channel,
-               _clientRequestHnadler,
-               _clientEventHandler);
+               new MessageListener(
+               loggerFactory.CreateLogger<MessageListener>(),
+               _cancellationToken, 
+               _channel, 
+               _clientRequestHnadler, 
+               _clientEventHandler, 
+               null, 
+               null));
+
+            _channel.OnDisconnect += () =>
+            {
+
+                logger.LogInformation("Channel Disconnect");
+                cancellationTokenSource.Cancel();
+            };
         }
 
         public Task<bool> Connect()
         {
-            CancellationToken cancellationToken = new CancellationToken();
             var success = _clientMessageListener.StartAsync(
-                cancellationToken,
+                _cancellationToken,
                 TimeSpan.FromSeconds(PipeApiConsts.ConnectTimeoutInSec)).Result;
             if (success)
             {

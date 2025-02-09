@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Service_48_ExecuterPlugin.CommTypes.Massages;
+using System.Collections.Generic;
 namespace Service_48_ExecuterPlugin.ClientSDK.v1
 {
     public class Api
@@ -13,6 +14,13 @@ namespace Service_48_ExecuterPlugin.ClientSDK.v1
             var response = await _client.RequestHandler.SendRequest<ResponseEcho3Message, RequestEcho3Message>(
                 new RequestEcho3Message(message));
             return response?.message;
+        }
+
+        public async Task<IEnumerable<string>> GetPlatformCompatibility()
+        {
+            var response = await _client.RequestHandler.SendRequest<ResponseGetPlatformCompatibilityMessage, RequestGetPlatformCompatibilityMessage>(
+                new RequestGetPlatformCompatibilityMessage());
+            return response?.list ?? new List<string>();
         }
     }
 }

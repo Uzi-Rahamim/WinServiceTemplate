@@ -1,4 +1,5 @@
 ﻿using AsyncPipeTransport.Extensions;
+using Microsoft.Extensions.Logging;
 using System.IO.Pipes;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -9,7 +10,7 @@ namespace AsyncPipeTransport.Channel
     {
         NamedPipeServerStream _pipeServer;
         private  const int _bufferSize = 2024;
-        public ServerPipeChannel(string pipeName)
+        public ServerPipeChannel(ILogger<ClientPipeChannel> logger,string pipeName) : base(logger)
         {
             var networkSid = new SecurityIdentifier(WellKnownSidType.NetworkSid, null);
             var pipeSecurity = new PipeSecurity();
@@ -33,7 +34,7 @@ namespace AsyncPipeTransport.Channel
                 pipeName, 
                 PipeDirection.InOut, 
                 NamedPipeServerStream.MaxAllowedServerInstances, 
-                PipeTransmissionMode.Message, 
+                PipeTransmissionMode.Byte, 
                 PipeOptions.Asynchronous ,
                 _bufferSize, _bufferSize, pipeSecurity);
 #elif NETFRAMEWORK
@@ -41,7 +42,7 @@ namespace AsyncPipeTransport.Channel
                 pipeName, 
                 PipeDirection.InOut, 
                 NamedPipeServerStream.MaxAllowedServerInstances, 
-                PipeTransmissionMode.Message, 
+                PipeTransmissionMode.Byte, 
                 PipeOptions.Asynchronous,
                 _bufferSize,_bufferSize,pipeSecurity);
 #endif

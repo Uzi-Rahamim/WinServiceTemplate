@@ -28,7 +28,7 @@ public class ServiceMain : BackgroundService
             var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsManager>();
             while (!stoppingToken.IsCancellationRequested)
             {
-                clientBroadcaster.BroadcastEvent(new PulseEventMessage("BroadcastEvent"));
+                clientBroadcaster.BroadcastEvent(new BPulseEventMessage("BroadcastEvent"));
                 //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(5000, stoppingToken);
             }
@@ -58,7 +58,15 @@ public class ServiceMain : BackgroundService
 
     private async Task StartApi()
     {
-        var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
-        await apiWorker.Start(_cts.Token);
+        try
+        {
+            var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
+            await apiWorker.Start(_cts.Token);
+        }
+        catch (Exception ex)
+        {
+
+            _logger.LogError(ex, "Worker Start api worker failed");
+        }
     }
 }

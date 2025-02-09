@@ -11,6 +11,7 @@ namespace Service_ExecuterPlugin.Executers
         public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, CancellationTokenSource cts, SimpleWorkerB simpleWorker) : 
             base(logger, cts) {
             _simpleWorker = simpleWorker;
+            
         }
 
         public static string Plugin_GetSchema()
@@ -27,9 +28,11 @@ namespace Service_ExecuterPlugin.Executers
         {
             // Send a response back to the client
             var responseMsg = requestMsg.message+ " from Echo2RequestExecuter";
+            await Task.Delay(10000);
             await SendLastResponse(new ResponseEcho2Message(responseMsg));
             Log.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
-
+            _simpleWorker.SetChannel(Channel);
+           
             return true;
         }
     }

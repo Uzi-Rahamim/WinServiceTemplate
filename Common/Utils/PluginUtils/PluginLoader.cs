@@ -6,6 +6,23 @@ namespace Utilities.PluginUtils
 {
     public class PluginLoader
     {
+        public static IEnumerable<string> GetAllDlls(string assemblyPath)
+        {
+            ////Alerdy loaded assemblies
+            //var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(asm => !asm.IsDynamic && File.Exists(asm.Location));
+            //var currentAssemblyMap = new ConcurrentDictionary<string, Assembly>(currentAssemblies.ToDictionary(asm => asm.FullName ?? string.Empty));
+
+            //get the list of referenced assemblies
+            var files = Directory.GetFiles(assemblyPath,"*.dll");
+            foreach (var file in files)
+            {
+                //if (currentAssemblyMap.ContainsKey(file.))
+                //    continue;
+
+                 yield return file;
+            }
+        }
+
         public static IEnumerable<string> GetReferencedAssemblies(string assemblyPath, Assembly assembly)
         {
             //Alerdy loaded assemblies
@@ -30,6 +47,13 @@ namespace Utilities.PluginUtils
         public static IEnumerable<Assembly> LoadPlugin(string assemblyPath, string assemblyExtention)
         {
             var loadContext = new AssemblyLoadContext("PluginLoadContext"+Guid.NewGuid(), isCollectible: true);
+
+            //var files = GetAllDlls("C:\\Repo\\MyRepos\\WinServiceTemplate\\WinServicePlugins\\PluginA\\Externals");
+            //foreach (var file in files)
+            //{
+            //    loadContext.LoadFromAssemblyPath(file);
+            //}
+
             var pluginFiles = Directory.GetFiles(assemblyPath, assemblyExtention).ToList();
             foreach (var pluginFile in pluginFiles)
             {

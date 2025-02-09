@@ -2,7 +2,7 @@
 {
     public interface IClientChannel : IChannel, IDisposable
     {
-        Task ConnectAsync(TimeSpan timeout);
+        Task ConnectAsync(TimeSpan timeout, CancellationToken cancellationToken);
     }
 }
 

@@ -1,4 +1,6 @@
-﻿namespace AsyncPipeTransport.Channel
+﻿using Microsoft.Extensions.Logging;
+
+namespace AsyncPipeTransport.Channel
 {
     public interface IServerChannelFactory
     {
@@ -7,15 +9,17 @@
 
     public class ServerChannelFactory: IServerChannelFactory
     {
-        string _pipeName;
-        public ServerChannelFactory(string pipeName)
+        private readonly string _pipeName;
+        private readonly ILogger<ClientPipeChannel> _logger;
+        public ServerChannelFactory(ILogger<ClientPipeChannel> logger, string pipeName)
         {
             this._pipeName = pipeName;
+            this._logger = logger;
         }
 
         public IServerChannel Create()
         {
-            return new ServerPipeChannel(_pipeName);
+            return new ServerPipeChannel(_logger, _pipeName);
         }
     }
 }

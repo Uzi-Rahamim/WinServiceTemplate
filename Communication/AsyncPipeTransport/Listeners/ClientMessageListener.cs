@@ -1,11 +1,5 @@
 ﻿using AsyncPipeTransport.Channel;
-using AsyncPipeTransport.Clients;
-using AsyncPipeTransport.Events;
-using AsyncPipeTransport.Executer;
-using AsyncPipeTransport.Request;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
-using System.Threading.Channels;
 
 namespace AsyncPipeTransport.Listeners
 {
@@ -16,30 +10,19 @@ namespace AsyncPipeTransport.Listeners
 
     public class ClientMessageListener : IClientMessageListener
     {
-        private MessageListener? _messageListener;
+        private readonly MessageListener _messageListener;
         private readonly IClientChannel _channel;
-        private readonly IClientEventManager? _clientEventHandler;
-        private readonly IClientRequestManager? _clientRequestHandler;
-        private readonly IExecuterManager? _executerManager;
-        private readonly IClientsManager? _activeClients;
         private readonly ILogger<ClientMessageListener> _logger;
 
 
         public ClientMessageListener(
             ILogger<ClientMessageListener> logger,
             IClientChannel channel,
-            IClientRequestManager? clientRequestHandler,
-            IClientEventManager? clientEventHandler,
-            IExecuterManager? executerManager = null,
-            IClientsManager? activeClients = null)
+            MessageListener messageListener)
         {
             _logger = logger;
             _channel = channel;
-            _clientRequestHandler = clientRequestHandler;
-            _clientEventHandler = clientEventHandler;
-            _executerManager = executerManager;
-            _activeClients = activeClients;
-
+            _messageListener = messageListener;
         }
 
         public void Dispose()
@@ -53,15 +36,14 @@ namespace AsyncPipeTransport.Listeners
             var channel = _channel;
             try
             {
-                await channel.ConnectAsync(timeout);
+                await channel.ConnectAsync(timeout, cancellationToken);
             }
             catch (TimeoutException)
             {
                 return false;
             }
-
-            _messageListener = new MessageListener(_logger, cancellationToken, channel, _clientRequestHandler, _clientEventHandler, _executerManager, _activeClients);
-            _messageListener.StartReadMessageLoop(timeout, endpointId);
+            
+            _messageListener.StartListen(timeout, endpointId);
             return true;
         }
 

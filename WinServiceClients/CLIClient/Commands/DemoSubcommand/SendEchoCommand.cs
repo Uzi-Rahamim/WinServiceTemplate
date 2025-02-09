@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Cocona;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace APIClient.commands.test;
@@ -9,7 +10,7 @@ public class SendEchoCommand
     [Command]
     public static async Task SentEcho([Argument(Description = "version 1,2,3")] int ver, [Argument(Description = "Your message")] string message)
     {
-        using (var channel = new ClientChannel())
+        using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
             if (!await channel.Connect())
             {

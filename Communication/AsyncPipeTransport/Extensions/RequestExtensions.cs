@@ -1,5 +1,5 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-using Newtonsoft.Json;
+using AsyncPipeTransport.Serializers;
 
 namespace AsyncPipeTransport.Extensions
 {
@@ -7,27 +7,22 @@ namespace AsyncPipeTransport.Extensions
     {
         public static string ToJson<T>(this T obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonMessageSerializer.SerializeObject(obj);
         }
 
-        public static T FromJson<T>(this string payload) where T : MessageHeader
+        public static T FromJson<T>(this string payload) 
         {
-            var obj = JsonConvert.DeserializeObject<T>(payload);
-            if (obj == null)
-            {
-                throw new JsonException("Failed to deserialize message payload");
-            }
-            return obj;
+            return JsonMessageSerializer.DeserializeObject<T>(payload); 
         }
 
         public static FrameHeader? ExtractFrameHeaders(this string messageJson)
         {
-            return JsonConvert.DeserializeObject<FrameHeader>(messageJson);
+            return messageJson.FromJson<FrameHeader>();
         }
 
         public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : MessageHeader
         {
-            return JsonConvert.DeserializeObject<T>(frame.payload);
+            return frame.payload.FromJson<T>();
         }
 
         public static string BuildMessage<T>(this T message, long requestId, FrameOptions options) where T : MessageHeader
@@ -35,8 +30,6 @@ namespace AsyncPipeTransport.Extensions
             string payload = message.ToJson();
             return new FrameHeader(requestId, options, message.msgType, payload).ToJson();
         }
-
-       
 
         public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {

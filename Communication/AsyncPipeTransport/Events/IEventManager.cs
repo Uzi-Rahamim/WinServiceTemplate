@@ -2,7 +2,7 @@
 
 namespace AsyncPipeTransport.Events
 {
-    public interface IClientEventManager
+    public interface IEventManager
     {
         public bool RegisterEvent(string messageType, IEvent eventAction);
 

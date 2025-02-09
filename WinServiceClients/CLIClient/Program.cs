@@ -1,5 +1,6 @@
 ﻿using APIClient.commands.test;
 using Cocona;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 
@@ -12,6 +13,12 @@ class Program
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateLogger();
+
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            // Add Serilog as a logging provider
+            builder.AddSerilog();
+        });
 
         var app = CoconaLiteApp.Create();
         await app.RunAsync<Program>();

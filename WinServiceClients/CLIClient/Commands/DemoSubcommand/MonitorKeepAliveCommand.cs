@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Cocona;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace APIClient.commands.test
@@ -9,7 +10,7 @@ namespace APIClient.commands.test
         [Command]
         public static async Task  monitor()
         {
-            using (var channel = new ClientChannel())
+            using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
                 if (!await channel.Connect())
                 {

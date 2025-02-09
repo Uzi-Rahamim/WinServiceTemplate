@@ -6,5 +6,6 @@ namespace AsyncPipeTransport.Channel
     public interface IChannelSender
     {
         public Task SendAsync(string message, CancellationToken cancellationToken);
+        bool IsConnected();
     }
 }

@@ -10,7 +10,7 @@ namespace AsyncPipeTransport.Executer
     public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : MessageHeader
     {
         protected ILogger<T> Log { get; private set; }
-        private IChannelSender _sender = default!;
+        protected IChannelSender Channel { get; private set; }
         protected long RequestId { get; private set; }
 
         protected abstract Task<bool> Execute(Rq request);
@@ -49,28 +49,36 @@ namespace AsyncPipeTransport.Executer
             Log.LogInformation("Request Handler Created");
         }
 
-        public Task<bool> Execute(IChannelSender sender, long requestId, string requestJson)
+        public Task<bool> Execute(IChannelSender channel, long requestId, string requestJson)
         {
-            _sender = sender;
+            Channel = channel;
             RequestId = requestId;
 
-            var requestMsg = requestJson.FromJson<Rq>();
-            return Execute(requestMsg);
+            try
+            {
+                var requestMsg = requestJson.FromJson<Rq>();
+                return Execute(requestMsg);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex, "Error in Execute");
+                return Task.FromResult(false);
+            }
         }
 
         protected Task SendLastResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(responseMessage.BuildResponseMessage(RequestId), CancellationToken.None);
+            return Channel.SendAsync(responseMessage.BuildResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendContinuingResponse<R>(R responseMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId), CancellationToken.None);
+            return Channel.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendEvent<R>(R eventMessage) where R : MessageHeader
         {
-            return _sender.SendAsync(eventMessage.BuildServerEventMessage(), CancellationToken.None);
+            return Channel.SendAsync(eventMessage.BuildServerEventMessage(), CancellationToken.None);
         }
     }
 }

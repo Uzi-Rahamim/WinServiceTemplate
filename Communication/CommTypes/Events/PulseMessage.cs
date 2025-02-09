@@ -4,13 +4,13 @@ namespace CommTypes.Massages
 {
     public partial class MessageType
     {
-        public static readonly string PulseEvent = "PulseEvent";
+        public static readonly string BPulseEvent = "PulseEvent";
     }
 
-    public class PulseEventMessage : MessageHeader
+    public class BPulseEventMessage : MessageHeader
     {
         public string message { get; set; }
 
-        public PulseEventMessage(string message) : base(MessageType.PulseEvent) => this.message = message;
+        public BPulseEventMessage(string message) : base(MessageType.BPulseEvent) => this.message = message;
     }
 }

@@ -67,7 +67,7 @@ namespace ClientSDK.v1
 
         public bool RegisterPulsEvent(Action<string> action)
         {
-           return _client.EventHandler.RegisterEvent(CommTypes.Massages.MessageType.PulseEvent, new EventToAction<PulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
+           return _client.EventHandler.RegisterEvent(MessageType.BPulseEvent, new EventToAction<BPulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
         }
     }
 }

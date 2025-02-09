@@ -15,7 +15,16 @@ namespace AsyncPipeTransport.Executer
             _logger = logger;
             foreach (var cmd in cmdList)
             {
-                _executers.Add(cmd.GetMessageType(), cmd);
+                try
+                {
+                    _logger.LogInformation("Server load executer for {messageType}", cmd.GetMessageType());
+                    _executers.Add(cmd.GetMessageType(), cmd);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Server load executer failed (Make sure Plugin_GetMessageType/GetMessageType is unique)");
+                }
+              
             }
         }
 
