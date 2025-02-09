@@ -1,4 +1,14 @@
-# WinServiceTemplate
+<div align="center">
+<h1>Win Service Template</h1>
+<p align="center">
+    <img src="logo.jpg" width="1000" height="600">
+</p>
+<br>
+
+</div>
+
+## 🚀 Quick Start Guide
+### WinServiceTemplate
 WinService : Template For windows service using .Net8
 Service_ExecuterPlugin : Example for WinService Plugin DLL 
 AsyncPipeTransport : Comm Infra using .Net8, .Net4.8, .Net4.6
@@ -13,17 +23,23 @@ Service Example :
 Implement the  BaseRequestExecuter 
 Register the executer in SetupRequestHandlers
 
+## ⚙️ Setting the Service
 
-# Install as a service 
-sc.exe create "MyService" binpath= "C:\Path\To\App.WindowsService.exe"
+### Install as a service 
+  ```bash
+  sc.exe create "MyService" binpath= "C:\Path\To\App.WindowsService.exe"
+  ```
+### Delete the service 
+  ```bash
+  sc.exe delete "MyService"
+  ```
 
-# Delete the service 
-sc.exe delete "MyService"
-
-
-# start the a service 
-sc.exe start "MyService"
-
-# stop the a service 
-sc.exe stop "MyService"
+### start the a service
+  ```bash
+  sc.exe start "MyService"
+  ```
+### stop the a service
+  ```bash
+  sc.exe stop "MyService"
+  ```
 
