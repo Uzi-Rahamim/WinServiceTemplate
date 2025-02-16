@@ -45,8 +45,9 @@ internal class Program
             builder.Logging.AddSerilog();
             builder.Services.AddSingleton<CancellationTokenSource>();
 
-            SetupPlugins.Create(builder).LoadPlugins();
-            SetupExecuters.Create(builder).Configure();
+            
+            SetupExecuters.Create(builder.Services).Configure();
+            SetupPlugins.Create(builder.Services).LoadPlugins();
 
 
             builder.Services.AddHostedService<ServiceMain>();

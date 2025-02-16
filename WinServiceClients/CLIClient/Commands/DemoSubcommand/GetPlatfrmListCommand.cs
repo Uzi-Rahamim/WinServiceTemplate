@@ -22,7 +22,7 @@ public class GetPlatfrmListCommand
 
             var api = new Api(channel);
 
-            Log.Information("Using GetListAsync");
+            Log.Information("Using GetPlatformCompatibility");
 
             var list = await api.GetPlatformCompatibility();
             foreach (var item in list)

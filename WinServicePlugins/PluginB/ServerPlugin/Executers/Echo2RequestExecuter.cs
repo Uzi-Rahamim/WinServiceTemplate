@@ -7,8 +7,8 @@ namespace Service_ExecuterPlugin.Executers
 {
     public class Echo2RequestExecuter : BaseRequestExecuter<Echo2RequestExecuter, RequestEcho2Message, ResponseEcho2Message>
     {
-        Worker.SimpleWorkerB _simpleWorker;
-        public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, CancellationTokenSource cts, SimpleWorkerB simpleWorker) : 
+        Worker.SimpleWorker _simpleWorker;
+        public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) : 
             base(logger, cts) {
             _simpleWorker = simpleWorker;
             
@@ -30,7 +30,7 @@ namespace Service_ExecuterPlugin.Executers
             var responseMsg = requestMsg.message+ " from Echo2RequestExecuter";
             await Task.Delay(10000);
             await SendLastResponse(new ResponseEcho2Message(responseMsg));
-            Log.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
+            Logger.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
             _simpleWorker.SetChannel(Channel);
            
             return true;

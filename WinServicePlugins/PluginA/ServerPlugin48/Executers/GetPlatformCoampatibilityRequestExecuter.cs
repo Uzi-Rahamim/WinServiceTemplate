@@ -30,15 +30,15 @@ namespace Service_ExecuterPlugin.Executers
             //var responseMsg = requestMsg.message + " from Echo3RequestExecuter";
             var list = new List<string>();
             list.Add("List is empty");  
-            try
-            {
-                IOverClockingLifeCycleManager OCMgr = OverClockingManagerFactory.CreateOverClockingLifeCycleManager();
-                list = OCMgr.ListPlatformCompatibility();
-            }
-            catch (Exception ex)
-            {
-                Log.LogInformation(ex, "IOverClockingLifeCycleManager Error ");
-            }
+            //try
+            //{
+            //    IOverClockingLifeCycleManager OCMgr = OverClockingManagerFactory.CreateOverClockingLifeCycleManager();
+            //    list = OCMgr.ListPlatformCompatibility();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.LogInformation(ex, "IOverClockingLifeCycleManager Error ");
+            //}
             
             await SendLastResponse(new ResponseGetPlatformCompatibilityMessage(list));
             //Log.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);

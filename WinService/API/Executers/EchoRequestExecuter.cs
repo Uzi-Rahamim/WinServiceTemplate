@@ -13,7 +13,7 @@ namespace App.WindowsService.API.Executers
             // Send a response back to the client
             var responseMsg = requestMsg.message;
             await SendLastResponse(new ResponseEchoMessage(responseMsg));
-            Log.LogInformation("Server sent reply: {reply}", responseMsg);
+            Logger.LogInformation("Server sent reply: {reply}", responseMsg);
 
             return true;
         }

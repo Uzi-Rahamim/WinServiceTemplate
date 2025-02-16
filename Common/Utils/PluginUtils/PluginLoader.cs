@@ -1,68 +1,75 @@
-﻿using System.Collections.Concurrent;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Loader;
 
 namespace Utilities.PluginUtils
 {
     public class PluginLoader
     {
-        public static IEnumerable<string> GetAllDlls(string assemblyPath)
+   
+        public static IEnumerable<AssemblyName> GetReferencedAssemblies(Assembly assembly)
         {
-            ////Alerdy loaded assemblies
-            //var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(asm => !asm.IsDynamic && File.Exists(asm.Location));
-            //var currentAssemblyMap = new ConcurrentDictionary<string, Assembly>(currentAssemblies.ToDictionary(asm => asm.FullName ?? string.Empty));
-
+            
             //get the list of referenced assemblies
-            var files = Directory.GetFiles(assemblyPath,"*.dll");
-            foreach (var file in files)
+            AssemblyName[] referencedAssemblyNames = assembly.GetReferencedAssemblies();
+            foreach (var assemblyName in referencedAssemblyNames)
             {
-                //if (currentAssemblyMap.ContainsKey(file.))
-                //    continue;
-
-                 yield return file;
+                yield return assemblyName;
             }
         }
 
-        public static IEnumerable<string> GetReferencedAssemblies(string assemblyPath, Assembly assembly)
+        public static void LoadAssemblyReference(AssemblyLoadContext loadContext, string dllPath, Assembly assembly)
         {
-            //Alerdy loaded assemblies
-            var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(asm => !asm.IsDynamic && File.Exists(asm.Location));
-            var currentAssemblyMap = new ConcurrentDictionary<string, Assembly>(currentAssemblies.ToDictionary(asm => asm.FullName ?? string.Empty));
-            
-            //get the list of referenced assemblies
-            AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
-            foreach (var referencedAssembly in referencedAssemblies)
+            foreach (var assemblyName in GetReferencedAssemblies(assembly))
             {
-                if (currentAssemblyMap.ContainsKey(referencedAssembly.FullName))
-                    continue;
-           
-                var dependentAssemblyFileName = Directory.GetFiles(assemblyPath, referencedAssembly.Name + ".dll").FirstOrDefault();
-                if (dependentAssemblyFileName is not null)
-                {   
-                    yield return dependentAssemblyFileName;
+                try
+                {
+                    try
+                    {
+                        // Check if the assembly is already loaded in this context:
+                        var existingAssembly = loadContext.LoadFromAssemblyName(assemblyName);
+                        if (existingAssembly != null)
+                        {
+                            //Console.WriteLine($"Skip - Already loaded {assemblyName}");
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //Ignore
+                    }
+                  
+
+                    var assemblyPath = Path.Combine(dllPath, assemblyName.Name + ".dll");
+                    //if (!File.Exists(assemblyPath))
+                    //    assemblyPath = Path.Combine(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319", assemblyName.Name + ".dll");
+                    if (!File.Exists(assemblyPath))
+                    {
+                        Console.WriteLine($"File not found: {assemblyName}");
+                        continue;
+                    }
+                    var dependentAssembly = loadContext.LoadFromAssemblyPath(assemblyPath);
+                    Console.WriteLine($"loading {dependentAssembly} {assemblyPath}");
+                    LoadAssemblyReference(loadContext, dllPath, dependentAssembly);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exception loading {ex}");
                 }
             }
+
         }
 
         public static IEnumerable<Assembly> LoadPlugin(string assemblyPath, string assemblyExtention)
-        {
+        {  
+            //// isCollectible allows unloading later
             var loadContext = new AssemblyLoadContext("PluginLoadContext"+Guid.NewGuid(), isCollectible: true);
-
-            //var files = GetAllDlls("C:\\Repo\\MyRepos\\WinServiceTemplate\\WinServicePlugins\\PluginA\\Externals");
-            //foreach (var file in files)
-            //{
-            //    loadContext.LoadFromAssemblyPath(file);
-            //}
-
             var pluginFiles = Directory.GetFiles(assemblyPath, assemblyExtention).ToList();
             foreach (var pluginFile in pluginFiles)
             {
                 var pluginAssembly = loadContext.LoadFromAssemblyPath(pluginFile);
-                foreach (var dependentAssembly in GetReferencedAssemblies(assemblyPath, pluginAssembly))
-                {
-                   loadContext.LoadFromAssemblyPath(dependentAssembly);
-                }
-
+                Console.WriteLine($".....loading {pluginAssembly}");
+                LoadAssemblyReference(loadContext, assemblyPath, pluginAssembly);
+             
                 yield return pluginAssembly;
             }
         }

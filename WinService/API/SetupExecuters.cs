@@ -12,7 +12,7 @@ namespace App.WindowsService.API;
 
 internal class SetupExecuters
 {
-    private IHostApplicationBuilder _builder;
+    private IServiceCollection _serviceCollection ;
     
     public void Configure()
     {
@@ -21,29 +21,30 @@ internal class SetupExecuters
         RegisterRequest<EchoRequestExecuter>(MessageType.Echo, EchoRequestExecuter.GetSchema);
         RegisterRequest<GetAPListRequestExecuter>(MessageType.APList,GetAPListRequestExecuter.GetSchema);
 
-        _builder.Services.AddTransient<ISequenceGenerator, SequenceGenerator>();
-        _builder.Services.AddSingleton<IClientsManager, ClientsManager>();
-        _builder.Services.AddSingleton<IExecuterManager, ExecuterManager>();
-        _builder.Services.AddSingleton<IServerMessageListener, ServerMessageListener>();
-        _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(
+        _serviceCollection.AddTransient<ISequenceGenerator, SequenceGenerator>();
+        _serviceCollection.AddSingleton<IClientsManager, ClientsManager>();
+        _serviceCollection.AddSingleton<IExecuterManager, ExecuterManager>();
+        _serviceCollection.AddSingleton<IServerMessageListener, ServerMessageListener>();
+        _serviceCollection.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(
             provider.GetRequiredService<ILogger<ClientPipeChannel>>(), 
             PipeApiConsts.PipeName));
-        _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
+        _serviceCollection.AddSingleton<ServerIncomingConnectionListener>();
     }
 
-    public static SetupExecuters Create(IHostApplicationBuilder builder)
+    public static SetupExecuters Create(IServiceCollection serviceCollection)
     {
-        return new SetupExecuters(builder);
+        return new SetupExecuters(serviceCollection);
     }
 
-    private SetupExecuters(IHostApplicationBuilder builder)
+    private SetupExecuters(IServiceCollection serviceCollection)
     {
-        this._builder = builder;
+        this._serviceCollection = serviceCollection;
     }
 
     private void RegisterRequest<T>(string messageType,Func<string > getSchema) where T : class, IRequestExecuter
     {
-        ExecuterRegister.RegisterRequest<T>(_builder, messageType, getSchema);
+        ExecuterRegister.RegisterSchema(_serviceCollection, messageType, getSchema);
+        ExecuterRegister.RegisterExecuter<T>(_serviceCollection, messageType);
     }
 
 }

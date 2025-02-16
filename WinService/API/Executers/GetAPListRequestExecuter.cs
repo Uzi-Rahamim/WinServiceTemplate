@@ -39,16 +39,16 @@ namespace App.WindowsService.API.Executers
             for (int page = 0; page < 100; page++)
             {
                 Task.Delay(1000).Wait();
-                Log.LogInformation($"Server sent page {page}");
+                Logger.LogInformation($"Server sent page {page}");
                 await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
             }
 
-            Log.LogInformation("Server sent last page");
+            Logger.LogInformation("Server sent last page");
             await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
 
             // Send a response back to the client
             string replyPalyload = $"Request # {RequestId} ";
-            Log.LogInformation("Server sent reply: {reply}", replyPalyload);
+            Logger.LogInformation("Server sent reply: {reply}", replyPalyload);
 
             return true;
         }

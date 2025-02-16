@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Service_ExecuterPlugin.Worker;
 using Types.Types;
@@ -8,25 +7,24 @@ namespace Service_ExecuterPlugin
 {
     public class PluginSetup : IPluginSetup
     {
-        IHostApplicationBuilder _builder;
+        IServiceCollection _serviceCollection;
         ILogger<PluginSetup> _logger;
         public void Configure()
         {
             _logger.LogInformation("Configure");
-            _builder.Services.AddSingleton<SimpleWorkerB>();
+            _serviceCollection.AddSingleton<SimpleWorker>();
 
-            var serviceProvider = _builder.Services.BuildServiceProvider();
-            var worker = serviceProvider.GetRequiredService<SimpleWorkerB>();
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+            var worker = serviceProvider.GetRequiredService<SimpleWorker>();
             worker.Start();
         }
 
-        public PluginSetup(IHostApplicationBuilder builder)
+        
+        public PluginSetup(IServiceCollection serviceCollection)
         {
-            this._builder = builder;
-            var serviceProvider = builder.Services.BuildServiceProvider();
+            this._serviceCollection = serviceCollection;
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
         }
-
-       
     }
 }
