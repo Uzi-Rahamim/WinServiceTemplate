@@ -57,9 +57,6 @@ namespace App.WindowsService
                     // Load all types that implement IRequestExecuter
                     foreach (var type in GetTypes(typeof(IRequestExecuter), pluginAssembly))
                     {
-                        //var y = type.GetInterfaces().FirstOrDefault();
-                        //var x1 = typeof(IRequestExecuter);
-                        //var x = y == x1;
                         _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
                         LoadExecuters(serviceCollection, type);
                     }
@@ -78,7 +75,7 @@ namespace App.WindowsService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "load {pluginFileName} failed", pluginFileName);
+                    _logger.LogError(ex, "LoadPlugins {pluginFileName} failed", pluginFileName);
                 }
 
             }
@@ -105,7 +102,7 @@ namespace App.WindowsService
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.LogError(ex, "LoadExecuters {type} failed", type);
             }
         }
 

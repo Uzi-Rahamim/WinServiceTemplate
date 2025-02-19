@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="..\..\Build\Version.props"  Condition="Exists('..\..\Build\Version.props')"/>
+	<Import Project="..\..\Build\Version.props" Condition="Exists('..\..\Build\Version.props')" />
 	
 	<PropertyGroup>
 		<OutputType>Library</OutputType>

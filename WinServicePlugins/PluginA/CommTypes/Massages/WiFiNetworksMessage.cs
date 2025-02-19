@@ -1,10 +1,11 @@
 ﻿using AsyncPipeTransport.CommonTypes;
+using PluginA.Contract.Types;
 
-namespace CommTypes.Massages
+namespace PluginA.Contract.Massages
 {
     public partial class MessageType
     {
-        public static readonly string APList = "APList";
+        public static readonly string APList = "PluginA.APList";
     }
 
     public class RequestWiFiNetworksMessage : MessageHeader
@@ -13,20 +14,11 @@ namespace CommTypes.Massages
         public RequestWiFiNetworksMessage() : base(MessageType.APList) { }
     }
 
-    public class WiFiNetworkItem
-    {
-        // Properties
-        public string ssid { get; set; }
-        public int signalStrength { get; set; }
-        public string securityType { get; set; }
-
-        // Constructor
-        public WiFiNetworkItem(string ssid, int signalStrength, string securityType) => (this.ssid, this.signalStrength, this.securityType) = (ssid, signalStrength, securityType);
-    }
-
     public class RespnseWiFiNetworksMessage : MessageHeader
     {
         public IEnumerable<WiFiNetworkItem> list { get; set; }
         public RespnseWiFiNetworksMessage(IEnumerable<WiFiNetworkItem> list) : base(MessageType.APList) => this.list = list;
     }
+
+    
 }

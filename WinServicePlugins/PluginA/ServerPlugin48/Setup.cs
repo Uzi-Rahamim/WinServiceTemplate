@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Service_APlugin.Worker;
+using PluginA.Worker;
 using WinService.Plugin.Common;
 
-namespace Service_APlugin
+namespace PluginA
 {
 
     public class PluginSetup : IPluginSetup

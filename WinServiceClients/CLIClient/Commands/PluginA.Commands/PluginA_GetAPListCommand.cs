@@ -2,30 +2,32 @@
 using Cocona;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using PluginA.ClientSDK.v1;
 
-namespace APIClient.commands.test;
+namespace ClientCLI.Commands.PluginA.Commands;
 
-public class GetAPListCommand
+public class PluginA_GetAPListCommand
 {
     [Command]
-    public static async Task GetAPList()
+    public static async Task PluginA_GetAPList()
     {
         try
         {
+            Log.Information($"PluginA_GetAPList");
             using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
                 if (!await channel.Connect())
                 {
-                    Console.WriteLine("Failed to connect to server");
+                    Log.Error("Failed to connect to server");
                     return;
                 }
 
 
-                var demoAPI = new DemoApi(channel);
+                var api = new PluginA_Api(channel);
 
                 Log.Information("Using GetAPListAsync");
 
-                var networks = demoAPI.GetAPListAsync();
+                var networks = api.GetAPListAsync();
                 await foreach (var network in networks)
                 {
                     Log.Information($"via SDK AP: {network.ssid} - {network.signalStrength}");

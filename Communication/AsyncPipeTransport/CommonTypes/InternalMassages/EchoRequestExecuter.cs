@@ -1,7 +1,7 @@
 ﻿using AsyncPipeTransport.Executer;
-using CommTypes.Massages;
+using Microsoft.Extensions.Logging;
 
-namespace App.WindowsService.API.Executers
+namespace AsyncPipeTransport.CommonTypes
 {
 
     public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>

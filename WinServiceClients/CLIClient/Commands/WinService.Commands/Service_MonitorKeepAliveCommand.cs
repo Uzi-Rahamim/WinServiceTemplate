@@ -5,24 +5,25 @@ using Serilog;
 
 namespace APIClient.commands.test
 {
-    public class MonitorKeepAliveCommand
+    public class Service_MonitorKeepAliveCommand
     {
         [Command]
-        public static async Task  monitor()
+        public static async Task Service_Monitor()
         {
+            Log.Information($"Service_Monitor");
             using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
                 if (!await channel.Connect())
                 {
-                    Console.WriteLine("Failed to connect to server");
+                    Log.Error("Failed to connect to server");
                     return;
                 }
 
-                var demoAPI = new DemoApi(channel);
+                var demoAPI = new WinServiceApi(channel);
 
                 demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
 
-                Console.WriteLine("Press any key to exit");
+                Log.Error("Press any key to exit");
                 Console.ReadKey();
             }
         }

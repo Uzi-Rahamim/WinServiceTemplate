@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Service_APlugin.Worker
+namespace PluginA.Worker
 {
     public class SimpleWorker
     {

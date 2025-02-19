@@ -18,8 +18,7 @@ internal class SetupExecuters
     {
         RegisterRequest<SchemaRequestExecuter>(FrameworkMessageTypes.RequestSchema, SchemaRequestExecuter.GetSchema);
         RegisterRequest<OpenSessionRequestExecuter>(FrameworkMessageTypes.OpenSession, OpenSessionRequestExecuter.GetSchema);
-        RegisterRequest<EchoRequestExecuter>(MessageType.Echo, EchoRequestExecuter.GetSchema);
-        RegisterRequest<GetAPListRequestExecuter>(MessageType.APList,GetAPListRequestExecuter.GetSchema);
+        RegisterRequest<EchoRequestExecuter>(FrameworkMessageTypes.Echo, EchoRequestExecuter.GetSchema);
 
         _serviceCollection.AddTransient<ISequenceGenerator, SequenceGenerator>();
         _serviceCollection.AddSingleton<IClientsManager, ClientsManager>();

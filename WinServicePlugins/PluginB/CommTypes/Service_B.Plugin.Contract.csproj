@@ -10,11 +10,6 @@
 	  <FileVersion>1.0.1</FileVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Consts\**" />
-    <EmbeddedResource Remove="Consts\**" />
-    <None Remove="Consts\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />

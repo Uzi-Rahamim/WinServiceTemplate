@@ -1,5 +1,6 @@
 ﻿using ClientSDK.v1;
 using Microsoft.Extensions.Logging;
+using PluginA.ClientSDK.v1;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,14 +27,15 @@ namespace SimpleClientApp
                     }
 
 
-                    var demoAPI = new DemoApi(channel);
+                    var winServiceApi = new WinServiceApi(channel);
 
                     //demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
                     var message = "Hello from client";
-                    var echoMsg = await demoAPI.GetEcho(message);
+                    var echoMsg = await winServiceApi.GetEcho(message);
                     Console.WriteLine(($"Server 2 reply to {message} with: {echoMsg}"));
 
-                    await demoAPI.GetAPListStream((network) =>
+                    var pluginA_Api = new PluginA_Api(channel);
+                    await pluginA_Api.GetAPListStream((network) =>
                          Console.WriteLine($"via SDK AP: {network.ssid} - {network.signalStrength}")
                          );
 

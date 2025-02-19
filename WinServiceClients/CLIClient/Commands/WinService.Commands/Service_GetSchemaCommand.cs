@@ -6,21 +6,22 @@ using System.Text;
 
 namespace APIClient.commands.test;
 
-public class GetSchemaCommand
+public class Service_GetSchemaCommand
 {
     [Command]
-    public static async Task GetSchema()
+    public static async Task Service_GetSchema()
     {
+        Log.Information($"Service_GetSchema");
         using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
             if (!await channel.Connect())
             {
-                Console.WriteLine("Failed to connect to server");
+                Log.Error("Failed to connect to server");
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
-            var demoAPI = new DemoApi(channel);
+            var demoAPI = new WinServiceApi(channel);
             var schemaList = demoAPI.GetSchema();
             await foreach (var schema in schemaList)
             {

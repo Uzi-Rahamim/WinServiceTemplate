@@ -113,6 +113,10 @@
       <Project>{aa4f73d0-9a68-4261-8e8e-99e12621d1fa}</Project>
       <Name>ClientSDK</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_A.Plugin.ClientSDK.csproj">
+      <Project>{3a35be25-b087-4591-9980-e4040b3b2ce5}</Project>
+      <Name>Service_A.Plugin.ClientSDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

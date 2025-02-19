@@ -1,11 +1,11 @@
-﻿using ServerSDK.CommonTypes;
-using System;
+﻿
+using PluginA.ClientSDK.CommonTypes;
 
-namespace ServerSDK.Convertors 
+namespace PluginA.ClientSDK.Convertors 
 {
     public static class ConvertWiFiNetwork
     {
-        public static WiFiNetwork ToWiFiNetwork(this CommTypes.Massages.WiFiNetworkItem obj)
+        public static WiFiNetwork ToWiFiNetwork(this PluginA.Contract.Types.WiFiNetworkItem obj)
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));

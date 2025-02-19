@@ -1,22 +1,22 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-namespace Service_BPlugin.Contract.Massages
+namespace PluginB.Contract.Massages
 {
     public partial class MessageType
     {
-        public static readonly string Echo2 = "Echo2";
+        public static readonly string PluginB_Echo = "PluginB.Echo";
     }
 
-    public class RequestEcho2Message : MessageHeader
+    public class RequestEchoMessage : MessageHeader
     {
         public string message { get; set; }
 
-        public RequestEcho2Message(string message) : base(MessageType.Echo2) => this.message = message;
+        public RequestEchoMessage(string message) : base(MessageType.PluginB_Echo) => this.message = message;
     }
 
-    public class ResponseEcho2Message : MessageHeader
+    public class ResponseEchoMessage : MessageHeader
     {
         public string message { get; set; }
-        public ResponseEcho2Message(string message) : base(MessageType.Echo2) => this.message = message;
+        public ResponseEchoMessage(string message) : base(MessageType.PluginB_Echo) => this.message = message;
     }
 
 }

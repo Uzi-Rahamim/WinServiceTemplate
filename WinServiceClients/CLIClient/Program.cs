@@ -4,7 +4,9 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 
 
-[HasSubCommands(typeof(DemoSubcommand), "demo", Description = "demo for testing server comunucation")]
+[HasSubCommands(typeof(Service_SubCommand), "service", Description = "service for testing server comunucation")]
+[HasSubCommands(typeof(PluginA_Subcommand), "plugin-a", Description = "plugin-a Apis")]
+[HasSubCommands(typeof(PluginB_Subcommand), "plugin-b", Description = "plugin-b Apis")]
 class Program
 {
     public static async Task Main(string[] args)

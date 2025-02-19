@@ -1,7 +1,5 @@
-﻿namespace ServerSDK.CommonTypes
+﻿namespace PluginA.ClientSDK.CommonTypes
 {
-    //public class WiFiNetwork(string ssid, int signalStrength, string securityType) { 
-    //}
     public class WiFiNetwork
     {
         // Properties

@@ -1,11 +1,23 @@
-﻿using CommTypes.Massages;
-using AsyncPipeTransport.Executer;
+﻿using AsyncPipeTransport.Executer;
+using Microsoft.Extensions.Logging;
+using PluginA.Contract.Massages;
+using PluginA.Contract.Types;
 
-namespace App.WindowsService.API.Executers
+namespace PluginA.Executers
 {
     public class GetAPListRequestExecuter : BaseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
     {
         public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
+
+        public static string Plugin_GetSchema()
+        {
+            return GetSchema();
+        }
+
+        public static string Plugin_GetMessageType()
+        {
+            return MessageType.APList;
+        }
 
         protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
         {

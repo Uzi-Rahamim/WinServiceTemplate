@@ -1,16 +1,16 @@
 ﻿using AsyncPipeTransport.Executer;
 using Microsoft.Extensions.Logging;
-using Service_BPlugin.Worker;
-using Service_BPlugin.Contract.Massages;
+using PluginB.Worker;
+using PluginB.Contract.Massages;
 
-namespace Service_BPlugin.Executers
+namespace PluginB.Executers
 {
-    public class Echo2RequestExecuter : BaseRequestExecuter<Echo2RequestExecuter, RequestEcho2Message, ResponseEcho2Message>
+    public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
         Worker.SimpleWorker _simpleWorker;
-        public Echo2RequestExecuter(ILogger<Echo2RequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) : 
+        public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) : 
             base(logger, cts) {
-            logger.LogInformation("Echo2RequestExecuter created");
+            logger.LogInformation("EchoRequestExecuter created");
             _simpleWorker = simpleWorker;
         }
 
@@ -21,18 +21,17 @@ namespace Service_BPlugin.Executers
 
         public static string Plugin_GetMessageType()
         {
-            return MessageType.Echo2;
+            return MessageType.PluginB_Echo;
         }
 
-        protected override async Task<bool> Execute(RequestEcho2Message requestMsg)
+        protected override async Task<bool> Execute(RequestEchoMessage requestMsg)
         {
             // Send a response back to the client
             var responseMsg = requestMsg.message+ " from Echo2RequestExecuter";
             //await Task.Delay(10000);
-            await SendLastResponse(new ResponseEcho2Message(responseMsg));
+            await SendLastResponse(new ResponseEchoMessage(responseMsg));
             Logger.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
-            _simpleWorker.SetChannel(Channel);
-           
+            
             return true;
         }
     }
