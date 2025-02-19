@@ -1,16 +1,14 @@
 ﻿using AsyncPipeTransport.Executer;
 using Microsoft.Extensions.Logging;
-using Service_APlugin.Worker;
 using Service_APlugin.Contract.Massages;
 
 namespace Service_APlugin.Executers
 {
-    public class Echo3RequestExecuter : BaseRequestExecuter<Echo3RequestExecuter, RequestEcho3Message, ResponseEcho3Message>
+    public class Echo3RequestExecuter : BaseRequestExecuter<Echo3RequestExecuter, RequestEcho3Message, ResponseEcho3Message> , IRequestExecuter
     {
-        Worker.SimpleWorker _simpleWorker;
-        public Echo3RequestExecuter(ILogger<Echo3RequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) : 
+        public Echo3RequestExecuter(ILogger<Echo3RequestExecuter> logger, CancellationTokenSource cts) : 
             base(logger, cts) {
-            _simpleWorker = simpleWorker;
+            logger.LogInformation("Echo3RequestExecuter created");
         }
 
         public static string Plugin_GetSchema()
@@ -28,7 +26,7 @@ namespace Service_APlugin.Executers
             // Send a response back to the client
             var responseMsg = requestMsg.message + " from Echo3RequestExecuter";
             await SendLastResponse(new ResponseEcho3Message(responseMsg));
-            Logger.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
+            Logger.LogInformation("Server plugin sent reply: {reply}", responseMsg);
 
             return true;
         }

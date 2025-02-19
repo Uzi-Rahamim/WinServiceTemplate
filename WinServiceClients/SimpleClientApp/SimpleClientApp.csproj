@@ -105,6 +105,10 @@
       <Project>{5b926da0-8277-7b6e-b157-b272d1160b0a}</Project>
       <Name>WinServicePluginCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj">
+      <Project>{745c5661-c7b4-439d-be1c-dc272dd54007}</Project>
+      <Name>AsyncPipeTransport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj">
       <Project>{aa4f73d0-9a68-4261-8e8e-99e12621d1fa}</Project>
       <Name>ClientSDK</Name>

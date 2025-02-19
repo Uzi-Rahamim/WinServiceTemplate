@@ -17,7 +17,7 @@ namespace App.WindowsService.API
         }
 
         public static void RegisterExecuter<T>(
-            IServiceCollection pluginsServiceCollection, 
+            IServiceCollection pluginsServiceCollection,
             string messageType) where T : class, IRequestExecuter
         {
             // Register the IRequestExecuter implementation as Transient
@@ -25,6 +25,21 @@ namespace App.WindowsService.API
             pluginsServiceCollection.AddSingleton<IRequestExecuterFactory>(serviceProvider =>
             {
                 var factory = () => serviceProvider.GetRequiredService<T>();
+                return new RequestExecuterFactory(messageType, factory);
+            });
+        }
+
+        public static void RegisterExecuterSafe<T>(
+            IServiceCollection mainCollection,
+            IServiceCollection pluginsCollection,
+            string messageType) where T : class, IRequestExecuter
+        {
+            // Register the IRequestExecuter implementation as Transient
+            pluginsCollection.AddTransient<T>();
+            mainCollection.AddSingleton<IRequestExecuterFactory>(serviceProvider =>
+            {
+                var pluginProvider = pluginsCollection.BuildServiceProvider();
+                var factory = () => pluginProvider.GetRequiredService<T>();
                 return new RequestExecuterFactory(messageType, factory);
             });
         }

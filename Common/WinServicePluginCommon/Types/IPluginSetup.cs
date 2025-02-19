@@ -1,7 +1,10 @@
-﻿namespace WinService.Plugin.Common
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace WinService.Plugin.Common
 {
     public interface IPluginSetup
     {
-        void Configure();
+        bool Start();
+        void Initialize(IServiceCollection serviceCollection);
     }
 }

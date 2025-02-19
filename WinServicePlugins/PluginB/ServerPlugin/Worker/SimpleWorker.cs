@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using AsyncPipeTransport.Extensions;
 using Service_BPlugin.Contract.Massages;
 
-namespace Service_APlugin.Worker
+namespace Service_BPlugin.Worker
 {
     public class SimpleWorker
     {

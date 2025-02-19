@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Service_APlugin.Worker;
 using WinService.Plugin.Common;
@@ -9,35 +8,28 @@ namespace Service_APlugin
 
     public class PluginSetup : IPluginSetup
     {
-        IServiceCollection _serviceCollection;
-        ILogger<PluginSetup> _logger;
-        public void Configure()
-        {   
-            _logger.LogInformation("Configure");
+        IServiceCollection? _serviceCollection;
+        ILogger<PluginSetup>? _logger;
+
+        public bool Start()
+        {
+            if (_serviceCollection == null || _logger == null)
+                return false;
+            _logger.LogInformation("Starting ... ");
             _serviceCollection.AddSingleton<SimpleWorker>();
 
             var serviceProvider = _serviceCollection.BuildServiceProvider();
             var worker = serviceProvider.GetRequiredService<SimpleWorker>();
             worker.Start();
+
+            return true;
         }
 
-        public PluginSetup(IServiceCollection serviceCollection)
+        public void Initialize(IServiceCollection serviceCollection)
         {
             this._serviceCollection = serviceCollection;
             var serviceProvider = _serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
         }
-
-        //public void PluginSetup2(IServiceCollection service)
-        //{
-        //    var services1 = new ServiceCollection();
-
-        //    this._serviceCollection = service;
-        //    var serviceProvider = builder.Services.BuildServiceProvider();
-        //    _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
-        //}
-       
-
-
     }
 }

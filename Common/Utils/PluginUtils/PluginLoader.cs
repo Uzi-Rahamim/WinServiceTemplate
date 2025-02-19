@@ -1,29 +1,30 @@
-﻿using System.Reflection;
+﻿using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.Loader;
 
 namespace Utilities.PluginUtils
 {
     public class PluginLoader
     {
-       
-        public static IEnumerable<Assembly> LoadPlugin(string pluginFile)
+
+        public static Assembly? LoadPlugin(string pluginFile)
         {
             var loadContext = new AssemblyLoadContext("PluginLoadContext" + Guid.NewGuid(), isCollectible: true);
-           
+
             var pluginAssembly = loadContext.LoadFromAssemblyPath(pluginFile);
             var path = Path.GetDirectoryName(pluginFile);
-            if (path == null) 
-                yield break;
+            if (path == null)
+                return null;
 
             foreach (var dependentAssembly in GetReferencedAssemblies(path, pluginAssembly))
             {
                 loadContext.LoadFromAssemblyPath(dependentAssembly);
             }
 
-            yield return pluginAssembly;
+            return pluginAssembly;
         }
 
-        
+
 
         public static IEnumerable<Type> GetTypes(Type interfaceType, Assembly assembly)
         {
@@ -57,8 +58,8 @@ namespace Utilities.PluginUtils
                     yield return dependentAssemblyFileName;
                 }
             }
-
         }
+
 
         //public static IEnumerable<Assembly> LoadPlugin(string assemblyPath, string assemblyExtention)
         //{

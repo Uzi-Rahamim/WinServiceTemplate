@@ -5,6 +5,28 @@ namespace App.WindowsService.API.Executers
 {
     public class GetAPListRequestExecuter : BaseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
     {
+        public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
+
+        protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
+        {
+
+            for (int page = 0; page < 100; page++)
+            {
+                Task.Delay(1000).Wait();
+                Logger.LogInformation($"Server sent page {page}");
+                await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            }
+
+            Logger.LogInformation("Server sent last page");
+            await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+
+            // Send a response back to the client
+            string replyPalyload = $"Request # {RequestId} ";
+            Logger.LogInformation("Server sent reply: {reply}", replyPalyload);
+
+            return true;
+        }
+
 
         // Create a list of 100 mock WiFi networks
         private readonly List<WiFiNetworkItem> wifiNetworks = new List<WiFiNetworkItem>
@@ -30,27 +52,5 @@ namespace App.WindowsService.API.Executers
                 new WiFiNetworkItem ("Network_19", -55,"None"),
                 new WiFiNetworkItem ("Network_20", -80,"WPA2"),
             };
-
-        public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
-
-        protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
-        {
-
-            for (int page = 0; page < 100; page++)
-            {
-                Task.Delay(1000).Wait();
-                Logger.LogInformation($"Server sent page {page}");
-                await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
-            }
-
-            Logger.LogInformation("Server sent last page");
-            await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
-
-            // Send a response back to the client
-            string replyPalyload = $"Request # {RequestId} ";
-            Logger.LogInformation("Server sent reply: {reply}", replyPalyload);
-
-            return true;
-        }
     }
 }

@@ -1,26 +1,30 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Service_APlugin.Worker;
+using Service_BPlugin.Worker;
 using WinService.Plugin.Common;
 
-namespace Service_APlugin
+namespace Service_BPlugin
 {
     public class PluginSetup : IPluginSetup
     {
-        IServiceCollection _serviceCollection;
-        ILogger<PluginSetup> _logger;
-        public void Configure()
+        private IServiceCollection? _serviceCollection;
+        private ILogger<PluginSetup>? _logger;
+       
+        public bool Start()
         {
-            _logger.LogInformation("Configure");
+            if (_serviceCollection == null || _logger == null) 
+                return false;
+            _logger.LogInformation("Starting ... ");
             _serviceCollection.AddSingleton<SimpleWorker>();
 
             var serviceProvider = _serviceCollection.BuildServiceProvider();
             var worker = serviceProvider.GetRequiredService<SimpleWorker>();
             worker.Start();
+
+            return true;
         }
 
-        
-        public PluginSetup(IServiceCollection serviceCollection)
+        public void Initialize(IServiceCollection serviceCollection)
         {
             this._serviceCollection = serviceCollection;
             var serviceProvider = _serviceCollection.BuildServiceProvider();

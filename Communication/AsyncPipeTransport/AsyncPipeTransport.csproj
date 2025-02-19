@@ -10,7 +10,7 @@
 		<Authors>Intel.Uzi</Authors>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>1.0.0</FileVersion>
-		<VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.250219.1</VersionPrefix>
+		<VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.250219.2</VersionPrefix>
 		<VersionSuffix Condition="'$(Configuration)' == 'Debug'">debug</VersionSuffix>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/Uzi-Rahamim/CommPackages</RepositoryUrl>
