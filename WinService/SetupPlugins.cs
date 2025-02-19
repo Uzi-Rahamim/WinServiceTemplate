@@ -1,15 +1,14 @@
 ﻿using App.WindowsService.API;
 using AsyncPipeTransport.Executer;
-using Types.Types;
+using CommTypes.Consts;
+using Utilities;
 using Utilities.PluginUtils;
+using WinService.Plugin.Common;
 
 namespace App.WindowsService
 {
     internal class SetupPlugins
     {
-        private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\bin\Plugin\Debug\"; }
-
-        //private string AssemblyPath { get => @"C:\Repo\MyRepos\WinServiceTemplate\WinServicePlugins\PluginA\ServerPlugin48\bin\x64\Debug\net4.8\"; }
         private IHostApplicationBuilder _builder;
         private ILogger<SetupPlugins> _logger;
         private SetupPlugins(IHostApplicationBuilder builder)
@@ -28,32 +27,36 @@ namespace App.WindowsService
 
         public void LoadPlugins()
         {
+            var pluginFileNames = RegistryUtils.GetKeySubStringValues(RegistryConsts.pluginKeyPath);
 
-            _logger.LogInformation("Loading plugin from - {AssemblyPath}", AssemblyPath);
-            foreach (var pluginAssembly in PluginLoader.LoadPlugin(AssemblyPath, "*ExecuterPlugin.dll"))
-            {
-                try
+            foreach (var pluginFileName in pluginFileNames)
+                foreach (var pluginAssembly in PluginLoader.LoadPlugin(pluginFileName))
                 {
-                    _logger.LogInformation("Loading plugin Assembly - {pluginAssembly.FullName}", pluginAssembly.FullName);
-                    foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
+                    try
                     {
-                        _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
-                        LoadExecuters(type);
-                    }
+                        _logger.LogInformation("Loading plugin Assembly - {pluginAssembly.FullName}", pluginAssembly.FullName);
 
-                    foreach (var type in PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly))
+                        // Load all types that implement IRequestExecuter
+                        foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
+                        {
+                            _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
+                            LoadExecuters(type);
+                        }
+
+                        // Load all types that implement IPluginSetup
+                        foreach (var type in PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly))
+                        {
+                            _logger.LogInformation("Loading plugin setup - {type.FullName}", type.FullName);
+                            // Create an instance by passing constructor arguments
+                            IPluginSetup? setupObj = Activator.CreateInstance(type, _builder) as IPluginSetup;
+                            setupObj?.Configure();
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        _logger.LogInformation("Loading plugin setup - {type.FullName}", type.FullName);
-                        // Create an instance by passing constructor arguments
-                        IPluginSetup? setupObj = Activator.CreateInstance(type, _builder) as IPluginSetup;
-                        setupObj?.Configure();
+                        _logger.LogError(ex, "load {pluginFileName} failed", pluginFileName);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
 
         }
 

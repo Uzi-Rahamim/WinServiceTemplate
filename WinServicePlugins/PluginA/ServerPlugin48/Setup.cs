@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Service_ExecuterPlugin.Worker;
-using Types.Types;
+using Service_APlugin.Worker;
+using WinService.Plugin.Common;
 
-namespace Service_ExecuterPlugin
+namespace Service_APlugin
 {
 
     public class PluginSetup : IPluginSetup

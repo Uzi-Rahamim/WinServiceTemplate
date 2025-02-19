@@ -10,7 +10,7 @@ namespace AsyncPipeTransport.Executer
     public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : MessageHeader
     {
         protected ILogger<T> Log { get; private set; }
-        protected IChannelSender Channel { get; private set; }
+        protected IChannelSender Channel { get; private set; } = null!;
         protected long RequestId { get; private set; }
 
         protected abstract Task<bool> Execute(Rq request);

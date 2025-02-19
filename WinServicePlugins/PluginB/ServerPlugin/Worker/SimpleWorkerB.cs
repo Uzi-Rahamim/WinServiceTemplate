@@ -1,9 +1,9 @@
 ﻿using AsyncPipeTransport.Channel;
 using Microsoft.Extensions.Logging;
 using AsyncPipeTransport.Extensions;
-using Service_ExecuterPlugin.CommTypes.Massages;
+using Service_BPlugin.Contract.Massages;
 
-namespace Service_ExecuterPlugin.Worker
+namespace Service_APlugin.Worker
 {
     public class SimpleWorkerB
     {

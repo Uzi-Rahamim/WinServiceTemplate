@@ -3,6 +3,7 @@ using ServerSDK.Convertors;
 using AsyncPipeTransport.Events;
 using AsyncPipeTransport.CommonTypes;
 using CommTypes.Massages;
+using WinServicePluginCommon.Sdk.Types;
 
 
 namespace ClientSDK.v1
@@ -10,11 +11,28 @@ namespace ClientSDK.v1
     public class DemoApi
     {
         ///private readonly ILogger<DemoApi> _logger;
-        private readonly ClientChannel _client;
+        private readonly ISDKClientChannel _client;
 
         //public DemoApi(ClientChannel client, ILogger<DemoApi> logger) => (_logger, _client) = (logger, client);
-        public DemoApi(ClientChannel client) => (_client) = (client);
+        public DemoApi(ISDKClientChannel client) => (_client) = (client);
 
+
+#if NET8_0_OR_GREATER
+        public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
+        {
+            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+                new RequestWiFiNetworksMessage());
+            await foreach (var response in responses)
+            {
+                foreach (var network in response.list)
+                {
+                    if (network == null)
+                        continue;
+                    yield return network.ToWiFiNetwork();
+                }
+            }
+        }
+ #elif NETFRAMEWORK
         public async Task GetAPListStream(Action<WiFiNetwork> setNextResult)
         {
             var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
@@ -30,21 +48,8 @@ namespace ClientSDK.v1
                 }
             }
         }
-
-        public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
-        {
-            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
-                new RequestWiFiNetworksMessage());
-            await foreach (var response in responses)
-            {
-                foreach (var network in response.list)
-                {
-                    if (network == null)
-                        continue;
-                    yield return network.ToWiFiNetwork();
-                }
-            }
-        }
+#endif
+       
 
         public async IAsyncEnumerable<string> GetSchema()
         {

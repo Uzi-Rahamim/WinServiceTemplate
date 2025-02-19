@@ -16,19 +16,21 @@
 		<RepositoryUrl>https://github.com/Uzi-Rahamim/CommPackages</RepositoryUrl>
 	</PropertyGroup>
 
+
 	<ItemGroup>
-		<ProjectReference Include="..\AsyncPipeTransport\AsyncPipeTransport.csproj" />
+	  <ProjectReference Include="..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
 	</ItemGroup>
+
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<OutputPath>..\..\bin\NuGets\CommType\Debug\</OutputPath>
+		<OutputPath>..\..\bin\NuGets\WinServicePluginCommon\Debug\</OutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<OutputPath>..\..\bin\NuGets\CommType\Release\</OutputPath>
+		<OutputPath>..\..\bin\NuGets\WinServicePluginCommon\Release\</OutputPath>
 	</PropertyGroup>
 </Project>

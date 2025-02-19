@@ -1,13 +1,13 @@
 ﻿using AsyncPipeTransport.Events;
-using ClientSDK.v1;
-using Service_ExecuterPlugin.CommTypes.Massages;
-namespace Service_ExecuterPlugin.ClientSDK.v1
+using Service_BPlugin.Contract.Massages;
+using WinServicePluginCommon.Sdk.Types;
+namespace Service_BPlugin.ClientSDK.v1
 {
     public class Api
     {
         ///private readonly ILogger<DemoApi> _logger;
-        private readonly ClientChannel _client;
-        public Api(ClientChannel client) => (_client) = (client);
+        private readonly ISDKClientChannel _client;
+        public Api(ISDKClientChannel client) => (_client) = (client);
 
         public async Task<string?> GetEcho(string message)
         {

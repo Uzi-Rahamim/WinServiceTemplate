@@ -10,11 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientCLI", "WinServiceClients\CLIClient\ClientCLI.csproj", "{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{60C8338D-81D9-4661-9C74-8921A5EC4079}"
-	ProjectSection(SolutionItems) = preProject
-		VersionInfo.json = VersionInfo.json
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Types", "Common\Types\Types.csproj", "{168B5D90-8DFD-473E-A6A7-691A7DB30328}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientSDK", "Communication\ClientSDK\ClientSDK.csproj", "{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}"
 EndProject
@@ -32,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncPipeTransportUnitTest"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServiceClients", "WinServiceClients", "{6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_ExecuterPlugin", "WinServicePlugins\PluginB\ServerPlugin\Service_ExecuterPlugin.csproj", "{256FADCF-7A6B-4312-8275-ED25FBB24EF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_B.Plugin", "WinServicePlugins\PluginB\ServerPlugin\Service_B.Plugin.csproj", "{256FADCF-7A6B-4312-8275-ED25FBB24EF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServicePlugins", "WinServicePlugins", "{B52451E9-FEC5-4A77-AA16-0B81D4A24082}"
 EndProject
@@ -40,15 +35,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PluginA", "PluginA", "{2472
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PluginB", "PluginB", "{615A7717-00DE-4F84-B1C6-AE44C542F101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_48_ExecuterPlugin.CommTypes", "WinServicePlugins\PluginA\CommTypes\Service_48_ExecuterPlugin.CommTypes.csproj", "{EE6D00BA-EFE6-4653-96F7-D2006D7BD466}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin.Contract", "WinServicePlugins\PluginA\CommTypes\Service_A.Plugin.Contract.csproj", "{EE6D00BA-EFE6-4653-96F7-D2006D7BD466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_ExecuterPlugin.CommTypes", "WinServicePlugins\PluginB\CommTypes\Service_ExecuterPlugin.CommTypes.csproj", "{FAC22824-7123-4238-B726-2C339CCD338C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_B.Plugin.Contract", "WinServicePlugins\PluginB\CommTypes\Service_B.Plugin.Contract.csproj", "{FAC22824-7123-4238-B726-2C339CCD338C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_48_ExecuterPlugin.ClientSDK", "WinServicePlugins\PluginA\ClientSDK\Service_48_ExecuterPlugin.ClientSDK.csproj", "{3A35BE25-B087-4591-9980-E4040B3B2CE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin.ClientSDK", "WinServicePlugins\PluginA\ClientSDK\Service_A.Plugin.ClientSDK.csproj", "{3A35BE25-B087-4591-9980-E4040B3B2CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_ExecuterPlugin.ClientSDK", "WinServicePlugins\PluginB\ClientSDK\Service_ExecuterPlugin.ClientSDK.csproj", "{C2E83ADE-0EE5-4C44-A8DB-13806F176E21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_B.Plugin.ClientSDK", "WinServicePlugins\PluginB\ClientSDK\Service_B.Plugin.ClientSDK.csproj", "{C2E83ADE-0EE5-4C44-A8DB-13806F176E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_48_ExecuterPlugin", "WinServicePlugins\PluginA\ServerPlugin48\Service_48_ExecuterPlugin.csproj", "{4B363838-9B72-4F25-935C-2C04D2899F2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin", "WinServicePlugins\PluginA\ServerPlugin48\Service_A.Plugin.csproj", "{4B363838-9B72-4F25-935C-2C04D2899F2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinServicePluginCommon", "Common\WinServicePluginCommon\WinServicePluginCommon.csproj", "{5B926DA0-8277-7B6E-B157-B272D1160B0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,10 +65,6 @@ Global
 		{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB}.Debug|x64.Build.0 = Debug|x64
 		{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB}.Release|x64.ActiveCfg = Release|x64
 		{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB}.Release|x64.Build.0 = Release|x64
-		{168B5D90-8DFD-473E-A6A7-691A7DB30328}.Debug|x64.ActiveCfg = Debug|x64
-		{168B5D90-8DFD-473E-A6A7-691A7DB30328}.Debug|x64.Build.0 = Debug|x64
-		{168B5D90-8DFD-473E-A6A7-691A7DB30328}.Release|x64.ActiveCfg = Release|x64
-		{168B5D90-8DFD-473E-A6A7-691A7DB30328}.Release|x64.Build.0 = Release|x64
 		{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}.Debug|x64.ActiveCfg = Debug|x64
 		{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}.Debug|x64.Build.0 = Debug|x64
 		{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}.Release|x64.ActiveCfg = Release|x64
@@ -89,9 +82,7 @@ Global
 		{A496E910-8426-4E55-B246-FF3356EF863C}.Release|x64.ActiveCfg = Release|x64
 		{A496E910-8426-4E55-B246-FF3356EF863C}.Release|x64.Build.0 = Release|x64
 		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Debug|x64.ActiveCfg = Debug|x64
-		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Debug|x64.Build.0 = Debug|x64
 		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Release|x64.ActiveCfg = Release|x64
-		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Release|x64.Build.0 = Release|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.ActiveCfg = Debug|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.Build.0 = Debug|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.ActiveCfg = Release|x64
@@ -116,6 +107,10 @@ Global
 		{4B363838-9B72-4F25-935C-2C04D2899F2A}.Debug|x64.Build.0 = Debug|x64
 		{4B363838-9B72-4F25-935C-2C04D2899F2A}.Release|x64.ActiveCfg = Release|x64
 		{4B363838-9B72-4F25-935C-2C04D2899F2A}.Release|x64.Build.0 = Release|x64
+		{5B926DA0-8277-7B6E-B157-B272D1160B0A}.Debug|x64.ActiveCfg = Debug|x64
+		{5B926DA0-8277-7B6E-B157-B272D1160B0A}.Debug|x64.Build.0 = Debug|x64
+		{5B926DA0-8277-7B6E-B157-B272D1160B0A}.Release|x64.ActiveCfg = Release|x64
+		{5B926DA0-8277-7B6E-B157-B272D1160B0A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,7 +118,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{745C5661-C7B4-439D-BE1C-DC272DD54007} = {2DC312E3-71C3-4F84-9E1D-7790DF3400BD}
 		{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB} = {6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}
-		{168B5D90-8DFD-473E-A6A7-691A7DB30328} = {60C8338D-81D9-4661-9C74-8921A5EC4079}
 		{AA4F73D0-9A68-4261-8E8E-99E12621D1FA} = {2DC312E3-71C3-4F84-9E1D-7790DF3400BD}
 		{C679B2F0-9633-435D-AD71-D27D65C25352} = {2DC312E3-71C3-4F84-9E1D-7790DF3400BD}
 		{F062C43F-5BE7-4FA7-8438-774A4648DCC7} = {60C8338D-81D9-4661-9C74-8921A5EC4079}
@@ -137,5 +131,9 @@ Global
 		{3A35BE25-B087-4591-9980-E4040B3B2CE5} = {24729577-42C1-4034-B6E7-4D16F5457A83}
 		{C2E83ADE-0EE5-4C44-A8DB-13806F176E21} = {615A7717-00DE-4F84-B1C6-AE44C542F101}
 		{4B363838-9B72-4F25-935C-2C04D2899F2A} = {24729577-42C1-4034-B6E7-4D16F5457A83}
+		{5B926DA0-8277-7B6E-B157-B272D1160B0A} = {60C8338D-81D9-4661-9C74-8921A5EC4079}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02E434DD-029C-410E-A06E-FAFEC14193C6}
 	EndGlobalSection
 EndGlobal

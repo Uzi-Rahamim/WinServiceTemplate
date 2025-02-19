@@ -1,4 +1,4 @@
-﻿namespace Types.Types
+﻿namespace WinService.Plugin.Common
 {
     public interface IPluginSetup
     {

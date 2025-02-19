@@ -16,14 +16,21 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<OutputPath>..\bin\Debug\</OutputPath>
+		<OutputPath>..\bin\Service\Debug\</OutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<OutputPath>..\bin\Release\</OutputPath>
+		<OutputPath>..\bin\Service\Release\</OutputPath>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="CommonTypes\**" />
+	  <Content Remove="CommonTypes\**" />
+	  <EmbeddedResource Remove="CommonTypes\**" />
+	  <None Remove="CommonTypes\**" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
@@ -35,15 +42,12 @@
     <PackageReference Include="Serilog.Sinks.EventLog" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.Trace" Version="4.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CommonTypes\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Types\Types.csproj" />
     <ProjectReference Include="..\Common\Utils\Utilities.csproj" />
+    <ProjectReference Include="..\Common\WinServicePluginCommon\WinServicePluginCommon.csproj" />
     <ProjectReference Include="..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
     <ProjectReference Include="..\Communication\CommTypes\CommTypes.csproj" />
   </ItemGroup>

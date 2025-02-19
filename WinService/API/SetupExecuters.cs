@@ -26,7 +26,7 @@ internal class SetupExecuters
         _builder.Services.AddSingleton<IExecuterManager, ExecuterManager>();
         _builder.Services.AddSingleton<IServerMessageListener, ServerMessageListener>();
         _builder.Services.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(
-            provider.GetRequiredService<ILogger<ClientPipeChannel>>(), 
+            provider.GetRequiredService<ILogger<ClientPipeChannel>>(),
             PipeApiConsts.PipeName));
         _builder.Services.AddSingleton<ServerIncomingConnectionListener>();
     }

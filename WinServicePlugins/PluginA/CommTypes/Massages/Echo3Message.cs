@@ -1,5 +1,5 @@
 ﻿using AsyncPipeTransport.CommonTypes;
-namespace Service_48_ExecuterPlugin.CommTypes.Massages
+namespace Service_APlugin.Contract.Massages
 {
     public partial class MessageType
     {

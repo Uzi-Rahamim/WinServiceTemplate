@@ -2,7 +2,6 @@
 using Cocona;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Service_48_ExecuterPlugin.ClientSDK.v1;
 
 namespace APIClient.commands.test;
 
@@ -20,15 +19,15 @@ public class GetPlatfrmListCommand
             }
 
 
-            var api = new Api(channel);
+            //var api = new Api(channel);
 
             Log.Information("Using GetListAsync");
 
-            var list = await api.GetPlatformCompatibility();
-            foreach (var item in list)
-            {
-                Log.Information($"{item}");
-            }
+            //var list = await api.GetPlatformCompatibility();
+            //foreach (var item in list)
+            //{
+            //    Log.Information($"{item}");
+            //}
 
             //Log.Information("Using GetAPListStream");
             //await testAPI.GetAPListStream((network)=> Log.Information($"via SDK AP: {network.ssid} - {network.signalStrength}"));

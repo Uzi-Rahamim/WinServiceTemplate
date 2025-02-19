@@ -28,8 +28,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj" />
-    <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_48_ExecuterPlugin.ClientSDK.csproj" />
-    <ProjectReference Include="..\..\WinServicePlugins\PluginB\ClientSDK\Service_ExecuterPlugin.ClientSDK.csproj" />
+    <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_A.Plugin.ClientSDK.csproj" />
+    <ProjectReference Include="..\..\WinServicePlugins\PluginB\ClientSDK\Service_B.Plugin.ClientSDK.csproj" />
   </ItemGroup>
 
 </Project>

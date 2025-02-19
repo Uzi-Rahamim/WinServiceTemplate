@@ -11,8 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Consts\" />
-    <Folder Include="Events\" />
+    <Compile Remove="Consts\**" />
+    <EmbeddedResource Remove="Consts\**" />
+    <None Remove="Consts\**" />
   </ItemGroup>
 
   <ItemGroup>

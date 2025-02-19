@@ -1,9 +1,9 @@
 ﻿using AsyncPipeTransport.Executer;
-using Service_ExecuterPlugin.CommTypes.Massages;
 using Microsoft.Extensions.Logging;
-using Service_ExecuterPlugin.Worker;
+using Service_APlugin.Worker;
+using Service_BPlugin.Contract.Massages;
 
-namespace Service_ExecuterPlugin.Executers
+namespace Service_APlugin.Executers
 {
     public class Echo2RequestExecuter : BaseRequestExecuter<Echo2RequestExecuter, RequestEcho2Message, ResponseEcho2Message>
     {

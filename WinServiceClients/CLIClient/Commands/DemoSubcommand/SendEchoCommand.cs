@@ -27,12 +27,12 @@ public class SendEchoCommand
                     echoMsg = await api.GetEcho(message) ?? "v1 fail";
                     break;
                 case 2:
-                    var api2 = new Service_ExecuterPlugin.ClientSDK.v1.Api(channel);
+                    var api2 = new Service_APlugin.ClientSDK.v1.Api(channel);
                     echoMsg = await api2.GetEcho(message) ?? "v2 fail";
                    
                     break;
                 case 3:
-                    var api3 = new Service_48_ExecuterPlugin.ClientSDK.v1.Api(channel);
+                    var api3 = new Service_BPlugin.ClientSDK.v1.Api(channel);
                     echoMsg = await api3.GetEcho(message) ?? "v3 fail";
                     break;
                 default:
