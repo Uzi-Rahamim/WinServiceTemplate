@@ -3,6 +3,7 @@ using WinService;
 using Serilog;
 using App.WindowsService.API;
 using App.WindowsService;
+using System.Reflection;
 
 internal class Program
 {
@@ -39,7 +40,11 @@ internal class Program
                 return; // Exit the application
             }
 
+
+            // Get the version of the current assembly
+            
             Log.Information("\n\r Starting ... \n\r");
+            LogServiceVersion();
 
             // add the provider
             builder.Logging.AddSerilog();
@@ -58,6 +63,20 @@ internal class Program
             Log.Information("\r\n Stoped !!! \r\n\r\n");
             // Dispose of the logger when the application ends
             Log.CloseAndFlush();
+        }
+    }
+
+    private static void LogServiceVersion()
+    {
+        Assembly currentAssembly = Assembly.GetExecutingAssembly();
+        Version? version = currentAssembly.GetName().Version;
+        if (version != null)
+        {
+            Log.Information("Service Version: {version}", version);
+        }
+        else
+        {
+            Log.Warning("Service Version information is not available.");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\..\Build\Version.props"  Condition="Exists('..\..\Build\Version.props')"/>
+	
   <PropertyGroup>
 	  <OutputType>Library</OutputType>
 	  <TargetFrameworks>net8.0-windows</TargetFrameworks>
@@ -7,7 +8,6 @@
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
 	  <LangVersion>latest</LangVersion>
-	  <FileVersion>1.0.1</FileVersion>
   </PropertyGroup>
 
 </Project>

@@ -99,7 +99,7 @@ namespace App.WindowsService
                 }
                 ExecuterRegister.RegisterSchema(_serviceCollection, messageType, () => schema);
                 
-                var registerExecuter = typeof(ExecuterRegister).GetMethod("RegisterExecuterSafe")?.MakeGenericMethod(type); //make generic method
+                var registerExecuter = typeof(ExecuterRegister).GetMethod("RegisterPluginExecuter")?.MakeGenericMethod(type); //make generic method
                 // Invoke the method
                 registerExecuter?.Invoke(null, new object[] { _serviceCollection, serviceCollection, messageType });
             }

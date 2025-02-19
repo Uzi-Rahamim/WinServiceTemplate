@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.2</FileVersion>
+    <Authors>Intel.Uzi</Authors>
+    <description>Sample package to demonstrate README inclusion</description>
+    <VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.250219.4</VersionPrefix>
+    <VersionSuffix Condition="'$(Configuration)' == 'Debug'">debug</VersionSuffix>
+  </PropertyGroup>
+</Project>

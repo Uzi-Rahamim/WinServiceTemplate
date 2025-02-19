@@ -29,7 +29,7 @@ namespace App.WindowsService.API
             });
         }
 
-        public static void RegisterExecuterSafe<T>(
+        public static void RegisterPluginExecuter<T>(
             IServiceCollection mainCollection,
             IServiceCollection pluginsCollection,
             string messageType) where T : class, IRequestExecuter
