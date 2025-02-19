@@ -9,11 +9,13 @@ namespace AsyncPipeTransport.Executer
 {
     public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : MessageHeader
     {
-        protected ILogger<T> Log { get; private set; }
-        protected IChannelSender Channel { get; private set; } = null!;
+        protected ILogger<T> Logger { get; private set; }
+        protected IChannelSender? Channel { get; private set; }
         protected long RequestId { get; private set; }
 
         protected abstract Task<bool> Execute(Rq request);
+
+        private readonly CancellationToken _cancellationToken;
 
         public static string GetSchema()
         {
@@ -43,10 +45,11 @@ namespace AsyncPipeTransport.Executer
             return JsonConvert.SerializeObject(properties, Formatting.Indented);
         }
 
-        public BaseRequestExecuter(ILogger<T> logger, CancellationTokenSource cts)
+        public BaseRequestExecuter(ILogger<T> logger, CancellationTokenSource cancellationToken)
         {
-            Log = logger;
-            Log.LogInformation("Request Handler Created");
+            Logger = logger;
+            Logger.LogInformation("Request Handler Created");
+            _cancellationToken = cancellationToken.Token;
         }
 
         public Task<bool> Execute(IChannelSender channel, long requestId, string requestJson)
@@ -61,23 +64,38 @@ namespace AsyncPipeTransport.Executer
             }
             catch (Exception ex)
             {
-                Log.LogError(ex, "Error in Execute");
+                Logger.LogError(ex, "Error in Execute");
                 return Task.FromResult(false);
             }
         }
 
         protected Task SendLastResponse<R>(R responseMessage) where R : MessageHeader
         {
+            if (Channel == null)
+            {
+                Logger.LogError("Channel is null");
+                return Task.CompletedTask;
+            }
             return Channel.SendAsync(responseMessage.BuildResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendContinuingResponse<R>(R responseMessage) where R : MessageHeader
         {
+            if (Channel == null)
+            {
+                Logger.LogError("Channel is null");
+                return Task.CompletedTask;
+            }
             return Channel.SendAsync(responseMessage.BuildContinuingResponseMessage(RequestId), CancellationToken.None);
         }
 
         protected Task SendEvent<R>(R eventMessage) where R : MessageHeader
         {
+            if (Channel == null)
+            {
+                Logger.LogError("Channel is null");
+                return Task.CompletedTask;
+            }
             return Channel.SendAsync(eventMessage.BuildServerEventMessage(), CancellationToken.None);
         }
     }

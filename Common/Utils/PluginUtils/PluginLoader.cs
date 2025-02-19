@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.Loader;
 
 namespace Utilities.PluginUtils
@@ -58,6 +57,7 @@ namespace Utilities.PluginUtils
                     yield return dependentAssemblyFileName;
                 }
             }
+
         }
 
         //public static IEnumerable<Assembly> LoadPlugin(string assemblyPath, string assemblyExtention)

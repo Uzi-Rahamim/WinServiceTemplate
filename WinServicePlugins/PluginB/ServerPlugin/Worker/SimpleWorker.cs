@@ -5,20 +5,24 @@ using Service_BPlugin.Contract.Massages;
 
 namespace Service_APlugin.Worker
 {
-    public class SimpleWorkerB
+    public class SimpleWorker
     {
-        ILogger<SimpleWorkerB> _logger;
-        public string Message { get=> "SimpleWorkerB"; }
+        ILogger<SimpleWorker> _logger;
+        public string Message { get=> "SimpleWorker B"; }
         public IChannelSender? _channel { get; private set; }
-        public SimpleWorkerB(ILogger<SimpleWorkerB> logger)
+        public SimpleWorker(ILogger<SimpleWorker> logger)
         {
             _logger = logger;
-            _logger.LogInformation("SimpleWorkerB created");
+            _logger.LogInformation("SimpleWorker B created");
         }
 
-
-        public void SetChannel(IChannelSender channel)
+        public void SetChannel(IChannelSender? channel)
         {
+            if (channel == null)
+            {
+                _logger.LogError("Channel is null");
+                return;
+            }
             _channel = channel;
             _= Task.Run(async () => {
                 _logger.LogInformation("Start worker Notify ");

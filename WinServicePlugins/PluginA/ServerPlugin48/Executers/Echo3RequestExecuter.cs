@@ -28,7 +28,7 @@ namespace Service_APlugin.Executers
             // Send a response back to the client
             var responseMsg = requestMsg.message + " from Echo3RequestExecuter";
             await SendLastResponse(new ResponseEcho3Message(responseMsg));
-            Log.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
+            Logger.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
 
             return true;
         }

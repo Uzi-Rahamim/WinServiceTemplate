@@ -9,27 +9,35 @@ namespace Service_APlugin
 
     public class PluginSetup : IPluginSetup
     {
-        IHostApplicationBuilder _builder;
+        IServiceCollection _serviceCollection;
         ILogger<PluginSetup> _logger;
         public void Configure()
-        {
-            
-
+        {   
             _logger.LogInformation("Configure");
-            _builder.Services.AddSingleton<SimpleWorker>();
+            _serviceCollection.AddSingleton<SimpleWorker>();
 
-            var serviceProvider = _builder.Services.BuildServiceProvider();
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
             var worker = serviceProvider.GetRequiredService<SimpleWorker>();
             worker.Start();
         }
 
-        public PluginSetup(IHostApplicationBuilder builder)
+        public PluginSetup(IServiceCollection serviceCollection)
         {
-            this._builder = builder;
-            var serviceProvider = builder.Services.BuildServiceProvider();
+            this._serviceCollection = serviceCollection;
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
         }
 
-   
+        //public void PluginSetup2(IServiceCollection service)
+        //{
+        //    var services1 = new ServiceCollection();
+
+        //    this._serviceCollection = service;
+        //    var serviceProvider = builder.Services.BuildServiceProvider();
+        //    _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
+        //}
+       
+
+
     }
 }

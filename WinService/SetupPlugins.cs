@@ -11,15 +11,15 @@ namespace App.WindowsService
     {
         private IHostApplicationBuilder _builder;
         private ILogger<SetupPlugins> _logger;
-        private SetupPlugins(IHostApplicationBuilder builder)
+        private SetupPlugins(IServiceCollection serviceCollection)
         {
-            _builder = builder;
-            var serviceProvider = builder.Services.BuildServiceProvider();
+            _serviceCollection = serviceCollection;
+            var serviceProvider = serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<SetupPlugins>>();
 
         }
 
-        public static SetupPlugins Create(IHostApplicationBuilder builder)
+        public static SetupPlugins Create(IServiceCollection builder)
         {
             return new SetupPlugins(builder);
         }
@@ -42,7 +42,38 @@ namespace App.WindowsService
                             _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
                             LoadExecuters(type);
                         }
+            _logger.LogInformation("Loading plugin from - {AssemblyPath}", AssemblyPath);
+           
+            foreach (var pluginAssembly in PluginLoader.LoadPlugin(AssemblyPath, "*ExecuterPlugin.dll"))
+            {
+                try
+                {
+                    //DI Isolation per plugin
+                    var serviceCollection = new ServiceCollection();
+                    CopyServices(_serviceCollection, serviceCollection);
+                    _logger.LogInformation("Loading plugin Assembly - {pluginAssembly.FullName}", pluginAssembly.FullName);
+                    foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
+                    {
+                        _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
+                        LoadExecuters(serviceCollection, type);
+                    }
 
+                    foreach (var type in PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly))
+                    {
+                        _logger.LogInformation("Loading plugin setup - {type.FullName}", type.FullName);
+                        // Create an instance by passing constructor arguments
+                        IPluginSetup? setupObj = Activator.CreateInstance(type, serviceCollection) as IPluginSetup;
+                        setupObj?.Configure();
+                    }
+                    
+                    serviceCollection.BuildServiceProvider();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+           
                         // Load all types that implement IPluginSetup
                         foreach (var type in PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly))
                         {
@@ -60,7 +91,7 @@ namespace App.WindowsService
 
         }
 
-        public void LoadExecuters(Type type)
+        private void LoadExecuters(IServiceCollection serviceCollection, Type type)
         {
             try
             {
@@ -74,16 +105,25 @@ namespace App.WindowsService
                     throw new ApplicationException("Plugin_GetMessageType is missing");
                 }
 
+                var registerSchema = typeof(ExecuterRegister).GetMethod("RegisterSchema");
+                var registerExecuter = typeof(ExecuterRegister).GetMethod("RegisterExecuter")?.MakeGenericMethod(type); //make generic method
 
-                var registerMethod = typeof(ExecuterRegister).GetMethod("RegisterRequest");
-                // Make the method generic by passing the Type
-                var genericRegisterMethod = registerMethod?.MakeGenericMethod(type);
                 // Invoke the method
-                genericRegisterMethod?.Invoke(null, new object[] { _builder, messageType, () => schema });
+                registerSchema?.Invoke(null, new object[] { _serviceCollection, messageType, () => schema });
+                registerExecuter?.Invoke(null, new object[] { serviceCollection, messageType });
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        public static void CopyServices(IServiceCollection source, IServiceCollection destination)
+        {
+            foreach (var serviceDescriptor in source)
+            {
+                //Console.WriteLine(serviceDescriptor.ServiceType);
+                destination.Add(serviceDescriptor);
             }
         }
     }
