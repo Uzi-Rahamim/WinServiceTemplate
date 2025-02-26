@@ -33,5 +33,10 @@ namespace AsyncPipeTransport.Extensions
         {
             return frame.options.HasFlag(FrameOptions.Discovery);
         }
+
+        public static bool IsErrorFrame(this FrameHeader frame)
+        {
+            return frame.options.HasFlag(FrameOptions.ErrorMsg);
+        }
     }
 }

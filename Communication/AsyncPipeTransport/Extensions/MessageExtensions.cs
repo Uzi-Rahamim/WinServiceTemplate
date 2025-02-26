@@ -1,9 +1,10 @@
 ﻿using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.CommonTypes.InternalMassages;
 using AsyncPipeTransport.Serializers;
 
 namespace AsyncPipeTransport.Extensions
 {
-    public static class RequestExtensions
+    public static class MessageExtensions
     {
         public static string ToJson<T>(this T obj)
         {
@@ -46,6 +47,11 @@ namespace AsyncPipeTransport.Extensions
             return message.BuildMessage(requestId, FrameOptions.Response | FrameOptions.LastFrame);
         }
 
+        public static string BuildErrorMessage<T>(this T message, long requestId) where T : ErrorMessage
+        {
+            return message.BuildMessage(requestId, FrameOptions.Response | FrameOptions.ErrorMsg);
+        }
+
         public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
             return message.BuildMessage(requestId, FrameOptions.Response);
@@ -54,6 +60,11 @@ namespace AsyncPipeTransport.Extensions
         public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
         {
             return message.BuildMessage(0, FrameOptions.EvantMsg);
+        }
+     
+        public static bool IsNullMessage(this FrameHeader frame)
+        {
+            return frame.msgType.Contains(FrameworkMessageTypes.Empty);
         }
     }
 }

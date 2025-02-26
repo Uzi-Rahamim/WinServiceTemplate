@@ -10,7 +10,7 @@ using WinServicePluginCommon.Sdk.Types;
 
 namespace ClientSDK.v1
 {
-    public class ClientChannel : ISDKClientChannel, IDisposable
+    public class SdkClientChannel : ISDKClientChannel, IDisposable
     {
         internal IClientMessageListener Listener { get => _clientMessageListener; }
         public IEventManager EventHandler { get => _clientEventHandler; }
@@ -24,10 +24,10 @@ namespace ClientSDK.v1
 
         public event Action? OnDisconnect;
 
-        public ClientChannel(ILoggerFactory loggerFactory)
+        public SdkClientChannel(ILoggerFactory loggerFactory)
         {
 
-            var logger = loggerFactory.CreateLogger<ClientChannel>();
+            var logger = loggerFactory.CreateLogger<SdkClientChannel>();
             var cancellationTokenSource = new CancellationTokenSource();
 
             _cancellationToken = cancellationTokenSource.Token;

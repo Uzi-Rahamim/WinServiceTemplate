@@ -19,22 +19,6 @@ namespace PluginA.Executers
             return MessageType.APList;
         }
 
-        protected override async Task<RespnseWiFiNetworksMessage?> Execute(
-            RequestWiFiNetworksMessage requestMsg, 
-            Func<RespnseWiFiNetworksMessage, Task> sendPage)
-        {
-
-            for (int page = 0; page < 100; page++)
-            {
-                await Task.Delay(1000);
-                Logger.LogInformation($"Server sent page {page}");
-                await sendPage(new RespnseWiFiNetworksMessage(wifiNetworks));
-            }
-
-            Logger.LogInformation("Server sent last page");
-            return new RespnseWiFiNetworksMessage(wifiNetworks);
-        }
-
         protected override async IAsyncEnumerable<RespnseWiFiNetworksMessage> Execute(RequestWiFiNetworksMessage request)
         {
             for (int page = 0; page < 2; page++)

@@ -1,6 +1,7 @@
 ﻿using App.WindowsService.API;
 using AsyncPipeTransport.Executer;
 using CommTypes.Consts;
+using Serilog;
 using Utilities;
 using Utilities.PluginUtils;
 using WinService.Plugin.Common;
@@ -11,65 +12,70 @@ namespace App.WindowsService
     {
         private readonly IServiceCollection _serviceCollection;
         private readonly ILogger<SetupPlugins> _logger;
+
+
         private SetupPlugins(IServiceCollection serviceCollection)
         {
             _serviceCollection = serviceCollection;
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<SetupPlugins>>();
         }
 
-        public static SetupPlugins Create(IServiceCollection builder)
+        public static SetupPlugins Create(IServiceCollection serviceCollection)
         {
-            return new SetupPlugins(builder);
+            return new SetupPlugins(serviceCollection);
         }
-
 
         public async Task LoadPlugins()
         {
             var pluginFileNames = RegistryUtils.GetKeySubStringValues(RegistryConsts.pluginKeyPath);
+
             foreach (var pluginFileName in pluginFileNames)
             {
-                _logger.LogInformation("Found plugin  - {pluginFileName}", pluginFileName);
-                var pluginAssembly = PluginLoader.LoadPlugin(pluginFileName);
-                if (pluginAssembly == null)
-                    continue;
+                var serviceCollection = CreateNewCollection();
+                await LoadPlugin(pluginFileName, serviceCollection);
+            }
+        }
+        private async Task LoadPlugin(string pluginFileName, IServiceCollection serviceCollection)
+        {
 
-                try
+            _logger.LogInformation("Found plugin  - {pluginFileName}", pluginFileName);
+            var pluginAssembly = PluginLoader.LoadPlugin(pluginFileName);
+            if (pluginAssembly == null)
+                return;
+
+            try
+            {
+                //DI Isolation per plugin
+                _logger.LogInformation("Loading plugin Assembly - {assembly.FullName}", pluginAssembly.FullName);
+
+                // Load Plugin IPluginSetup
+                var pluginSetupType = PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly).FirstOrDefault();
+                if (pluginSetupType == null)
                 {
-                    //DI Isolation per plugin
-                    var serviceCollection = new ServiceCollection();
-                    CopyServices(_serviceCollection, serviceCollection);
-                    _logger.LogInformation("Loading plugin Assembly - {assembly.FullName}", pluginAssembly.FullName);
-
-                    // Load Plugin IPluginSetup
-                    var pluginSetupType = PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly).FirstOrDefault();
-                    if (pluginSetupType == null)
-                    {
-                        _logger.LogError("Plugin setup not found- {assembly.FullName} failed", pluginAssembly.FullName);
-                        continue;
-                    }
-
-                    _logger.LogInformation("Loading plugin setup - {type.FullName}", pluginSetupType.FullName);
-                    if (!await LoadPluginSetup(serviceCollection, pluginSetupType))
-                    {
-                        _logger.LogError("Loading plugin setup - {type.FullName} failed", pluginSetupType.FullName);
-                        continue;
-                    }
-
-                    // Load all Plugin types that implement IRequestExecuter
-                    foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
-                    {
-                        _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
-                        LoadExecuters(serviceCollection, type);
-                    }
-
-                    serviceCollection.BuildServiceProvider();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "LoadPlugins {pluginFileName} failed", pluginFileName);
+                    _logger.LogError("Plugin setup not found- {assembly.FullName} failed", pluginAssembly.FullName);
+                    return;
                 }
 
+                _logger.LogInformation("Loading plugin setup - {type.FullName}", pluginSetupType.FullName);
+                if (!await LoadPluginSetup(serviceCollection, pluginSetupType))
+                {
+                    _logger.LogError("Loading plugin setup - {type.FullName} failed", pluginSetupType.FullName);
+                    return;
+                }
+
+                // Load all Plugin types that implement IRequestExecuter
+                foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
+                {
+                    _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
+                    LoadExecuters(serviceCollection, type);
+                }
+
+               // serviceCollection.BuildServiceProvider();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "LoadPlugins {pluginFileName} failed", pluginFileName);
             }
         }
 
@@ -79,10 +85,16 @@ namespace App.WindowsService
             IPluginSetup? pluginSetup = Activator.CreateInstance(pluginSetupType) as IPluginSetup;
             if (pluginSetup == null)
                 return false;
+
             await pluginSetup.Initialize(serviceCollection);
             var version = pluginSetup.GetVersion();
             _logger.LogInformation("Loading plugin setup - {type.FullName} {version}", pluginSetupType.FullName, version);
-            return await pluginSetup.Start();
+            PluginManager.GetInstance().AddPlugin(pluginSetup);
+
+            //return await pluginSetup.Start();
+
+
+            return true;
         }
 
         private void LoadExecuters(IServiceCollection serviceCollection, Type type)
@@ -110,13 +122,14 @@ namespace App.WindowsService
             }
         }
 
-        private void CopyServices(IServiceCollection source, IServiceCollection destination)
+        private IServiceCollection CreateNewCollection()
         {
-            foreach (var serviceDescriptor in source)
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
             {
-                //_logger.LogDebug("CopyServices {serviceDescriptor.ServiceType}", serviceDescriptor.ServiceType);
-                destination.Add(serviceDescriptor);
-            }
+                builder.AddSerilog(); // Adds Serilog as the logging provider
+            });
+            return serviceCollection;
         }
     }
 }

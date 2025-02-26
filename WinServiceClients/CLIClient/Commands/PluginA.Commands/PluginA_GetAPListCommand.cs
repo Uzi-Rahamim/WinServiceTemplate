@@ -14,7 +14,7 @@ public class PluginA_GetAPListCommand
         try
         {
             Log.Information($"PluginA_GetAPList");
-            using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
+            using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
                 if (!await channel.Connect())
                 {

@@ -2,7 +2,7 @@
   "profiles": {
     "APIClient": {
       "commandName": "Project",
-      "commandLineArgs": "demo list"
+      "commandLineArgs": "plugin-a list"
     },
     "Profile 1": {
       "commandName": "Executable"

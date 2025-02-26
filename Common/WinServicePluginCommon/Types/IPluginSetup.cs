@@ -10,5 +10,6 @@ namespace WinService.Plugin.Common
         Version? GetVersion();
 
         Task Initialize(IServiceCollection serviceCollection);
+        Task Shutdown();
     }
 }

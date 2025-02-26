@@ -1,17 +1,17 @@
-using AsyncPipeTransport.Clients;
+using App.WindowsService;
 using AsyncPipeTransport.Listeners;
-using CommTypes.Massages;
-using System.Threading;
 
 namespace WinService;
 
-public class ServiceMain : BackgroundService
+public class LifeCycleManager : BackgroundService
 {
-    private readonly ILogger<ServiceMain> _logger;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<LifeCycleManager> _logger;
     private readonly CancellationTokenSource _cts;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ServiceMain(CancellationTokenSource cts, IServiceProvider serviceProvider,ILogger<ServiceMain> logger)
+    public LifeCycleManager(CancellationTokenSource cts,
+        IServiceProvider serviceProvider,
+        ILogger<LifeCycleManager> logger)
     {
         _logger = logger;
         _cts = cts;
@@ -22,18 +22,22 @@ public class ServiceMain : BackgroundService
     {
         try
         {
-            _logger.LogInformation("Worker Start running at: {time}", DateTimeOffset.Now);
-            _= StartApi();
+            _logger.LogInformation("LifeCycleManager Start running at: {time}", DateTimeOffset.Now);
+            await PluginManager.GetInstance().StartPlugins();
+            _ = StartApi();
 
-            var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsManager>();
+            //var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsManager>();
             while (!stoppingToken.IsCancellationRequested)
             {
-                clientBroadcaster.BroadcastEvent(new BPulseEventMessage("BroadcastEvent"));
-                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                //clientBroadcaster.BroadcastEvent(new BPulseEventMessage("BroadcastEvent"));
+                ////_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(5000, stoppingToken);
             }
+
             _cts.Cancel();
-            _logger.LogInformation("Worker Stop running at: {time}", DateTimeOffset.Now);
+            _logger.LogInformation("LifeCycleManager Shutdown Plugins");
+            await PluginManager.GetInstance().ShutdownPlugins();
+            _logger.LogInformation("LifeCycleManager Stop running at: {time}", DateTimeOffset.Now);
         }
         catch (OperationCanceledException)
         {
@@ -62,6 +66,7 @@ public class ServiceMain : BackgroundService
         {
             var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
             await apiWorker.Start(_cts.Token);
+
         }
         catch (Exception ex)
         {

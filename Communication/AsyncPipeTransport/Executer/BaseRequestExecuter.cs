@@ -1,5 +1,6 @@
 ﻿using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.CommonTypes.InternalMassages;
 using AsyncPipeTransport.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -50,31 +51,66 @@ namespace AsyncPipeTransport.Executer
             _cancellationToken = cancellationToken.Token;
         }
 
+        private async Task<Rs?> SafeExecute(Rq request, Func<Rs, Task> sendPage, Func<string, int, Task> onError)
+        {
+            try
+            {
+                return await Execute(request,sendPage);
+            }
+            catch (Exception ex)
+            {
+                await onError(ex.Message,(int) ErrorCode.InternalServerError);
+                throw;
+            }
+
+        }
+
         public async Task<bool> Execute(IChannelSender channel, long requestId, string requestJson)
         {
             try
             {
                 var requestMsg = requestJson.FromJson<Rq>();
-                var response = await Execute(
+
+                var response = await SafeExecute(
                     requestMsg,
-                    (responsePage) =>
+                    (nextResponse) =>
                     {
                         if (channel.IsConnected())
                         {
+                            Logger.LogDebug("Sending nextResponse Massage");
                             return channel.SendAsync(
-                            responsePage.BuildContinuingResponseMessage(requestId), CancellationToken.None);
+                            nextResponse.BuildContinuingResponseMessage(requestId), CancellationToken.None);
                         }
                         Logger.LogWarning("send responsePage faile : Channel is not connected");
                         throw new TaskCanceledException();
-                    });
+                    },
+                    (message, code) =>
+                    {   
+                        if (channel.IsConnected())
+                        {
+                            Logger.LogDebug("Sending ErrorMessage");
+                            return channel.SendAsync(
+                                    (new ErrorMessage(message, code)).BuildErrorMessage(requestId), CancellationToken.None);
+                        }
+                        Logger.LogWarning("send error faile : Channel is not connected");
+                        throw new TaskCanceledException();
+                    }
+                    );
 
                 if (channel.IsConnected())
                 {
                     if (response == null)
-                        return true;
+                    {
+                        Logger.LogDebug("Sending NullMessage");
+                        await channel.SendAsync(
+                            (new NullMessage()).BuildResponseMessage(requestId), CancellationToken.None);
+                    }
                     else
+                    {
+                        Logger.LogDebug("Sending Last Response");
                         await channel.SendAsync(
                             response.BuildResponseMessage(requestId), CancellationToken.None);
+                    }
                 }
                 else
                 {

@@ -8,15 +8,20 @@ namespace PluginB
 {
     public class PluginSetup : IPluginSetup
     {
-        private IServiceCollection? _serviceCollection;
-        private ILogger<PluginSetup>? _logger;
-       
+        IServiceCollection? _serviceCollection;
+        ILogger<PluginSetup>? _logger;
+
+        public Version? GetVersion()
+        {
+            Assembly currentAssembly = Assembly.GetExecutingAssembly();
+            return currentAssembly.GetName().Version;
+        }
+
         public Task<bool> Start()
         {
             if (_serviceCollection == null || _logger == null)
                 return Task.FromResult(false);
             _logger.LogInformation("Starting ... ");
-            _serviceCollection.AddSingleton<SimpleWorker>();
 
             var serviceProvider = _serviceCollection.BuildServiceProvider();
             var worker = serviceProvider.GetRequiredService<SimpleWorker>();
@@ -25,23 +30,24 @@ namespace PluginB
             return Task.FromResult(true);
         }
 
+        public Task Initialize(IServiceCollection serviceCollection)
+        {
+            _serviceCollection = serviceCollection;
+            _serviceCollection.AddSingleton<SimpleWorker>();
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
+            _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
+            return Task.CompletedTask;
+        }
+
         public Task<bool> Stop()
         {
+            _logger?.LogInformation("Stoping ... ");
             return Task.FromResult(true);
         }
 
-        public Version? GetVersion()
+        public Task Shutdown()
         {
-            Assembly currentAssembly = Assembly.GetExecutingAssembly();
-            return currentAssembly.GetName().Version;
-        }
-
-        public Task Initialize(IServiceCollection serviceCollection)
-        {
-            this._serviceCollection = serviceCollection;
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-            _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
-
+            _logger?.LogInformation("Shutdown");
             return Task.CompletedTask;
         }
     }

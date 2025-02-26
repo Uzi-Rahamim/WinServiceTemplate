@@ -12,7 +12,7 @@ public class Service_GetSchemaCommand
     public static async Task Service_GetSchema()
     {
         Log.Information($"Service_GetSchema");
-        using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
+        using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
             if (!await channel.Connect())
             {

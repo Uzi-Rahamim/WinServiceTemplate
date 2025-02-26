@@ -12,7 +12,7 @@ public class PluginA_SendEchoCommand
     public static async Task PluginA_SentEcho([Argument(Description = "Your message")] string message)
     {
         Log.Information($"PluginA_SentEcho");
-        using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
+        using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
             if (!await channel.Connect())
             {

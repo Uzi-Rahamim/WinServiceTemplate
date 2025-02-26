@@ -14,7 +14,7 @@ namespace App.WindowsService.API;
 internal class SetupExecuters
 {
     private IServiceCollection _serviceCollection ;
-    
+
     public void Configure()
     {
         RegisterRequest<SchemaRequestExecuter>(FrameworkMessageTypes.RequestSchema, SchemaRequestExecuter.GetSchema);

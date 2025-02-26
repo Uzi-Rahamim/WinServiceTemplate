@@ -1,5 +1,7 @@
 ﻿using AsyncPipeTransport.Channel;
 using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.CommonTypes.InternalMassages;
+using AsyncPipeTransport.Exceptions;
 using AsyncPipeTransport.Extensions;
 using System.Collections.Concurrent;
 
@@ -32,34 +34,49 @@ namespace AsyncPipeTransport.Request
             do
             {
                 reply = await WaitForNextFrame(requestId);
-
-                if (reply == null)
+                if (reply.IsLastFrame() && !reply.IsErrorFrame()) //terminate 
                 {
-                    throw new TimeoutException();
-                    //yield break;
+                    yield break;
                 }
 
-                var response = reply.ExtractMessageHeaders<T>();
-                if (response == null)
-                {
-                    throw new ArgumentNullException("response is invalid");
-                }
-                yield return response;
+                yield return ExtructResponse<T>(reply);
             } while (!reply.IsLastFrame());
-
         }
 
         public async Task<T?> SendRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
             var reply = await Send((requestId) => message.BuildRequestMessage(requestId));
-            var response = reply?.ExtractMessageHeaders<T>() ?? null;
-            return response;
+            return ExtructResponse<T>(reply);
         }
 
         public async Task<T?> SendOpenSessionRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
             var reply = await Send((requestId) => message.BuildOpenSessionRequestMessage(requestId));
-            var response = reply?.ExtractMessageHeaders<T>() ?? null;
+            return ExtructResponse<T>(reply);
+        }
+
+        private T ExtructResponse<T>(FrameHeader? frame) where T : MessageHeader
+        {
+            if (frame == null)
+            {
+                throw new TimeoutException();
+            }
+            else if (frame.IsErrorFrame())
+            {
+                var errorMsg = frame.ExtractMessageHeaders<ErrorMessage>();
+                if (errorMsg == null)
+                {
+                    throw new ErrorResponseException("Error Response is invalid",(int) ErrorCode.InternalServerError);
+                }
+                throw new ErrorResponseException(errorMsg.Message, errorMsg.Code);
+            }
+
+            var response = frame.ExtractMessageHeaders<T>();
+            if (response == null)
+            {
+                throw new ErrorResponseException("Response is invalid", (int)ErrorCode.InternalServerError);
+            }
+
             return response;
         }
 

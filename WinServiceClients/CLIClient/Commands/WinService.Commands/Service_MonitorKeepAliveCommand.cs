@@ -11,7 +11,7 @@ namespace APIClient.commands.test
         public static async Task Service_Monitor()
         {
             Log.Information($"Service_Monitor");
-            using (var channel = new ClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
+            using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
                 if (!await channel.Connect())
                 {

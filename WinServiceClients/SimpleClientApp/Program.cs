@@ -18,7 +18,7 @@ namespace SimpleClientApp
 
             try
             {
-                using (var channel = new ClientChannel(loggerFactory))
+                using (var channel = new SdkClientChannel(loggerFactory))
                 {
                     if (!await channel.Connect())
                     {

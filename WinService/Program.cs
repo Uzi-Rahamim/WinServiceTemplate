@@ -1,4 +1,3 @@
-
 using WinService;
 using Serilog;
 using App.WindowsService.API;
@@ -53,19 +52,19 @@ internal class Program
 
             // add the provider
             builder.Logging.AddSerilog();
-            builder.Services.AddSingleton<CancellationTokenSource>();
 
+            builder.Services.AddSingleton<CancellationTokenSource>();
+          
             
             SetupExecuters.Create(builder.Services).Configure();
             SetupPlugins.Create(builder.Services).LoadPlugins().Wait();
 
-
-            builder.Services.AddHostedService<ServiceMain>();
             //builder.Services.AddWindowsService(options =>
             //{
             //    options.ServiceName = "MyWindowsService33333";
             //});
 
+            builder.Services.AddHostedService<LifeCycleManager>();
             var host = builder.Build();
             host.Run();
 
