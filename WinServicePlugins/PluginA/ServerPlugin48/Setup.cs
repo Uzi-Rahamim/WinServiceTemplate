@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PluginA.Worker;
+using System.Reflection;
 using WinService.Plugin.Common;
 
 namespace PluginA
@@ -11,10 +12,10 @@ namespace PluginA
         IServiceCollection? _serviceCollection;
         ILogger<PluginSetup>? _logger;
 
-        public bool Start()
+        public Task<bool> Start()
         {
             if (_serviceCollection == null || _logger == null)
-                return false;
+                return Task.FromResult(false);
             _logger.LogInformation("Starting ... ");
             _serviceCollection.AddSingleton<SimpleWorker>();
 
@@ -22,14 +23,27 @@ namespace PluginA
             var worker = serviceProvider.GetRequiredService<SimpleWorker>();
             worker.Start();
 
-            return true;
+            return Task.FromResult(true);
         }
 
-        public void Initialize(IServiceCollection serviceCollection)
+        public Task<bool> Stop()
+        {
+            return Task.FromResult(true);
+        }
+
+        public Version? GetVersion()
+        {
+            Assembly currentAssembly = Assembly.GetExecutingAssembly();
+            return currentAssembly.GetName().Version;
+        }
+
+        public Task Initialize(IServiceCollection serviceCollection)
         {
             this._serviceCollection = serviceCollection;
             var serviceProvider = _serviceCollection.BuildServiceProvider();
             _logger = serviceProvider.GetRequiredService<ILogger<PluginSetup>>();
+
+            return Task.CompletedTask;
         }
     }
 }

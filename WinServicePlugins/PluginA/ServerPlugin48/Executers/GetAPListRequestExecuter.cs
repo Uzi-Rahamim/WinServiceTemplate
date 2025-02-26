@@ -5,7 +5,7 @@ using PluginA.Contract.Types;
 
 namespace PluginA.Executers
 {
-    public class GetAPListRequestExecuter : BaseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
+    public class GetAPListRequestExecuter : StreamResponseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
     {
         public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
 
@@ -19,24 +19,33 @@ namespace PluginA.Executers
             return MessageType.APList;
         }
 
-        protected override async Task<bool> Execute(RequestWiFiNetworksMessage requestMsg)
+        protected override async Task<RespnseWiFiNetworksMessage?> Execute(
+            RequestWiFiNetworksMessage requestMsg, 
+            Func<RespnseWiFiNetworksMessage, Task> sendPage)
         {
 
             for (int page = 0; page < 100; page++)
             {
-                Task.Delay(1000).Wait();
+                await Task.Delay(1000);
                 Logger.LogInformation($"Server sent page {page}");
-                await SendContinuingResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+                await sendPage(new RespnseWiFiNetworksMessage(wifiNetworks));
             }
 
             Logger.LogInformation("Server sent last page");
-            await SendLastResponse(new RespnseWiFiNetworksMessage(wifiNetworks));
+            return new RespnseWiFiNetworksMessage(wifiNetworks);
+        }
 
-            // Send a response back to the client
-            string replyPalyload = $"Request # {RequestId} ";
-            Logger.LogInformation("Server sent reply: {reply}", replyPalyload);
+        protected override async IAsyncEnumerable<RespnseWiFiNetworksMessage> Execute(RequestWiFiNetworksMessage request)
+        {
+            for (int page = 0; page < 2; page++)
+            {
+                await Task.Delay(1000);
+                Logger.LogInformation($"Server sent page {page}");
+                yield return new RespnseWiFiNetworksMessage(wifiNetworks);
+            }
 
-            return true;
+            Logger.LogInformation("Server End Sending");
+            yield break;
         }
 
 

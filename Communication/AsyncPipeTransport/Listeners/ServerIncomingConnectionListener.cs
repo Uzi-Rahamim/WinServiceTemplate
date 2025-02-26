@@ -31,10 +31,8 @@ namespace AsyncPipeTransport.Listeners
         {
             try
             {
-                while (true)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    ManualResetEvent signal = new ManualResetEvent(false);
-
                     var clientId = _clientIdGenerator.GetNextId();
 
                     // Create a NamedPipeServerStream to listen for connections

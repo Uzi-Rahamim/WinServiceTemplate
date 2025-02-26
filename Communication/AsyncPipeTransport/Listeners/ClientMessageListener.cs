@@ -32,7 +32,7 @@ namespace AsyncPipeTransport.Listeners
 
         public async Task<bool> StartAsync(CancellationToken cancellationToken, TimeSpan timeout, long endpointId = 0)
         {
-            Console.WriteLine("StartAsync");
+            _logger.LogInformation("StartAsync");
             var channel = _channel;
             try
             {

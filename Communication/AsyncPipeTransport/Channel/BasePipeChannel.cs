@@ -89,6 +89,9 @@ namespace AsyncPipeTransport.Channel
 
         public bool IsConnected()
         {
+            if (_disposed)
+                return false;
+
             var isConnected = PipeStream?.IsConnected ?? false;
             if (isConnected && _lastMessageTimeStamp < DateTime.UtcNow.AddMilliseconds(-Consts.MaxConnectionMonitorInterval*2))
             {

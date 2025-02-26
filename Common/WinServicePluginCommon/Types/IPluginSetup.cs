@@ -4,7 +4,11 @@ namespace WinService.Plugin.Common
 {
     public interface IPluginSetup
     {
-        bool Start();
-        void Initialize(IServiceCollection serviceCollection);
+        Task<bool> Start();
+        Task<bool> Stop();
+
+        Version? GetVersion();
+
+        Task Initialize(IServiceCollection serviceCollection);
     }
 }

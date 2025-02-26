@@ -40,9 +40,14 @@ internal class Program
                 return; // Exit the application
             }
 
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                Log.Fatal(e.ExceptionObject as Exception, "Unhandled exception occurred");
+            };
+
 
             // Get the version of the current assembly
-            
+
             Log.Information("\n\r Starting ... \n\r");
             LogServiceVersion();
 
@@ -52,10 +57,14 @@ internal class Program
 
             
             SetupExecuters.Create(builder.Services).Configure();
-            SetupPlugins.Create(builder.Services).LoadPlugins();
+            SetupPlugins.Create(builder.Services).LoadPlugins().Wait();
 
 
             builder.Services.AddHostedService<ServiceMain>();
+            //builder.Services.AddWindowsService(options =>
+            //{
+            //    options.ServiceName = "MyWindowsService33333";
+            //});
 
             var host = builder.Build();
             host.Run();

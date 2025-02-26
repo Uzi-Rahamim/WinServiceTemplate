@@ -5,11 +5,12 @@ using PluginB.Contract.Massages;
 
 namespace PluginB.Executers
 {
-    public class EchoRequestExecuter : BaseRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
+    public class EchoRequestExecuter : SimpleRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
         Worker.SimpleWorker _simpleWorker;
-        public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) : 
-            base(logger, cts) {
+        public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger, CancellationTokenSource cts, SimpleWorker simpleWorker) :
+            base(logger, cts)
+        {
             logger.LogInformation("EchoRequestExecuter created");
             _simpleWorker = simpleWorker;
         }
@@ -24,15 +25,13 @@ namespace PluginB.Executers
             return MessageType.PluginB_Echo;
         }
 
-        protected override async Task<bool> Execute(RequestEchoMessage requestMsg)
+        protected override Task<ResponseEchoMessage?> Execute(RequestEchoMessage requestMsg)
         {
             // Send a response back to the client
-            var responseMsg = requestMsg.message+ " from Echo2RequestExecuter";
+            var responseMsg = requestMsg.message;
             //await Task.Delay(10000);
-            await SendLastResponse(new ResponseEchoMessage(responseMsg));
             Logger.LogInformation("Server plugin sent reply: {reply} , WorkerMsg: {_simpleWorker.Message}", responseMsg, _simpleWorker.Message);
-            
-            return true;
+            return Task.FromResult<ResponseEchoMessage?>(new ResponseEchoMessage(responseMsg));
         }
     }
 

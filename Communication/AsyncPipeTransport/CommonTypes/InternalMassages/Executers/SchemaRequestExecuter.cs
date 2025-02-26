@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Text;
 
-namespace AsyncPipeTransport.CommonTypes
+namespace AsyncPipeTransport.CommonTypes.InternalMassages.Executers
 {
     public class SchemaRequestExecuter : BaseRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
     {
@@ -11,16 +11,17 @@ namespace AsyncPipeTransport.CommonTypes
             base(logger,cts) 
             => _schemaProviderList = schemaProviderList;
 
-        protected override async Task<bool> Execute(RequestSchemaMessage requestMsg)
+        protected override async Task<ResponseSchemaMessage?> Execute(
+            RequestSchemaMessage requestMsg,
+            Func<ResponseSchemaMessage, Task> sendPage)
         {
             StringBuilder sb = new();
-            await SendContinuingResponse<ResponseSchemaMessage>(new ResponseSchemaMessage("{ commands : ["));
+            await sendPage(new ResponseSchemaMessage("{ commands : ["));
             foreach (var schemaProvider in _schemaProviderList)
             {
-                await SendContinuingResponse<ResponseSchemaMessage>(new ResponseSchemaMessage(schemaProvider.GetSchema()));
+                await sendPage(new ResponseSchemaMessage(schemaProvider.GetSchema()));
             }
-            await SendLastResponse<ResponseSchemaMessage>(new ResponseSchemaMessage("]}"));
-            return true;
+            return new ResponseSchemaMessage("]}");
         }
     }
 

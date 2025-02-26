@@ -1,7 +1,6 @@
 ﻿using App.WindowsService.API;
 using AsyncPipeTransport.Executer;
 using CommTypes.Consts;
-using System.Reflection;
 using Utilities;
 using Utilities.PluginUtils;
 using WinService.Plugin.Common;
@@ -24,20 +23,8 @@ namespace App.WindowsService
             return new SetupPlugins(builder);
         }
 
-        public static IEnumerable<Type> GetTypes(Type interfaceType, Assembly assembly)
-        {
-            foreach (var type in assembly.GetTypes())
-            {
-                if (type is not null &&
-                    interfaceType.FullName is not null &&
-                    type.GetInterfaces().Any(intf => intf.FullName?.Contains(interfaceType.FullName) ?? false))
-                {
-                    yield return type;
-                }
-            }
-        }
 
-        public void LoadPlugins()
+        public async Task LoadPlugins()
         {
             var pluginFileNames = RegistryUtils.GetKeySubStringValues(RegistryConsts.pluginKeyPath);
             foreach (var pluginFileName in pluginFileNames)
@@ -53,22 +40,27 @@ namespace App.WindowsService
                     var serviceCollection = new ServiceCollection();
                     CopyServices(_serviceCollection, serviceCollection);
                     _logger.LogInformation("Loading plugin Assembly - {assembly.FullName}", pluginAssembly.FullName);
-   
-                    // Load all types that implement IRequestExecuter
-                    foreach (var type in GetTypes(typeof(IRequestExecuter), pluginAssembly))
+
+                    // Load Plugin IPluginSetup
+                    var pluginSetupType = PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly).FirstOrDefault();
+                    if (pluginSetupType == null)
+                    {
+                        _logger.LogError("Plugin setup not found- {assembly.FullName} failed", pluginAssembly.FullName);
+                        continue;
+                    }
+
+                    _logger.LogInformation("Loading plugin setup - {type.FullName}", pluginSetupType.FullName);
+                    if (!await LoadPluginSetup(serviceCollection, pluginSetupType))
+                    {
+                        _logger.LogError("Loading plugin setup - {type.FullName} failed", pluginSetupType.FullName);
+                        continue;
+                    }
+
+                    // Load all Plugin types that implement IRequestExecuter
+                    foreach (var type in PluginLoader.GetTypes(typeof(IRequestExecuter), pluginAssembly))
                     {
                         _logger.LogInformation("Loading plugin Executer - {type.FullName}", type.FullName);
                         LoadExecuters(serviceCollection, type);
-                    }
-
-                    // Load all types that implement IPluginSetup
-                    foreach (var type in PluginLoader.GetTypes(typeof(IPluginSetup), pluginAssembly))
-                    {
-                        _logger.LogInformation("Loading plugin setup - {type.FullName}", type.FullName);
-                        // Create an instance by passing constructor arguments
-                        IPluginSetup? setupObj = Activator.CreateInstance(type) as IPluginSetup;
-                        setupObj?.Initialize(serviceCollection);
-                        setupObj?.Start();
                     }
 
                     serviceCollection.BuildServiceProvider();
@@ -79,6 +71,18 @@ namespace App.WindowsService
                 }
 
             }
+        }
+
+        private async Task<bool> LoadPluginSetup(IServiceCollection serviceCollection, Type pluginSetupType)
+        {
+            // Create an instance by passing constructor arguments
+            IPluginSetup? pluginSetup = Activator.CreateInstance(pluginSetupType) as IPluginSetup;
+            if (pluginSetup == null)
+                return false;
+            await pluginSetup.Initialize(serviceCollection);
+            var version = pluginSetup.GetVersion();
+            _logger.LogInformation("Loading plugin setup - {type.FullName} {version}", pluginSetupType.FullName, version);
+            return await pluginSetup.Start();
         }
 
         private void LoadExecuters(IServiceCollection serviceCollection, Type type)
@@ -95,7 +99,7 @@ namespace App.WindowsService
                     throw new ApplicationException("Plugin_GetMessageType is missing");
                 }
                 ExecuterRegister.RegisterSchema(_serviceCollection, messageType, () => schema);
-                
+
                 var registerExecuter = typeof(ExecuterRegister).GetMethod("RegisterPluginExecuter")?.MakeGenericMethod(type); //make generic method
                 // Invoke the method
                 registerExecuter?.Invoke(null, new object[] { _serviceCollection, serviceCollection, messageType });
