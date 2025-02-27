@@ -4,7 +4,6 @@ using AsyncPipeTransport.Events;
 using AsyncPipeTransport.Executer;
 using AsyncPipeTransport.Request;
 using Microsoft.Extensions.Logging;
-using Serilog.Core;
 
 namespace AsyncPipeTransport.Listeners
 {
@@ -19,13 +18,13 @@ namespace AsyncPipeTransport.Listeners
         private readonly IEventManager? _clientEventHandler;
         private readonly IClientRequestManager? _clientRequestHandler;
         private readonly IExecuterManager? _executerManager;
-        private readonly IClientsManager? _activeClients;
+        private readonly IEventDispatcher? _eventDispatcher;
         private readonly ILogger<ServerMessageListener> _logger;
 
         public ServerMessageListener(
             ILogger<ServerMessageListener> logger,
             IExecuterManager? executerManager,
-            IClientsManager? activeClients,
+            IEventDispatcher? eventDispatcher,
             IClientRequestManager? clientRequestHandler = null,
             IEventManager? clientEventHandler = null
             )
@@ -34,7 +33,7 @@ namespace AsyncPipeTransport.Listeners
             _clientRequestHandler = clientRequestHandler;
             _clientEventHandler = clientEventHandler;
             _executerManager = executerManager;
-            _activeClients = activeClients;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<bool> StartAsync(CancellationToken cancellationToken, IServerChannel channel, TimeSpan timeout, long endpointId)
@@ -47,7 +46,7 @@ namespace AsyncPipeTransport.Listeners
             if (channel == null)
                 return false;
 
-            _messageListener = new MessageListener(_logger, cancellationToken, channel, _clientRequestHandler, _clientEventHandler, _executerManager, _activeClients);
+            _messageListener = new MessageListener(_logger, cancellationToken, channel, _clientRequestHandler, _clientEventHandler, _executerManager, _eventDispatcher);
             _messageListener.OnDisconnect += () =>
             {
                 _logger.LogInformation("Server {clientId}  Client disconnected.", endpointId);

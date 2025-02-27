@@ -34,7 +34,7 @@ namespace AsyncPipeTransport.Executer
             var cmd = CreateExecuter(msgType, requestId, clientId);
             if (cmd == null)
             {
-                _logger.LogInformation("Server {clientId} command handler not found {frame.requestId} ", clientId, requestId);
+                _logger.LogInformation("Server {clientId} executer not found {frame.requestId} ", clientId, requestId);
                 return false;
             }
             return await cmd.Execute(pipeServer, requestId, payload);

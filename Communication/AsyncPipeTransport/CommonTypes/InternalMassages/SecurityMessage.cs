@@ -10,6 +10,7 @@ namespace CommTypes.Massages
 
         public RequestSecurityMessage(string token) : base(String.Empty) => this.token = token;
     }
+
     public class ResponseSecurityMessage : MessageHeader
     {
         public bool isValid { get; set; }

@@ -9,14 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace AsyncPipeTransport.Listeners
 {
-
     public class MessageListener : IDisposable
     {
         protected readonly IChannel _channel;
         private readonly IEventManager? _clientEventHandler;
         private readonly IClientRequestManager? _clientRequestHandler;
         private readonly IExecuterManager? _executerManager;
-        private readonly IClientsManager? _activeClients;
+        private readonly IEventDispatcher? _eventDispatcher;
         private readonly CancellationToken _cancellationToken;
         private readonly ILogger _logger;
         private bool _disposed = false;
@@ -30,7 +29,7 @@ namespace AsyncPipeTransport.Listeners
             IClientRequestManager? clientRequestHandler,
             IEventManager? clientEventHandler,
             IExecuterManager? executerManager,
-            IClientsManager? activeClients)
+            IEventDispatcher? eventDispatcher)
         {
             _logger = logger;
             _cancellationToken = cancellationToken;
@@ -38,7 +37,7 @@ namespace AsyncPipeTransport.Listeners
             _clientRequestHandler = clientRequestHandler;
             _clientEventHandler = clientEventHandler;
             _executerManager = executerManager;
-            _activeClients = activeClients;
+            _eventDispatcher = eventDispatcher;
         }
 
         private void OnDisconnectInternal()
@@ -131,25 +130,38 @@ namespace AsyncPipeTransport.Listeners
                         {
                             channelIsSecure = await _executerManager.Execute(_channel, FrameworkMessageTypes.OpenSession, frame.requestId, frame.payload, endpointId);
                             if (!channelIsSecure)
+                            {
+                                _logger.LogWarning("Channel open session failed, close the channel");
                                 break;
-
-                            //_activeClients.AddClient(clientId, _channel);
+                            }
+                            _logger.LogInformation("Channel is secure {frame.requestId}", frame.requestId);
+                            continue;
                         }
-                        _logger.LogInformation("Channel is not secure {frame.requestId} ignore request", frame.requestId);
-                        continue;
+                        _logger.LogWarning("Channel is not secure {frame.requestId} close the channel", frame.requestId);
+                        break;
                     }
+
                     _ = Task.Run(async () =>
                     {
-                        await _executerManager.Execute(_channel, frame.msgType, frame.requestId, frame.payload, endpointId);
+                        _logger.LogInformation("Execute {frame.requestId} request {frame.msgType} ", frame.requestId, frame.msgType);
+                        try
+                        {
+                            await _executerManager.Execute(_channel, frame.msgType, frame.requestId, frame.payload, endpointId);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex,"Executer failed");
+                        }                        
                     });
-                    _logger.LogInformation("No executer {frame.requestId} found for this response", frame.requestId);
                 }
                 else
                 {
                     _logger.LogInformation("Unknow message {frame.msgType} ", frame.msgType);
                 }
-            }
-            //_activeClients.RemoveClient(clientId);
+            }//End of message loop 
+
+            //Stop all event
+            _eventDispatcher?.UnregisterAllEvents(_channel.ChannelId);
         }
 
         private async Task StartPulseEvantGenerator()

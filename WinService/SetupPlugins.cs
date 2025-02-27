@@ -1,4 +1,5 @@
 ﻿using App.WindowsService.API;
+using AsyncPipeTransport.Clients;
 using AsyncPipeTransport.Executer;
 using CommTypes.Consts;
 using Serilog;
@@ -11,19 +12,22 @@ namespace App.WindowsService
     internal class SetupPlugins
     {
         private readonly IServiceCollection _serviceCollection;
+        private readonly ServiceProvider _globalServiceProvider;
         private readonly ILogger<SetupPlugins> _logger;
 
 
-        private SetupPlugins(IServiceCollection serviceCollection)
+        private SetupPlugins(IServiceCollection serviceCollection,
+            ServiceProvider globalServiceProvider)
         {
             _serviceCollection = serviceCollection;
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-            _logger = serviceProvider.GetRequiredService<ILogger<SetupPlugins>>();
+            _globalServiceProvider = globalServiceProvider;
+            _logger = _globalServiceProvider.GetRequiredService<ILogger<SetupPlugins>>();
         }
 
-        public static SetupPlugins Create(IServiceCollection serviceCollection)
+        public static SetupPlugins Create(IServiceCollection serviceCollection,
+                                          ServiceProvider globalServiceProvider)
         {
-            return new SetupPlugins(serviceCollection);
+            return new SetupPlugins(serviceCollection, globalServiceProvider);
         }
 
         public async Task LoadPlugins()
@@ -129,6 +133,8 @@ namespace App.WindowsService
             {
                 builder.AddSerilog(); // Adds Serilog as the logging provider
             });
+            serviceCollection.AddSingleton(sp=> _globalServiceProvider.GetRequiredService<IEventDispatcher>());
+            serviceCollection.AddSingleton(sp=> _globalServiceProvider.GetRequiredService<CancellationTokenSource>());
             return serviceCollection;
         }
     }

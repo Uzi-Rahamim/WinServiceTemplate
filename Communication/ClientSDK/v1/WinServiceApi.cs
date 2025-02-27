@@ -1,7 +1,6 @@
-﻿using AsyncPipeTransport.Events;
-using AsyncPipeTransport.CommonTypes;
-using CommTypes.Massages;
+﻿using AsyncPipeTransport.CommonTypes;
 using WinServicePluginCommon.Sdk.Types;
+using AsyncPipeTransport.CommonTypes.Test;
 
 
 namespace ClientSDK.v1
@@ -31,11 +30,6 @@ namespace ClientSDK.v1
             var response = await _client.RequestHandler.SendRequest<ResponseEchoMessage, RequestEchoMessage>(
                 new RequestEchoMessage(message));
             return response?.message;
-        }
-
-        public bool RegisterPulsEvent(Action<string> action)
-        {
-           return _client.EventHandler.RegisterEvent(MessageType.BPulseEvent, new EventToAction<BPulseEventMessage>((pulseMsg)=>action(pulseMsg.message)));
         }
     }
 }

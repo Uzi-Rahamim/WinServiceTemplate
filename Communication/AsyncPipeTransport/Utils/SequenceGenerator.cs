@@ -1,4 +1,4 @@
-﻿namespace AsyncPipeTransport.CommonTypes
+﻿namespace AsyncPipeTransport.Utils
 {
     public class SequenceGenerator : ISequenceGenerator
     {

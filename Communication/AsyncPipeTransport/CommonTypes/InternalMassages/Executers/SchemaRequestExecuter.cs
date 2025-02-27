@@ -1,27 +1,26 @@
 ﻿using AsyncPipeTransport.Executer;
 using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace AsyncPipeTransport.CommonTypes.InternalMassages.Executers
 {
-    public class SchemaRequestExecuter : BaseRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
+    public class SchemaRequestExecuter : StreamResponseRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
     {
         IEnumerable<IRequestSchemaProvider> _schemaProviderList;
         public SchemaRequestExecuter(ILogger<SchemaRequestExecuter> logger, CancellationTokenSource cts, IEnumerable<IRequestSchemaProvider> schemaProviderList) : 
             base(logger,cts) 
             => _schemaProviderList = schemaProviderList;
 
-        protected override async Task<ResponseSchemaMessage?> Execute(
-            RequestSchemaMessage requestMsg,
-            Func<ResponseSchemaMessage, Task> sendPage)
+        protected override async IAsyncEnumerable<ResponseSchemaMessage> Execute(RequestSchemaMessage requestMsg)
         {
-            StringBuilder sb = new();
-            await sendPage(new ResponseSchemaMessage("{ commands : ["));
+            // Simulate async work
+            await Task.Yield();
+
+            yield return new ResponseSchemaMessage("{ commands : [");
             foreach (var schemaProvider in _schemaProviderList)
             {
-                await sendPage(new ResponseSchemaMessage(schemaProvider.GetSchema()));
+                yield return new ResponseSchemaMessage(schemaProvider.GetSchema());
             }
-            return new ResponseSchemaMessage("]}");
+            yield return new ResponseSchemaMessage("]}");
         }
     }
 

@@ -3,6 +3,8 @@ using Serilog;
 using App.WindowsService.API;
 using App.WindowsService;
 using System.Reflection;
+using AsyncPipeTransport.Clients;
+using Microsoft.Extensions.DependencyInjection;
 
 internal class Program
 {
@@ -24,6 +26,7 @@ internal class Program
             });
             Environment.SetEnvironmentVariable("WinDerviceLogDir", AppContext.BaseDirectory);
 
+            
             //Clear Providers 
             builder.Logging.ClearProviders();
 
@@ -46,25 +49,25 @@ internal class Program
 
 
             // Get the version of the current assembly
-
             Log.Information("\n\r Starting ... \n\r");
             LogServiceVersion();
+
 
             // add the provider
             builder.Logging.AddSerilog();
 
-            builder.Services.AddSingleton<CancellationTokenSource>();
-          
-            
-            SetupExecuters.Create(builder.Services).Configure();
-            SetupPlugins.Create(builder.Services).LoadPlugins().Wait();
+            //Build global service provider to share between providers
+            var globalServiceProvider = ConfigureGlobalSharedProvider();
 
-            //builder.Services.AddWindowsService(options =>
-            //{
-            //    options.ServiceName = "MyWindowsService33333";
-            //});
-
+            //Build service provider
+            builder.Services.AddSingleton(sp=> globalServiceProvider.GetRequiredService<CancellationTokenSource>());
             builder.Services.AddHostedService<LifeCycleManager>();
+
+            SetupExecuters.Create(builder.Services).Configure(globalServiceProvider);
+            
+            //Build plugin providers
+            SetupPlugins.Create(builder.Services,globalServiceProvider).LoadPlugins().Wait();
+
             var host = builder.Build();
             host.Run();
 
@@ -72,6 +75,15 @@ internal class Program
             // Dispose of the logger when the application ends
             Log.CloseAndFlush();
         }
+    }
+
+    private static ServiceProvider ConfigureGlobalSharedProvider()
+    {
+        var sharedServiceCollection = new ServiceCollection();
+        sharedServiceCollection.AddSingleton<CancellationTokenSource>();
+        sharedServiceCollection.AddSingleton<IEventDispatcher, EventDispatcher>();
+        sharedServiceCollection.AddLogging(sp => sp.AddSerilog()); // Adds Serilog as the logging provider
+        return sharedServiceCollection.BuildServiceProvider();
     }
 
     private static void LogServiceVersion()

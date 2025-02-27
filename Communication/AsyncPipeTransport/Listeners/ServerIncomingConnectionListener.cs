@@ -1,5 +1,5 @@
 ﻿using AsyncPipeTransport.Channel;
-using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.Utils;
 using Microsoft.Extensions.Logging;
 
 

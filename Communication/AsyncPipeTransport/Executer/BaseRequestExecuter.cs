@@ -1,4 +1,5 @@
 ﻿using AsyncPipeTransport.Channel;
+using AsyncPipeTransport.Clients;
 using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.CommonTypes.InternalMassages;
 using AsyncPipeTransport.Extensions;
@@ -12,9 +13,9 @@ namespace AsyncPipeTransport.Executer
     {
         protected ILogger<T> Logger { get; private set; }
 
-        protected abstract Task<Rs?> Execute(Rq request, Func<Rs, Task> sendPage);
+        protected abstract Task<Rs?> Execute(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse);
 
-        private readonly CancellationToken _cancellationToken;
+        protected readonly CancellationToken _cancellationToken;
 
         public static string GetSchema()
         {
@@ -43,7 +44,7 @@ namespace AsyncPipeTransport.Executer
             // Convert the type information (properties) to JSON
             return JsonConvert.SerializeObject(properties, Formatting.Indented);
         }
-
+      
         public BaseRequestExecuter(ILogger<T> logger, CancellationTokenSource cancellationToken)
         {
             Logger = logger;
@@ -51,11 +52,11 @@ namespace AsyncPipeTransport.Executer
             _cancellationToken = cancellationToken.Token;
         }
 
-        private async Task<Rs?> SafeExecute(Rq request, Func<Rs, Task> sendPage, Func<string, int, Task> onError)
+        private async Task<Rs?> SafeExecute(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse, Func<string, int, Task> onError)
         {
             try
             {
-                return await Execute(request,sendPage);
+                return await Execute(channel, request, sendNextResponse);
             }
             catch (Exception ex)
             {
@@ -71,57 +72,60 @@ namespace AsyncPipeTransport.Executer
             {
                 var requestMsg = requestJson.FromJson<Rq>();
 
+                Logger.LogDebug("Executer --> SafeExecute");
                 var response = await SafeExecute(
+                    channel,
                     requestMsg,
                     (nextResponse) =>
                     {
                         if (channel.IsConnected())
                         {
-                            Logger.LogDebug("Sending nextResponse Massage");
+                            Logger.LogDebug("Executer --> Sending Next Response Massage");
                             return channel.SendAsync(
-                            nextResponse.BuildContinuingResponseMessage(requestId), CancellationToken.None);
+                            nextResponse.BuildContinuingResponseMessage(requestId), _cancellationToken);
                         }
-                        Logger.LogWarning("send responsePage faile : Channel is not connected");
+                        Logger.LogWarning("Executer --> send responsePage faile : Channel is not connected");
                         throw new TaskCanceledException();
                     },
                     (message, code) =>
                     {   
                         if (channel.IsConnected())
                         {
-                            Logger.LogDebug("Sending ErrorMessage");
+                            Logger.LogDebug("Executer --> Sending Error Message");
                             return channel.SendAsync(
-                                    (new ErrorMessage(message, code)).BuildErrorMessage(requestId), CancellationToken.None);
+                                    (new ErrorMessage(message, code)).BuildErrorMessage(requestId), _cancellationToken);
                         }
-                        Logger.LogWarning("send error faile : Channel is not connected");
+                        Logger.LogWarning("Executer --> send error faile : Channel is not connected");
                         throw new TaskCanceledException();
                     }
                     );
 
+                Logger.LogDebug("Executer --> Response returned");
                 if (channel.IsConnected())
                 {
                     if (response == null)
                     {
-                        Logger.LogDebug("Sending NullMessage");
+                        Logger.LogDebug("Executer --> Sending NullMessage");
                         await channel.SendAsync(
-                            (new NullMessage()).BuildResponseMessage(requestId), CancellationToken.None);
+                            (new NullMessage()).BuildResponseMessage(requestId), _cancellationToken);
                     }
                     else
                     {
-                        Logger.LogDebug("Sending Last Response");
+                        Logger.LogDebug("Executer --> Sending Response");
                         await channel.SendAsync(
-                            response.BuildResponseMessage(requestId), CancellationToken.None);
+                            response.BuildResponseMessage(requestId), _cancellationToken);
                     }
                 }
                 else
                 {
-                    Logger.LogWarning("send response falied : Channel is not connected");
+                    Logger.LogWarning("Executer --> send response falied : Channel is not connected");
                 }
 
                 return true;
             }
             catch (TaskCanceledException)
             {
-                Logger.LogWarning("Executer - Execute operation was aborted");
+                Logger.LogWarning("Executer --> Execute operation was aborted");
                 return false;
             }
             catch (Exception ex)

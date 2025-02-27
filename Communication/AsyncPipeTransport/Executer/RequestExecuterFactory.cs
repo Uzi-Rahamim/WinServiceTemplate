@@ -1,6 +1,4 @@
-﻿using AsyncPipeTransport.CommonTypes;
-
-namespace AsyncPipeTransport.Executer
+﻿namespace AsyncPipeTransport.Executer
 {
     public class RequestExecuterFactory : IRequestExecuterFactory
     {

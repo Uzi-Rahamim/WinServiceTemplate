@@ -1,4 +1,7 @@
-﻿using PluginA.ClientSDK.CommonTypes;
+﻿using AsyncPipeTransport.CommonTypes;
+using AsyncPipeTransport.CommonTypes.InternalMassages;
+using AsyncPipeTransport.Events;
+using PluginA.ClientSDK.CommonTypes;
 using PluginA.ClientSDK.Convertors;
 using PluginA.Contract.Massages;
 using WinServicePluginCommon.Sdk.Types;
@@ -50,5 +53,15 @@ namespace PluginA.ClientSDK.v1
             }
         }
 #endif
+
+        public async Task RegisterCpuEvent(Action<long> action)
+        {
+            var response = await _client.RequestHandler.SendRequest<NullMessage, RegisterForEventMessage>(
+               new RegisterForEventMessage([MessageType.PluginA_CpuData]));
+
+             _client.EventHandler.RegisterEvent(MessageType.PluginA_CpuData, 
+                new EventToAction<GetCpuDataEventMessage>((pulseMsg) => action(pulseMsg.usage)));
+        }
     }
 }
+   

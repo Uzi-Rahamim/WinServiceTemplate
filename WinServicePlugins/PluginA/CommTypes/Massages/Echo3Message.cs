@@ -18,5 +18,4 @@ namespace PluginA.Contract.Massages
         public string message { get; set; }
         public ResponseEchoMessage(string message) : base(MessageType.PluginA_Echo) => this.message = message;
     }
-
 }

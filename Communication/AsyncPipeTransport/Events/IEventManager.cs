@@ -6,7 +6,6 @@ namespace AsyncPipeTransport.Events
     {
         public bool RegisterEvent(string messageType, IEvent eventAction);
 
-
         public bool UnregisterEvent(string messageType);
 
         public void HandleEvent(FrameHeader frame);

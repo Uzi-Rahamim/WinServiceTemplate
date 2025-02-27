@@ -8,7 +8,7 @@ namespace AsyncPipeTransport.Channel
 {
     public class ServerPipeChannel : BasePipeChannel, IServerChannel
     {
-        NamedPipeServerStream _pipeServer;
+        private readonly NamedPipeServerStream _pipeServer;
         private  const int _bufferSize = 2024;
         public ServerPipeChannel(ILogger<ClientPipeChannel> logger,string pipeName) : base(logger)
         {

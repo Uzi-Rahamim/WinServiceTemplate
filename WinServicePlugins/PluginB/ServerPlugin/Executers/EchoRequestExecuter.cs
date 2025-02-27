@@ -1,7 +1,7 @@
-﻿using AsyncPipeTransport.Executer;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using PluginB.Worker;
 using PluginB.Contract.Massages;
+using AsyncPipeTransport.Executer;
 
 namespace PluginB.Executers
 {

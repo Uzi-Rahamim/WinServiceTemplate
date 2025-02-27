@@ -21,7 +21,7 @@ namespace APIClient.commands.test
 
                 var demoAPI = new WinServiceApi(channel);
 
-                demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
+                //demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
 
                 Log.Error("Press any key to exit");
                 Console.ReadKey();

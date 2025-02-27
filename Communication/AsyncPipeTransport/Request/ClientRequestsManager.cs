@@ -3,6 +3,7 @@ using AsyncPipeTransport.CommonTypes;
 using AsyncPipeTransport.CommonTypes.InternalMassages;
 using AsyncPipeTransport.Exceptions;
 using AsyncPipeTransport.Extensions;
+using AsyncPipeTransport.Utils;
 using System.Collections.Concurrent;
 
 namespace AsyncPipeTransport.Request

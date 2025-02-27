@@ -8,7 +8,7 @@ namespace PluginA.Executers
     {
         public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger, CancellationTokenSource cts) : 
             base(logger, cts) {
-            logger.LogInformation("Echo3RequestExecuter created");
+            logger.LogInformation("EchoRequestExecuter created");
         }
 
         public static string Plugin_GetSchema()

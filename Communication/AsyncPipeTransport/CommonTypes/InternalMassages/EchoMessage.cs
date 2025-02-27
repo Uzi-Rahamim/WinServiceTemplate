@@ -1,4 +1,4 @@
-﻿namespace AsyncPipeTransport.CommonTypes
+﻿namespace AsyncPipeTransport.CommonTypes.Test
 {
     public class RequestEchoMessage : MessageHeader
     {

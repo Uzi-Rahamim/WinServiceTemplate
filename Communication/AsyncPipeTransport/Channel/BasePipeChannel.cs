@@ -8,11 +8,15 @@ namespace AsyncPipeTransport.Channel
     public abstract class BasePipeChannel : IChannel
     {
         public event Action? OnDisconnect;
+        public Guid ChannelId { get => Guid.NewGuid(); }
+
         private bool _disposed = false;
         private DateTime _lastMessageTimeStamp = DateTime.UtcNow;
         private readonly ILogger _logger;
+        
         //BufferPool<BytesBufferItem> _buffPool;
         protected PipeStream PipeStream { get; set; }
+
 
         protected BasePipeChannel(ILogger logger)
         {

@@ -1,6 +1,7 @@
 ﻿
 namespace AsyncPipeTransport.CommonTypes
 {
+
     public class RequestSchemaMessage : MessageHeader
     {
         public RequestSchemaMessage() : base(FrameworkMessageTypes.RequestSchema) { }
