@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\WinServicePluginCommon\WinServicePluginCommon.csproj" />
+    <ProjectReference Include="..\..\..\Communication\CommTypes\IntelConnectIPCCommon.csproj" />
+    <ProjectReference Include="..\..\..\Communication\InfraIPC\IntelConnectIPC.csproj" />
     <ProjectReference Include="..\CommTypes\Service_A.Plugin.Contract.csproj" />
-    <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
   </ItemGroup>
 
 </Project>

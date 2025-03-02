@@ -1,6 +1,6 @@
-﻿using AsyncPipeTransport.Events;
+﻿using Intel.IntelConnect.IPC.Events;
+using Intel.IntelConnect.IPC.Sdk.Types;
 using PluginB.Contract.Massages;
-using WinServicePluginCommon.Sdk.Types;
 namespace PluginB.ClientSDK.v1
 {
     public class PluginB_Api

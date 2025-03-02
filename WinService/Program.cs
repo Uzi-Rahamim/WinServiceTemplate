@@ -1,9 +1,9 @@
-using WinService;
+using Intel.IntelConnectPluginCommon;
 using Serilog;
-using App.WindowsService.API;
-using App.WindowsService;
+using Intel.IntelConnectWindowsService.API;
+using Intel.IntelConnectWindowsService;
 using System.Reflection;
-using AsyncPipeTransport.Clients;
+using Intel.IntelConnect.IPC.Clients;
 using Microsoft.Extensions.DependencyInjection;
 
 internal class Program

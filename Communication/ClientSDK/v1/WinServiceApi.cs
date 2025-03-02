@@ -1,9 +1,9 @@
-﻿using AsyncPipeTransport.CommonTypes;
-using WinServicePluginCommon.Sdk.Types;
-using AsyncPipeTransport.CommonTypes.Test;
+﻿using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.Sdk.Types;
+using Intel.IntelConnect.IPC.CommonTypes.Test;
 
 
-namespace ClientSDK.v1
+namespace Intel.IntelConnect.ClientSDK.v1
 {
     public class WinServiceApi
     {

@@ -1,13 +1,13 @@
-﻿using App.WindowsService.API;
-using AsyncPipeTransport.Clients;
-using AsyncPipeTransport.Executer;
-using CommTypes.Consts;
+﻿using Intel.IntelConnectWindowsService.API;
+using Intel.IntelConnect.IPC.Clients;
+using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPCCommon.Consts;
+using Intel.IntelConnect.PluginCommon;
 using Serilog;
 using Utilities;
 using Utilities.PluginUtils;
-using WinService.Plugin.Common;
 
-namespace App.WindowsService
+namespace Intel.IntelConnectWindowsService
 {
     internal class SetupPlugins
     {

@@ -1,4 +1,4 @@
-﻿using ClientSDK.v1;
+﻿using Intel.IntelConnect.ClientSDK.v1;
 using Microsoft.Extensions.Logging;
 using PluginA.ClientSDK.v1;
 using System;

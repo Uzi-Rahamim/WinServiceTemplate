@@ -1,16 +1,15 @@
-﻿using ClientSDK.v1;
+﻿using Intel.IntelConnect.ClientSDK.v1;
 using Cocona;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using PluginA.ClientSDK.v1;
-using Newtonsoft.Json.Linq;
 
 namespace APIClient.commands.test;
 
 public class PluginA_ListenToCpuEventsCommand
 {
     [Command]
-    public static async Task PluginA_ListenToCpuEvents([Argument(Description = "Your message")] string message)
+    public static async Task PluginA_ListenToCpuEvents()
     {
         Log.Information($"PluginA_SentEcho");
         using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
@@ -28,6 +27,8 @@ public class PluginA_ListenToCpuEventsCommand
 
             Log.Information("Wait For Events (Enter to abort)...");
             Console.ReadLine();
+
+            api.UnregisterCpuEvent().Wait();
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using AsyncPipeTransport.CommonTypes;
-using AsyncPipeTransport.Executer;
+﻿using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.Executer;
 
-namespace App.WindowsService.API
+namespace Intel.IntelConnectWindowsService.API
 {
     internal class ExecuterRegister
     {

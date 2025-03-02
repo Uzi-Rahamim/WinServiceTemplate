@@ -1,10 +1,10 @@
-﻿using AsyncPipeTransport.CommonTypes;
-using AsyncPipeTransport.CommonTypes.InternalMassages;
-using AsyncPipeTransport.Events;
+﻿using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.CommonTypes.InternalMassages;
+using Intel.IntelConnect.IPC.Events;
 using PluginA.ClientSDK.CommonTypes;
 using PluginA.ClientSDK.Convertors;
 using PluginA.Contract.Massages;
-using WinServicePluginCommon.Sdk.Types;
+using Intel.IntelConnect.IPC.Sdk.Types;
 namespace PluginA.ClientSDK.v1
 {
     public class PluginA_Api
@@ -56,11 +56,23 @@ namespace PluginA.ClientSDK.v1
 
         public async Task RegisterCpuEvent(Action<long> action)
         {
+            // Start service producing events 
             var response = await _client.RequestHandler.SendRequest<NullMessage, RegisterForEventMessage>(
-               new RegisterForEventMessage([MessageType.PluginA_CpuData]));
+               new RegisterForEventMessage(MessageType.PluginA_RegisterEvent,true, [MessageType.PluginA_CpuData]));
 
-             _client.EventHandler.RegisterEvent(MessageType.PluginA_CpuData, 
+            // listen for events on the client side
+            _client.EventHandler.RegisterEvent(MessageType.PluginA_CpuData, 
                 new EventToAction<GetCpuDataEventMessage>((pulseMsg) => action(pulseMsg.usage)));
+        }
+
+        public async Task UnregisterCpuEvent()
+        {
+            // Stop service producing events 
+            var response = await _client.RequestHandler.SendRequest<NullMessage, RegisterForEventMessage>(
+               new RegisterForEventMessage(MessageType.PluginA_RegisterEvent, false, [MessageType.PluginA_CpuData]));
+
+            // stop listen for events on the client side
+            _client.EventHandler.UnregisterEvent(MessageType.PluginA_CpuData);
         }
     }
 }

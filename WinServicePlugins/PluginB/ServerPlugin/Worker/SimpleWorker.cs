@@ -1,6 +1,6 @@
-﻿using AsyncPipeTransport.Channel;
+﻿using Intel.IntelConnect.IPC.Channel;
 using Microsoft.Extensions.Logging;
-using AsyncPipeTransport.Extensions;
+using Intel.IntelConnect.IPC.Extensions;
 using PluginB.Contract.Massages;
 
 namespace PluginB.Worker

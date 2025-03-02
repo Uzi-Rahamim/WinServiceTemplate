@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj" />
+    <ProjectReference Include="..\..\Communication\ClientSDK\IntelConnectClientSDK.csproj" />
     <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_A.Plugin.ClientSDK.csproj" />
     <ProjectReference Include="..\..\WinServicePlugins\PluginB\ClientSDK\Service_B.Plugin.ClientSDK.csproj" />
   </ItemGroup>

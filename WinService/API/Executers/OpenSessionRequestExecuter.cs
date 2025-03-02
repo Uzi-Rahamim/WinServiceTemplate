@@ -1,8 +1,8 @@
-﻿using AsyncPipeTransport.Executer;
-using CommTypes.Massages;
+﻿using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPCCommon.Massages;
 using System.Reflection;
 
-namespace App.WindowsService.API.Executers
+namespace Intel.IntelConnectWindowsService.API.Executers
 {
     public class OpenSessionRequestExecuter : SimpleRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage, ResponseSecurityMessage>
     {

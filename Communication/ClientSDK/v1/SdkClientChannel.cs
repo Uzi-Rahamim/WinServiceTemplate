@@ -1,14 +1,14 @@
-﻿using AsyncPipeTransport.Channel;
-using AsyncPipeTransport.Events;
-using AsyncPipeTransport.Listeners;
-using AsyncPipeTransport.Request;
-using AsyncPipeTransport.Utils;
-using CommTypes.Consts;
-using CommTypes.Massages;
+﻿using Intel.IntelConnect.IPC.Channel;
+using Intel.IntelConnect.IPC.Events;
+using Intel.IntelConnect.IPC.Listeners;
+using Intel.IntelConnect.IPC.Request;
+using Intel.IntelConnect.IPC.Utils;
+using Intel.IntelConnect.IPCCommon.Consts;
+using Intel.IntelConnect.IPCCommon.Massages;
 using Microsoft.Extensions.Logging;
-using WinServicePluginCommon.Sdk.Types;
+using Intel.IntelConnect.IPC.Sdk.Types;
 
-namespace ClientSDK.v1
+namespace Intel.IntelConnect.ClientSDK.v1
 {
     public class SdkClientChannel : ISDKClientChannel, IDisposable
     {

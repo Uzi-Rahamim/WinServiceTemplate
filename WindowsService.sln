@@ -3,27 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncPipeTransport", "Communication\AsyncPipeTransport\AsyncPipeTransport.csproj", "{745C5661-C7B4-439D-BE1C-DC272DD54007}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelConnectIPC", "Communication\InfraIPC\IntelConnectIPC.csproj", "{745C5661-C7B4-439D-BE1C-DC272DD54007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinService", "WinService\WinService.csproj", "{D3229796-5B00-46A5-BF2A-613394D57C3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelConnectWinService", "WinService\IntelConnectWinService.csproj", "{D3229796-5B00-46A5-BF2A-613394D57C3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientCLI", "WinServiceClients\CLIClient\ClientCLI.csproj", "{4FEFA462-CDF7-41A9-8BD1-C9ED74A460FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{60C8338D-81D9-4661-9C74-8921A5EC4079}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientSDK", "Communication\ClientSDK\ClientSDK.csproj", "{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelConnectClientSDK", "Communication\ClientSDK\IntelConnectClientSDK.csproj", "{AA4F73D0-9A68-4261-8E8E-99E12621D1FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommTypes", "Communication\CommTypes\CommTypes.csproj", "{C679B2F0-9633-435D-AD71-D27D65C25352}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelConnectIPCCommon", "Communication\CommTypes\IntelConnectIPCCommon.csproj", "{C679B2F0-9633-435D-AD71-D27D65C25352}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{2DC312E3-71C3-4F84-9E1D-7790DF3400BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Common\Utils\Utilities.csproj", "{F062C43F-5BE7-4FA7-8438-774A4648DCC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleClientApp", "WinServiceClients\SimpleClientApp\SimpleClientApp.csproj", "{A496E910-8426-4E55-B246-FF3356EF863C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D8466F27-1226-4B0D-81A7-E4165561E3BD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncPipeTransportUnitTest", "Tests\AsyncPipeTransportUnitTest\AsyncPipeTransportUnitTest.csproj", "{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinServiceClients", "WinServiceClients", "{6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}"
 EndProject
@@ -43,9 +39,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin.ClientSDK"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_B.Plugin.ClientSDK", "WinServicePlugins\PluginB\ClientSDK\Service_B.Plugin.ClientSDK.csproj", "{C2E83ADE-0EE5-4C44-A8DB-13806F176E21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin", "WinServicePlugins\PluginA\ServerPlugin48\Service_A.Plugin.csproj", "{4B363838-9B72-4F25-935C-2C04D2899F2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service_A.Plugin", "WinServicePlugins\PluginA\ServerPlugin\Service_A.Plugin.csproj", "{4B363838-9B72-4F25-935C-2C04D2899F2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinServicePluginCommon", "Common\WinServicePluginCommon\WinServicePluginCommon.csproj", "{5B926DA0-8277-7B6E-B157-B272D1160B0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelConnectPluginCommon", "Common\WinServicePluginCommon\IntelConnectPluginCommon.csproj", "{5B926DA0-8277-7B6E-B157-B272D1160B0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,8 +77,6 @@ Global
 		{A496E910-8426-4E55-B246-FF3356EF863C}.Debug|x64.Build.0 = Debug|x64
 		{A496E910-8426-4E55-B246-FF3356EF863C}.Release|x64.ActiveCfg = Release|x64
 		{A496E910-8426-4E55-B246-FF3356EF863C}.Release|x64.Build.0 = Release|x64
-		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Debug|x64.ActiveCfg = Debug|x64
-		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26}.Release|x64.ActiveCfg = Release|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.ActiveCfg = Debug|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Debug|x64.Build.0 = Debug|x64
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1}.Release|x64.ActiveCfg = Release|x64
@@ -122,8 +116,6 @@ Global
 		{C679B2F0-9633-435D-AD71-D27D65C25352} = {2DC312E3-71C3-4F84-9E1D-7790DF3400BD}
 		{F062C43F-5BE7-4FA7-8438-774A4648DCC7} = {60C8338D-81D9-4661-9C74-8921A5EC4079}
 		{A496E910-8426-4E55-B246-FF3356EF863C} = {6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}
-		{D8466F27-1226-4B0D-81A7-E4165561E3BD} = {6B4209CB-3E32-4519-A6CC-01BF5B2B96F9}
-		{70AF744C-A9F5-4DF1-9470-C3853E5E8F26} = {D8466F27-1226-4B0D-81A7-E4165561E3BD}
 		{256FADCF-7A6B-4312-8275-ED25FBB24EF1} = {615A7717-00DE-4F84-B1C6-AE44C542F101}
 		{24729577-42C1-4034-B6E7-4D16F5457A83} = {B52451E9-FEC5-4A77-AA16-0B81D4A24082}
 		{615A7717-00DE-4F84-B1C6-AE44C542F101} = {B52451E9-FEC5-4A77-AA16-0B81D4A24082}

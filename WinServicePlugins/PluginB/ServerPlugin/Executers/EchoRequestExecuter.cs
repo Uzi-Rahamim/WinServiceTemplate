@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PluginB.Worker;
 using PluginB.Contract.Massages;
-using AsyncPipeTransport.Executer;
+using Intel.IntelConnect.IPC.Executer;
 
 namespace PluginB.Executers
 {

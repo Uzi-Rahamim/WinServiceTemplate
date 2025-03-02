@@ -1,4 +1,4 @@
-﻿namespace CommTypes.Consts
+﻿namespace Intel.IntelConnect.IPCCommon.Consts
 {
     public static class RegistryConsts
     {

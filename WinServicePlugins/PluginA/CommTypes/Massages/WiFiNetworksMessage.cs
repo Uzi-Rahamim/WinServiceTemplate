@@ -1,4 +1,4 @@
-﻿using AsyncPipeTransport.CommonTypes;
+﻿using Intel.IntelConnect.IPC.CommonTypes;
 using PluginA.Contract.Types;
 
 namespace PluginA.Contract.Massages

@@ -1,7 +1,7 @@
-using App.WindowsService;
-using AsyncPipeTransport.Listeners;
+using Intel.IntelConnectWindowsService;
+using Intel.IntelConnect.IPC.Listeners;
 
-namespace WinService;
+namespace Intel.IntelConnectPluginCommon;
 
 public class LifeCycleManager : BackgroundService
 {

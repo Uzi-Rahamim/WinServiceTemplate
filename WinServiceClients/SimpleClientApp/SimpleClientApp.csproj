@@ -101,17 +101,17 @@
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\WinServicePluginCommon\WinServicePluginCommon.csproj">
+    <ProjectReference Include="..\..\Common\WinServicePluginCommon\IntelConnectPluginCommon.csproj">
       <Project>{5b926da0-8277-7b6e-b157-b272d1160b0a}</Project>
-      <Name>WinServicePluginCommon</Name>
+      <Name>IntelConnectPluginCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj">
+    <ProjectReference Include="..\..\Communication\InfraIPC\IntelConnectIPC.csproj">
       <Project>{745c5661-c7b4-439d-be1c-dc272dd54007}</Project>
-      <Name>AsyncPipeTransport</Name>
+      <Name>IntelConnectIPC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Communication\ClientSDK\ClientSDK.csproj">
+    <ProjectReference Include="..\..\Communication\ClientSDK\IntelConnectClientSDK.csproj">
       <Project>{aa4f73d0-9a68-4261-8e8e-99e12621d1fa}</Project>
-      <Name>ClientSDK</Name>
+      <Name>IntelConnectClientSDK</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinServicePlugins\PluginA\ClientSDK\Service_A.Plugin.ClientSDK.csproj">
       <Project>{3a35be25-b087-4591-9980-e4040b3b2ce5}</Project>

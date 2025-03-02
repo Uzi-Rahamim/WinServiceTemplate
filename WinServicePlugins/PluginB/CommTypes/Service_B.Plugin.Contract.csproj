@@ -12,7 +12,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
+	  <ProjectReference Include="..\..\..\Communication\InfraIPC\IntelConnectIPC.csproj" />
   </ItemGroup>
 
 </Project>

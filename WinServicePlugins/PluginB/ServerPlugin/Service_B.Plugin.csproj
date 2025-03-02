@@ -16,9 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Common\WinServicePluginCommon\WinServicePluginCommon.csproj" />
-	  <ProjectReference Include="..\..\..\Communication\AsyncPipeTransport\AsyncPipeTransport.csproj" />
-	  <ProjectReference Include="..\CommTypes\Service_B.Plugin.Contract.csproj" />
+		<ProjectReference Include="..\..\..\Common\WinServicePluginCommon\IntelConnectPluginCommon.csproj" />
+		<ProjectReference Include="..\..\..\Communication\CommTypes\IntelConnectIPCCommon.csproj" />
+		<ProjectReference Include="..\CommTypes\Service_B.Plugin.Contract.csproj" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

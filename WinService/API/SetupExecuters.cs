@@ -1,16 +1,16 @@
-﻿using App.WindowsService.API.Executers;
-using AsyncPipeTransport.Channel;
-using AsyncPipeTransport.Clients;
-using AsyncPipeTransport.CommonTypes;
-using AsyncPipeTransport.CommonTypes.InternalMassages.Executers;
-using AsyncPipeTransport.Executer;
-using AsyncPipeTransport.Listeners;
-using AsyncPipeTransport.Utils;
-using CommTypes.Consts;
-using CommTypes.Massages;
+﻿using Intel.IntelConnectWindowsService.API.Executers;
+using Intel.IntelConnect.IPC.Channel;
+using Intel.IntelConnect.IPC.Clients;
+using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.CommonTypes.InternalMassages.Executers;
+using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPC.Listeners;
+using Intel.IntelConnect.IPC.Utils;
+using Intel.IntelConnect.IPCCommon.Consts;
+using Intel.IntelConnect.IPCCommon.Massages;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace App.WindowsService.API;
+namespace Intel.IntelConnectWindowsService.API;
 
 internal class SetupExecuters
 {

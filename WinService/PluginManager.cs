@@ -1,6 +1,6 @@
-﻿using WinService.Plugin.Common;
+﻿using Intel.IntelConnect.PluginCommon;
 
-namespace App.WindowsService
+namespace Intel.IntelConnectWindowsService
 {
     public class PluginManager
     {
