@@ -2,18 +2,22 @@
 
 namespace PluginA.Contract.Massages
 {
+    public partial class MethodName
+    {   
+        public const string PluginA_RegisterEvent = "PluginA.RegisterEvent";
+        public const string PluginA_UnregisterEvent = "PluginA.RegisterEvent";
+    }
+
     public partial class TopicName
     {
         public const string PluginA_CpuData = "PluginA.CpuData";
     }
-    public partial class MethodName
-    {   
-        public const string PluginA_RegisterEvent = "PluginA.RegisterEvent";
-    }
 
-    public class GetCpuDataEventMessage : MessageHeader
+    public class GetCpuDataEventMessage : IEventMessageHeader
     {
         public int usage { get; set; }
-        public GetCpuDataEventMessage(int usage) : base(TopicName.PluginA_CpuData) => this.usage = usage;
+        public string topic { get => TopicName.PluginA_CpuData; }
+
+        public GetCpuDataEventMessage(int usage) => this.usage =usage;
     }
 }

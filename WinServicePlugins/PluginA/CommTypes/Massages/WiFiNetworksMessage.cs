@@ -8,16 +8,15 @@ namespace PluginA.Contract.Massages
         public const string APList = "PluginA.APList";
     }
 
-    public class RequestWiFiNetworksMessage : MessageHeader
+    public class RequestWiFiNetworksMessage : IMessageHeader
     {
         public int interval { get; set; }
-        public RequestWiFiNetworksMessage() : base(MethodName.APList) { }
     }
 
-    public class RespnseWiFiNetworksMessage : MessageHeader
+    public class RespnseWiFiNetworksMessage : IMessageHeader
     {
         public IEnumerable<WiFiNetworkItem> list { get; set; }
-        public RespnseWiFiNetworksMessage(IEnumerable<WiFiNetworkItem> list) : base(MethodName.APList) => this.list = list;
+        public RespnseWiFiNetworksMessage(IEnumerable<WiFiNetworkItem> list) => this.list = list;
     }
 
     

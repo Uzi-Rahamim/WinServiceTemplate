@@ -7,18 +7,19 @@ namespace Intel.IntelConnect.IPC.Events.Client
     {
         private readonly ConcurrentDictionary<string, IEvent> events = new ConcurrentDictionary<string, IEvent>();
 
-        public bool RegisterEvent(string messageType, IEvent eventAction)
+        public bool RegisterEvent(string topic, IEvent eventAction)
         {
-            return events.TryAdd(messageType, eventAction);
+            return events.TryAdd(topic, eventAction);
         }
 
-        public bool UnregisterEvent(string messageType)
+        public bool UnregisterEvent(string topic)
         {
-            return events.TryRemove(messageType, out _);
+            return events.TryRemove(topic, out _);
         }
 
         public void HandleEvent(FrameHeader frame)
         {
+            Console.WriteLine($"HandleEvent {frame.methodName}");
             if (!events.ContainsKey(frame.methodName))
             {
                 return;

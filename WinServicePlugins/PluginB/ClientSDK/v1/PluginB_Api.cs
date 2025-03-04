@@ -13,13 +13,15 @@ namespace PluginB.ClientSDK.v1
         public async Task<string?> GetEchoAsync(string message)
         {
             var response = await _client.RequestHandler.SendRequestAsync<ResponseEchoMessage, RequestEchoMessage>(
+                MethodName.PluginB_Echo,
                 new RequestEchoMessage(message));
             return response?.message;
         }
 
         public bool RegisterNotifyEvent(Action<string> action)
         {
-            return _client.EventHandler.RegisterEvent(MethodName.NotifyEvant, new EventToAction<NotifyEvantMessage>((pulseMsg) => action(pulseMsg.message)));
+            return _client.EventHandler.RegisterEvent(TopicName.NotifyEvant, 
+                new EventToAction<NotifyEvantMessage>((pulseMsg) => action(pulseMsg.message)));
         }
     }
 }

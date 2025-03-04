@@ -3,7 +3,7 @@ using Intel.IntelConnect.IPC.Extensions;
 
 namespace Intel.IntelConnect.IPC.Events.Client
 {
-    public class EventToAction<T> : IEvent where T : MessageHeader
+    public class EventToAction<T> : IEvent where T : IMessageHeader
     {
         Action<T> _action;
         public EventToAction(Action<T> action) => _action = action;

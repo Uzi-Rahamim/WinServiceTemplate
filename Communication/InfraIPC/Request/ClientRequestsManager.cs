@@ -28,9 +28,9 @@ namespace Intel.IntelConnect.IPC.Request
             return _pendingRequests.TryGetValue(requestId, out request);
         }
 
-        public async IAsyncEnumerable<T> SendLongRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async IAsyncEnumerable<T> SendLongRequestAsync<T, R>(string methodName, R message) where T : IMessageHeader where R : IMessageHeader
         {
-            var requestId = await SendNonBlockAsync((requestId) => message.BuildRequestMessage(requestId));
+            var requestId = await SendNonBlockAsync((requestId) => message.BuildRequestMessage(methodName, requestId));
             FrameHeader? reply = null;
             do
             {
@@ -44,19 +44,19 @@ namespace Intel.IntelConnect.IPC.Request
             } while (!reply.IsLastFrame());
         }
 
-        public async Task<T?> SendRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async Task<T?> SendRequestAsync<T, R>(string methodName, R message) where T : IMessageHeader where R : IMessageHeader
         {
-            var reply = await SendAsync((requestId) => message.BuildRequestMessage(requestId));
+            var reply = await SendAsync((requestId) => message.BuildRequestMessage(methodName, requestId));
             return ExtructResponse<T>(reply);
         }
 
-        public async Task<T?> SendOpenSessionRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async Task<T?> SendOpenSessionRequestAsync<T, R>(R message) where T : IMessageHeader where R : IMessageHeader
         {
             var reply = await SendAsync((requestId) => message.BuildOpenSessionRequestMessage(requestId));
             return ExtructResponse<T>(reply);
         }
 
-        private T ExtructResponse<T>(FrameHeader? frame) where T : MessageHeader
+        private T ExtructResponse<T>(FrameHeader? frame) where T : IMessageHeader
         {
             if (frame == null)
             {

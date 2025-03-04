@@ -9,6 +9,6 @@ namespace Intel.IntelConnect.IPC.Events.Service
         Task SafeUnregisterEventsAsync(Guid clientId, IEnumerable<string> topics, Func<IEnumerable<string>, Task> callback);
         Task SafeUnregisterAllEventsAsync(Guid clientId);
 
-        Task<bool> DispatchEventAsync<R>(R eventMessage) where R : MessageHeader;
+        Task<bool> DispatchEventAsync<R>(R eventMessage) where R : IEventMessageHeader;
     }
 }

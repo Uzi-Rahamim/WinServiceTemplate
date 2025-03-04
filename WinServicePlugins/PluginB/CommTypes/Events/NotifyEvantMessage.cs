@@ -2,16 +2,18 @@
 
 namespace PluginB.Contract.Massages
 {
-    public partial class MethodName
+    public partial class TopicName
     {
         public static readonly string NotifyEvant = "NotifyEvant";
     }
 
-    public class NotifyEvantMessage : MessageHeader
+    public class NotifyEvantMessage : IEventMessageHeader
     {
         public string message { get; set; }
 
-        public NotifyEvantMessage(string message) : base(MethodName.NotifyEvant) => this.message = message;
+        public string topic => TopicName.NotifyEvant;
+
+        public NotifyEvantMessage(string message)  => this.message = message;
     }
 
 }

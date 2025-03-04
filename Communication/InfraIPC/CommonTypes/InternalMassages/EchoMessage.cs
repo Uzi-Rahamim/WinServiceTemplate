@@ -1,16 +1,16 @@
 ﻿namespace Intel.IntelConnect.IPC.CommonTypes.Test
 {
-    public class RequestEchoMessage : MessageHeader
+    public class RequestEchoMessage : IMessageHeader
     {
         public string message { get; set; }
 
-        public RequestEchoMessage(string message) : base(FrameworkMethodName.Echo) => this.message = message;
+        public RequestEchoMessage(string message)  => this.message = message;
     }
 
-    public class ResponseEchoMessage : MessageHeader
+    public class ResponseEchoMessage : IMessageHeader
     {
         public string message { get; set; }
-        public ResponseEchoMessage(string message) : base(FrameworkMethodName.Echo) => this.message = message;
+        public ResponseEchoMessage(string message) => this.message = message;
     }
 
 }

@@ -4,17 +4,17 @@
 namespace Intel.IntelConnect.IPCCommon.Massages
 {
 
-    public class RequestSecurityMessage : MessageHeader
+    public class RequestSecurityMessage : IMessageHeader
     {
         public string token { get; set; }
 
-        public RequestSecurityMessage(string token) : base(String.Empty) => this.token = token;
+        public RequestSecurityMessage(string token) => this.token = token;
     }
 
-    public class ResponseSecurityMessage : MessageHeader
+    public class ResponseSecurityMessage : IMessageHeader
     {
         public bool isValid { get; set; }
         public string hostVersion { get; set; }
-        public ResponseSecurityMessage(bool isValid,string hostVersion) : base(String.Empty) => (this.isValid, this.hostVersion) = (isValid, hostVersion);
+        public ResponseSecurityMessage(bool isValid,string hostVersion) => (this.isValid, this.hostVersion) = (isValid, hostVersion);
     }
 }

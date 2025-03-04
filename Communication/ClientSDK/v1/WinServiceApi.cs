@@ -16,6 +16,7 @@ namespace Intel.IntelConnect.ClientSDK.v1
         public async IAsyncEnumerable<string> GetSchemaAsync()
         {
             var responses = _client.RequestHandler.SendLongRequestAsync<ResponseSchemaMessage, RequestSchemaMessage>(
+                FrameworkMethodName.RequestSchema,
                 new RequestSchemaMessage());
             await foreach (var response in responses)
             {
@@ -28,6 +29,7 @@ namespace Intel.IntelConnect.ClientSDK.v1
         public async Task<string?> GetEchoAsync(string message)
         {
             var response = await _client.RequestHandler.SendRequestAsync<ResponseEchoMessage, RequestEchoMessage>(
+                FrameworkMethodName.Echo,
                 new RequestEchoMessage(message));
             return response?.message;
         }

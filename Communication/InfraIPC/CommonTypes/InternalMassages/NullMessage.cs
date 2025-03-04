@@ -1,9 +1,6 @@
 ﻿namespace Intel.IntelConnect.IPC.CommonTypes.InternalMassages
 {
-    public class NullMessage : MessageHeader
+    public class NullMessage : IMessageHeader
     {
-        public NullMessage() : base(FrameworkMethodName.Empty)
-        {
-        }
     }
 }

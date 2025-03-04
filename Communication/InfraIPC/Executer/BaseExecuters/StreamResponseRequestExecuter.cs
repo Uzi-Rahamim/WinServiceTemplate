@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Intel.IntelConnect.IPC.v1.Executer
 {
-    public abstract class StreamResponseRequestExecuter<T, Rq, Rs> : BaseRequestExecuter<T, Rq, Rs> where Rq : MessageHeader where Rs : MessageHeader
+    public abstract class StreamResponseRequestExecuter<T, Rq, Rs> : BaseRequestExecuter<T, Rq, Rs> where Rq : IMessageHeader where Rs : IMessageHeader
     {
         protected StreamResponseRequestExecuter(ILogger<T> logger, CancellationTokenSource cancellationToken) : base(logger, cancellationToken) { }
         protected override async Task<Rs?> ExecuteAsync(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse)
@@ -16,7 +16,7 @@ namespace Intel.IntelConnect.IPC.v1.Executer
             {
                 await sendNextResponse(response);
             }
-            return null;
+            return default(Rs);
         }
 
         protected abstract IAsyncEnumerable<Rs> ExecuteAsync(Rq request);

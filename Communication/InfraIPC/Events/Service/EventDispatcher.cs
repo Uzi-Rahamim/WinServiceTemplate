@@ -70,15 +70,15 @@ namespace Intel.IntelConnect.IPC.Events.Service
             }
         }
 
-        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : MessageHeader
+        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : IEventMessageHeader
         {
-            if (_topics.TryGetValue(eventMessage.methodName, out var topicChannels))
+            if (_topics.TryGetValue(eventMessage.topic, out var topicChannels))
             {
                 return await topicChannels.DispatchEventAsync(eventMessage);
             }
             else
             {
-                _logger.LogInformation("No clients found - for {eventMessage.methodName} Event", eventMessage.methodName);
+                _logger.LogInformation("No clients found - for {eventMessage.methodName} Event", eventMessage.topic);
             }
             return false;
         }

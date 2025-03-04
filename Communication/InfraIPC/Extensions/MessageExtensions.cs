@@ -21,45 +21,45 @@ namespace Intel.IntelConnect.IPC.Extensions
             return messageJson.FromJson<FrameHeader>();
         }
 
-        public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : MessageHeader
+        public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : IMessageHeader
         {
             return frame.payload.FromJson<T>();
         }
 
-        public static string BuildMessage<T>(this T message, long requestId, FrameOptions options) where T : MessageHeader
+        public static string BuildMessage<T>(this T message, string methodName, long requestId, FrameOptions options) where T : IMessageHeader
         {
             string payload = message.ToJson();
-            return new FrameHeader(requestId, options, message.methodName, payload).ToJson();
+            return new FrameHeader(requestId, options, methodName, payload).ToJson();
         }
 
-        public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : IMessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.OpenSessionMsg | FrameOptions.RequestMsg);
+            return message.BuildMessage(FrameworkMethodName.Error, requestId, FrameOptions.OpenSessionMsg | FrameOptions.RequestMsg);
         }
 
-        public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader
+        public static string BuildRequestMessage<T>(this T message, string methodName, long requestId) where T : IMessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.RequestMsg);
+            return message.BuildMessage(methodName, requestId, FrameOptions.RequestMsg);
         }
 
-        public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
+        public static string BuildResponseMessage<T>(this T message, long requestId) where T : IMessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.ResponseMsg | FrameOptions.LastFrame);
+            return message.BuildMessage(FrameworkMethodName.Empty, requestId,  FrameOptions.ResponseMsg | FrameOptions.LastFrame);
         }
 
         public static string BuildErrorMessage<T>(this T message, long requestId) where T : ErrorMessage
         {
-            return message.BuildMessage(requestId, FrameOptions.ResponseMsg | FrameOptions.ErrorMsg);
+            return message.BuildMessage(FrameworkMethodName.Empty, requestId, FrameOptions.ResponseMsg | FrameOptions.ErrorMsg);
         }
 
-        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
+        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : IMessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.ResponseMsg);
+            return message.BuildMessage(FrameworkMethodName.Empty, requestId, FrameOptions.ResponseMsg);
         }
 
-        public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
+        public static string BuildServerEventMessage<T>(this T message) where T : IEventMessageHeader
         {
-            return message.BuildMessage(0, FrameOptions.EvantMsg);
+            return message.BuildMessage(message.topic, 0, FrameOptions.EvantMsg);
         }
      
         public static bool IsNullMessage(this FrameHeader frame)

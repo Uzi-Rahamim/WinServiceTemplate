@@ -2,14 +2,14 @@
 namespace Intel.IntelConnect.IPC.CommonTypes
 {
 
-    public class RequestSchemaMessage : MessageHeader
+    public class RequestSchemaMessage : IMessageHeader
     {
-        public RequestSchemaMessage() : base(FrameworkMethodName.RequestSchema) { }
+        public RequestSchemaMessage()  { }
     }
 
-    public class ResponseSchemaMessage : MessageHeader
+    public class ResponseSchemaMessage : IMessageHeader
     {
         public string schema { get; set; }
-        public ResponseSchemaMessage(string schema) : base(FrameworkMethodName.RequestSchema) => this.schema = schema;
+        public ResponseSchemaMessage(string schema) => this.schema = schema;
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace Intel.IntelConnect.IPC.CommonTypes.InternalMassages
 {
-    public class ErrorMessage : MessageHeader
+    public class ErrorMessage : IMessageHeader
     {
         public string Message { get; set; }
         public int Code { get; set; }
-        public ErrorMessage(string message, int code) : base(FrameworkMethodName.Error)
+        public ErrorMessage(string message, int code) 
         {
             Message = message;
             Code = code;

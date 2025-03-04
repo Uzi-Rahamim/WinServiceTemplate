@@ -1,15 +1,15 @@
 ﻿namespace Intel.IntelConnect.IPC.CommonTypes
 {
-    public class PulseEventMessage : MessageHeader
+    public class PulseEventMessage : IEventMessageHeader
     {
-        public PulseEventMessage() : base(FrameworkMethodName.PulseEvent) {}
+        public string topic => FrameworkMethodName.PulseEvent;
     }
 
 
-    public class RegisterForEventMessage : MessageHeader
+    public class RegisterForEventMessage : IMessageHeader
     {
         public IEnumerable<string> topics { get; set; }
         public bool start { get; set; }
-        public RegisterForEventMessage(string methodName,bool start, IEnumerable<string> topics) : base(methodName) => (this.topics, this.start) = (topics, start);
+        public RegisterForEventMessage(bool start, IEnumerable<string> topics) => (this.topics, this.start) = (topics, start);
     }
 }

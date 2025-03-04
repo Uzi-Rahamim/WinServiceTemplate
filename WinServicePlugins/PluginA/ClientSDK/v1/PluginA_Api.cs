@@ -16,6 +16,7 @@ namespace PluginA.ClientSDK.v1
         public async Task<string?> GetEchoAsync(string message)
         {
             var response = await _client.RequestHandler.SendRequestAsync<ResponseEchoMessage, RequestEchoMessage>(
+                MethodName.PluginA_Echo,
                 new RequestEchoMessage(message));
             return response?.message;
         }
@@ -25,6 +26,7 @@ namespace PluginA.ClientSDK.v1
         public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
         {
             var responses = _client.RequestHandler.SendLongRequestAsync<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+                MethodName.APList,
                 new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
@@ -40,6 +42,7 @@ namespace PluginA.ClientSDK.v1
         public async Task GetAPListStreamAsync(Action<WiFiNetwork> setNextResult)
         {
             var responses = _client.RequestHandler.SendLongRequestAsync<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+                MethodName.APList,
                 new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
@@ -58,7 +61,8 @@ namespace PluginA.ClientSDK.v1
         {
             // Start service producing events 
             var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
-               new RegisterForEventMessage(MethodName.PluginA_RegisterEvent,true, [TopicName.PluginA_CpuData]));
+               MethodName.PluginA_RegisterEvent,
+               new RegisterForEventMessage(true, [TopicName.PluginA_CpuData]));
 
             // listen for events on the client side
             _client.EventHandler.RegisterEvent(TopicName.PluginA_CpuData, 
@@ -69,7 +73,8 @@ namespace PluginA.ClientSDK.v1
         {
             // Stop service producing events 
             var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
-               new RegisterForEventMessage(MethodName.PluginA_RegisterEvent, false, [TopicName.PluginA_CpuData]));
+                MethodName.PluginA_UnregisterEvent,
+               new RegisterForEventMessage(false, [TopicName.PluginA_CpuData]));
 
             // stop listen for events on the client side
             _client.EventHandler.UnregisterEvent(TopicName.PluginA_CpuData);
