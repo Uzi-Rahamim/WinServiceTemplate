@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Intel.IntelConnect.IPC.Executer
 {
-    public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : IMessageHeader where Rs : IMessageHeader
+    public abstract class BaseRequestExecuter<T, Rq, Rs> : IRequestExecuter where Rq : MessageHeader where Rs : MessageHeader
     {
         protected ILogger<T> Logger { get; private set; }
 

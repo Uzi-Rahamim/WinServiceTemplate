@@ -7,13 +7,11 @@ namespace PluginB.Contract.Massages
         public static readonly string NotifyEvant = "NotifyEvant";
     }
 
-    public class NotifyEvantMessage : IEventMessageHeader
+    public class NotifyEvantMessage : EventMessageHeader
     {
         public string message { get; set; }
 
-        public string topic => TopicName.NotifyEvant;
-
-        public NotifyEvantMessage(string message)  => this.message = message;
+        public NotifyEvantMessage(string message) : base(TopicName.NotifyEvant) => this.message = message;
     }
 
 }

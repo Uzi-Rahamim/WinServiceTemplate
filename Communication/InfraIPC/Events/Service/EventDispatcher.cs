@@ -70,7 +70,7 @@ namespace Intel.IntelConnect.IPC.Events.Service
             }
         }
 
-        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : IEventMessageHeader
+        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : EventMessageHeader
         {
             if (_topics.TryGetValue(eventMessage.topic, out var topicChannels))
             {

@@ -31,7 +31,7 @@ namespace Intel.IntelConnect.IPC.Events.Service
             _clients.TryRemove(channelId, out _);
         }
 
-        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : IEventMessageHeader
+        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : EventMessageHeader
         {
             var channelsKeys = _clients.ToList();
             if (channelsKeys.Count == 0)

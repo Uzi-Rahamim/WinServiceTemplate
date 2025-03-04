@@ -18,8 +18,7 @@ namespace Intel.IntelConnect.IPC.Events.Client
         }
 
         public void HandleEvent(FrameHeader frame)
-        {
-            Console.WriteLine($"HandleEvent {frame.methodName}");
+        {   
             if (!events.ContainsKey(frame.methodName))
             {
                 return;

@@ -13,11 +13,10 @@ namespace PluginA.Contract.Massages
         public const string PluginA_CpuData = "PluginA.CpuData";
     }
 
-    public class GetCpuDataEventMessage : IEventMessageHeader
+    public class GetCpuDataEventMessage : EventMessageHeader
     {
         public int usage { get; set; }
-        public string topic { get => TopicName.PluginA_CpuData; }
 
-        public GetCpuDataEventMessage(int usage) => this.usage =usage;
+        public GetCpuDataEventMessage(int usage) : base(TopicName.PluginA_CpuData) => this.usage =usage;
     }
 }

@@ -21,28 +21,28 @@ namespace Intel.IntelConnect.IPC.Extensions
             return messageJson.FromJson<FrameHeader>();
         }
 
-        public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : IMessageHeader
+        public static T? ExtractMessageHeaders<T>(this FrameHeader frame) where T : MessageHeader
         {
             return frame.payload.FromJson<T>();
         }
 
-        public static string BuildMessage<T>(this T message, string methodName, long requestId, FrameOptions options) where T : IMessageHeader
+        public static string BuildMessage<T>(this T message, string methodName, long requestId, FrameOptions options) where T : MessageHeader
         {
             string payload = message.ToJson();
             return new FrameHeader(requestId, options, methodName, payload).ToJson();
         }
 
-        public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : IMessageHeader
+        public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {
             return message.BuildMessage(FrameworkMethodName.Error, requestId, FrameOptions.OpenSessionMsg | FrameOptions.RequestMsg);
         }
 
-        public static string BuildRequestMessage<T>(this T message, string methodName, long requestId) where T : IMessageHeader
+        public static string BuildRequestMessage<T>(this T message, string methodName, long requestId) where T : MessageHeader
         {
             return message.BuildMessage(methodName, requestId, FrameOptions.RequestMsg);
         }
 
-        public static string BuildResponseMessage<T>(this T message, long requestId) where T : IMessageHeader
+        public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
             return message.BuildMessage(FrameworkMethodName.Empty, requestId,  FrameOptions.ResponseMsg | FrameOptions.LastFrame);
         }
@@ -52,12 +52,12 @@ namespace Intel.IntelConnect.IPC.Extensions
             return message.BuildMessage(FrameworkMethodName.Empty, requestId, FrameOptions.ResponseMsg | FrameOptions.ErrorMsg);
         }
 
-        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : IMessageHeader
+        public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
             return message.BuildMessage(FrameworkMethodName.Empty, requestId, FrameOptions.ResponseMsg);
         }
 
-        public static string BuildServerEventMessage<T>(this T message) where T : IEventMessageHeader
+        public static string BuildServerEventMessage<T>(this T message) where T : EventMessageHeader
         {
             return message.BuildMessage(message.topic, 0, FrameOptions.EvantMsg);
         }
