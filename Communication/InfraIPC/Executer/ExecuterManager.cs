@@ -18,37 +18,37 @@ namespace Intel.IntelConnect.IPC.Executer
             {
                 try
                 {
-                    _logger.LogInformation("Server load executer for {messageType}", cmd.GetMessageType());
+                    _logger.LogInformation("Server load executer method {messageType}", cmd.GetMessageType());
                     _executers.Add(cmd.GetMessageType(), cmd);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Server load executer failed (Make sure Plugin_GetMessageType/GetMessageType is unique)");
+                    _logger.LogError(ex, "Server load executer method failed (Make sure Plugin_GetMethodName/GetMessageType is unique)");
                 }
               
             }
         }
 
-        public async Task<bool> Execute(IChannel pipeServer, string msgType, long requestId, string payload, long clientId)
+        public async Task<bool> ExecuteAsync(IChannel pipeServer, string methodName, long requestId, string payload)
         {
-            var cmd = CreateExecuter(msgType, requestId, clientId);
+            var cmd = CreateExecuter(methodName, requestId, pipeServer.ChannelId);
             if (cmd == null)
             {
-                _logger.LogInformation("Server {clientId} executer not found {frame.requestId} ", clientId, requestId);
+                _logger.LogInformation("Server {clientId} executer not found {frame.requestId} ", pipeServer.ChannelId, requestId);
                 return false;
             }
-            return await cmd.Execute(pipeServer, requestId, payload);
+            return await cmd.ExecuteAsync(pipeServer, requestId, payload);
         }
 
 
-        private IRequestExecuter? CreateExecuter(string msgType, long requestId, long clientId)
+        private IRequestExecuter? CreateExecuter(string methodName, long requestId, Guid channelId)
         {
-            if (!_executers.ContainsKey(msgType))
+            if (!_executers.ContainsKey(methodName))
             {
-                _logger.LogInformation("Server {clientId} command not found {frame.msgType}", clientId, requestId);
+                _logger.LogInformation("Server {clientId} command not found {frame.methodName}", channelId, requestId);
                 return null;
             }
-            return _executers[msgType].Create();
+            return _executers[methodName].Create();
         }
 
     }

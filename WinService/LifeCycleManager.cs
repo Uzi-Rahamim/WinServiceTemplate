@@ -1,4 +1,4 @@
-using Intel.IntelConnectWindowsService;
+using Intel.IntelConnect.WindowsService;
 using Intel.IntelConnect.IPC.Listeners;
 
 namespace Intel.IntelConnectPluginCommon;
@@ -23,8 +23,8 @@ public class LifeCycleManager : BackgroundService
         try
         {
             _logger.LogInformation("LifeCycleManager Start running at: {time}", DateTimeOffset.Now);
-            await PluginManager.GetInstance().StartPlugins();
-            _ = StartApi();
+            await PluginManager.GetInstance().StartPluginsAsync();
+            _ = StartApiAsync();
 
             //var clientBroadcaster = _serviceProvider.GetRequiredService<IClientsManager>();
             while (!stoppingToken.IsCancellationRequested)
@@ -34,9 +34,9 @@ public class LifeCycleManager : BackgroundService
                 await Task.Delay(5000, stoppingToken);
             }
 
-            _cts.Cancel();
+            await _cts.CancelAsync();
             _logger.LogInformation("LifeCycleManager Shutdown Plugins");
-            await PluginManager.GetInstance().ShutdownPlugins();
+            await PluginManager.GetInstance().ShutdownPluginsAsync();
             _logger.LogInformation("LifeCycleManager Stop running at: {time}", DateTimeOffset.Now);
         }
         catch (OperationCanceledException)
@@ -60,12 +60,12 @@ public class LifeCycleManager : BackgroundService
         }
     }
 
-    private async Task StartApi()
+    private async Task StartApiAsync()
     {
         try
         {
             var apiWorker = _serviceProvider.GetRequiredService<ServerIncomingConnectionListener>();
-            await apiWorker.Start(_cts.Token);
+            await apiWorker.StartAsync(_cts.Token);
 
         }
         catch (Exception ex)

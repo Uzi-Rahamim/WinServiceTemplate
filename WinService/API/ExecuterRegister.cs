@@ -1,7 +1,7 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.Executer;
 
-namespace Intel.IntelConnectWindowsService.API
+namespace Intel.IntelConnect.WindowsService.API
 {
     internal class ExecuterRegister
     {

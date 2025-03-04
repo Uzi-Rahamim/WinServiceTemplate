@@ -1,11 +1,12 @@
 ﻿using Intel.IntelConnect.IPC.Channel;
-using Intel.IntelConnect.IPC.Clients;
 using Intel.IntelConnect.IPC.CommonTypes;
-using Intel.IntelConnect.IPC.Events;
 using Intel.IntelConnect.IPC.Executer;
 using Intel.IntelConnect.IPC.Extensions;
 using Intel.IntelConnect.IPC.Request;
+using Intel.IntelConnect.IPC.Events.Client;
+using Intel.IntelConnect.IPC.Events.Service;
 using Microsoft.Extensions.Logging;
+using System.Threading.Channels;
 
 namespace Intel.IntelConnect.IPC.Listeners
 {
@@ -46,14 +47,14 @@ namespace Intel.IntelConnect.IPC.Listeners
             disconnectEvent?.Invoke();
         }
 
-        public void StartListen(TimeSpan timeout, long endpointId)
+        public void StartListen(TimeSpan timeout)
         {
             _ = Task.Run(async () =>
             {
                 try
                 {
-                    _logger.LogDebug("MessageListener Start");
-                    await StartReadMessageLoop(timeout, endpointId);
+                    _logger.LogInformation("MessageListener Start {ChannelId} ...", _channel.ChannelId);
+                    await StartReadMessageLoopAsync(timeout);
                     _logger.LogDebug("MessageListener Terminate");
                 }
                 catch (Exception ex) when (
@@ -61,11 +62,11 @@ namespace Intel.IntelConnect.IPC.Listeners
                 ex is OperationCanceledException ||
                 ex is IOException)
                 {
-                    _logger.LogDebug("MessageListener Terminate - {type}", ex.GetType().Name);
+                    _logger.LogDebug("MessageListener Terminate - {ChannelId} {type}", _channel.ChannelId, ex.GetType().Name);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error in MessageListener");
+                    _logger.LogError(ex, "Error in MessageListener {ChannelId}", _channel.ChannelId);
                 }
                 finally
                 {
@@ -77,8 +78,8 @@ namespace Intel.IntelConnect.IPC.Listeners
             {
                 try
                 {
-                    _logger.LogDebug("PulseEvantGenerator Start");
-                    await StartPulseEvantGenerator();
+                    _logger.LogDebug("PulseEvantGenerator {ChannelId} ...", _channel.ChannelId);
+                    await StartPulseEvantGeneratorAsync();
                     _logger.LogDebug("PulseEvantGenerator Terminate");
                 }
                 catch (Exception ex) when (
@@ -86,19 +87,19 @@ namespace Intel.IntelConnect.IPC.Listeners
                 ex is OperationCanceledException ||
                 ex is IOException)
                 {
-                    _logger.LogDebug("PulseEvantGenerator Terminate - {type} ", ex.GetType().Name);
+                    _logger.LogDebug("PulseEvantGenerator Terminate {ChannelId} - {type} ", _channel.ChannelId, ex.GetType().Name);
                 }
                 catch (Exception ex)
                 {   
                     if (_disposed)
-                        _logger.LogDebug("PulseEvantGenerator Terminate - {type} ", ex.GetType().Name);
+                        _logger.LogDebug("PulseEvantGenerator Terminate {ChannelId} - {type} ", _channel.ChannelId, ex.GetType().Name);
                     else
-                        _logger.LogError(ex, "Error in PulseEvantGenerator");
+                        _logger.LogError(ex, "Error in PulseEvantGenerator {ChannelId}", _channel.ChannelId);
                 }
             });
         }
 
-        private async Task StartReadMessageLoop(TimeSpan timeout, long endpointId)
+        private async Task StartReadMessageLoopAsync(TimeSpan timeout)
         {
             bool channelIsSecure = false;
             while (!_disposed)
@@ -110,7 +111,7 @@ namespace Intel.IntelConnect.IPC.Listeners
                 var frame = messageStr.ExtractFrameHeaders();
                 if (frame == null)
                 {
-                    _logger.LogInformation($"Receive an invalid message");
+                    _logger.LogInformation("Receive an invalid message {ChannelId}", _channel.ChannelId);
                     continue;
                 }
                 else if (frame.IsEventFrame()) 
@@ -128,43 +129,44 @@ namespace Intel.IntelConnect.IPC.Listeners
                     {
                         if (frame.IsOpenSessionFrame())
                         {
-                            channelIsSecure = await _executerManager.Execute(_channel, FrameworkMessageTypes.OpenSession, frame.requestId, frame.payload, endpointId);
+                            channelIsSecure = await _executerManager.ExecuteAsync(_channel, FrameworkMethodName.OpenSession, frame.requestId, frame.payload);
                             if (!channelIsSecure)
                             {
-                                _logger.LogWarning("Channel open session failed, close the channel");
+                                _logger.LogWarning("Channel open session failed, close the channel {ChannelId}", _channel.ChannelId);
                                 break;
                             }
-                            _logger.LogInformation("Channel is secure {frame.requestId}", frame.requestId);
+                            _logger.LogInformation("Channel is secure {ChannelId} {frame.requestId}", _channel.ChannelId, frame.requestId);
                             continue;
                         }
-                        _logger.LogWarning("Channel is not secure {frame.requestId} close the channel", frame.requestId);
+                        _logger.LogWarning("Channel is not secure {frame.requestId} close the channel {ChannelId}", frame.requestId, _channel.ChannelId);
                         break;
                     }
 
                     _ = Task.Run(async () =>
                     {
-                        _logger.LogInformation("Execute {frame.requestId} request {frame.msgType} ", frame.requestId, frame.msgType);
+                        _logger.LogInformation("Execute {frame.requestId} request {frame.methodName} channel {ChannelId}", frame.requestId, frame.methodName, _channel.ChannelId);
                         try
                         {
-                            await _executerManager.Execute(_channel, frame.msgType, frame.requestId, frame.payload, endpointId);
+                            await _executerManager.ExecuteAsync(_channel, frame.methodName, frame.requestId, frame.payload);
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex,"Executer failed");
+                            _logger.LogError(ex, "Executer failed {ChannelId}", _channel.ChannelId);
                         }                        
                     });
                 }
                 else
                 {
-                    _logger.LogInformation("Unknow message {frame.msgType} ", frame.msgType);
+                    _logger.LogInformation("Unknow message {ChannelId} {frame.methodName} ", _channel.ChannelId, frame.methodName);
                 }
             }//End of message loop 
 
             //Stop all event
-            _eventDispatcher?.UnregisterAllEvents(_channel.ChannelId);
+            if (_eventDispatcher!=null)
+                await _eventDispatcher.SafeUnregisterAllEventsAsync(_channel.ChannelId);
         }
 
-        private async Task StartPulseEvantGenerator()
+        private async Task StartPulseEvantGeneratorAsync()
         {
             await Task.Delay(Consts.MaxConnectionMonitorInterval);
             while (!_disposed)
@@ -178,7 +180,7 @@ namespace Intel.IntelConnect.IPC.Listeners
         {
             if (_disposed)
                 return;
-            _logger.LogDebug("Disposed");
+            _logger.LogDebug("Disposed {ChannelId}", _channel.ChannelId);
             _disposed = true;
             _channel.Dispose();
         }

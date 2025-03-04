@@ -2,7 +2,7 @@
 {
     public class PulseEventMessage : MessageHeader
     {
-        public PulseEventMessage() : base(FrameworkMessageTypes.PulseEvent) {}
+        public PulseEventMessage() : base(FrameworkMethodName.PulseEvent) {}
     }
 
 
@@ -10,6 +10,6 @@
     {
         public IEnumerable<string> topics { get; set; }
         public bool start { get; set; }
-        public RegisterForEventMessage(string msgType,bool start, IEnumerable<string> topics) : base(msgType) => (this.topics, this.start) = (topics, start);
+        public RegisterForEventMessage(string methodName,bool start, IEnumerable<string> topics) : base(methodName) => (this.topics, this.start) = (topics, start);
     }
 }

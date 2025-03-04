@@ -2,7 +2,7 @@
 {
     public class NullMessage : MessageHeader
     {
-        public NullMessage() : base(FrameworkMessageTypes.Empty)
+        public NullMessage() : base(FrameworkMethodName.Empty)
         {
         }
     }

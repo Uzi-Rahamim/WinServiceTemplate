@@ -4,7 +4,7 @@ namespace Intel.IntelConnect.IPC.Executer
 {
     public interface IRequestExecuter
     {
-        Task<bool> Execute(IChannelSender sender, long requestId, string requestJson);
+        Task<bool> ExecuteAsync(IChannelSender sender, long requestId, string requestJson);
     }
 }
 

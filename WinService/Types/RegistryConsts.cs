@@ -2,7 +2,7 @@
 {
     public static class RegistryConsts
     {
-        public const string pluginKeyPath = @"SOFTWARE\Intel\ICPS\ExecuterPlugins";
+        public const string pluginKeyPath = @"SOFTWARE\Intel\IntelConnectWinService\ExecuterPlugins";
 
     }
 }

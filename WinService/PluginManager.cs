@@ -1,6 +1,6 @@
-﻿using Intel.IntelConnect.PluginCommon;
+﻿using Intel.IntelConnect.PluginCommon.v1;
 
-namespace Intel.IntelConnectWindowsService
+namespace Intel.IntelConnect.WindowsService
 {
     public class PluginManager
     {
@@ -25,20 +25,20 @@ namespace Intel.IntelConnectWindowsService
             _plugins.Add(pluginSetup);
         }
 
-        public async Task StartPlugins()
+        public async Task StartPluginsAsync()
         {
             var tasks = _plugins.Select(plugin => plugin.Start()).ToArray();
             await Task.WhenAll(tasks);
         }
 
-        public async Task ShutdownPlugins()
+        public async Task ShutdownPluginsAsync()
         {
-            await StopPlugins();
+            await StopPluginsAsync();
             var tasks = _plugins.Select(plugin => plugin.Shutdown()).ToArray();
             await Task.WhenAll(tasks);
         }
 
-        private async Task StopPlugins()
+        private async Task StopPluginsAsync()
         {
             var tasks = _plugins.Select(plugin => plugin.Stop()).ToArray();
             await Task.WhenAll(tasks);

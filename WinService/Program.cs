@@ -1,14 +1,15 @@
 using Intel.IntelConnectPluginCommon;
 using Serilog;
-using Intel.IntelConnectWindowsService.API;
-using Intel.IntelConnectWindowsService;
+using Intel.IntelConnect.WindowsService.API;
+using Intel.IntelConnect.WindowsService;
 using System.Reflection;
-using Intel.IntelConnect.IPC.Clients;
 using Microsoft.Extensions.DependencyInjection;
+using Intel.IntelConnect.IPC.Events.Service;
+using System.Runtime.CompilerServices;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         string mutexName = "MyWinServiceUniqeName";
 
@@ -66,14 +67,14 @@ internal class Program
             SetupExecuters.Create(builder.Services).Configure(globalServiceProvider);
             
             //Build plugin providers
-            SetupPlugins.Create(builder.Services,globalServiceProvider).LoadPlugins().Wait();
+            await SetupPlugins.Create(builder.Services,globalServiceProvider).LoadPluginsAsync();
 
             var host = builder.Build();
             host.Run();
 
             Log.Information("\r\n Stoped !!! \r\n\r\n");
             // Dispose of the logger when the application ends
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 

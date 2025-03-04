@@ -32,10 +32,10 @@ namespace Intel.IntelConnect.IPC.Request
             _responseFrames.Writer.TryWrite(responseFrame);
         }
 
-        public async Task<FrameHeader> WaitForResponse(Action<bool> reset) => await WaitForResponse(reset, _timeout);
+        public async Task<FrameHeader> WaitForResponseAsync(Action<bool> reset) => await WaitForResponseAsync(reset, _timeout);
 
 
-        public async Task<FrameHeader> WaitForResponse(Action<bool> reset, TimeSpan timeout)
+        public async Task<FrameHeader> WaitForResponseAsync(Action<bool> reset, TimeSpan timeout)
         {
             try
             {

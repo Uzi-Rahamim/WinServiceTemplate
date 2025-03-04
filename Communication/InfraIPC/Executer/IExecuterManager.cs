@@ -4,6 +4,6 @@ namespace Intel.IntelConnect.IPC.Executer
 {
     public interface IExecuterManager
     {
-        Task<bool> Execute(IChannel pipeServer, string msgType, long requestId, string payload, long clientId);
+        Task<bool> ExecuteAsync(IChannel pipeServer, string methodName, long requestId, string payload);
     }
 }

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Intel.IntelConnect.PluginCommon.v1;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PluginA.Worker;
 using System.Reflection;
-using Intel.IntelConnect.PluginCommon;
 
 namespace PluginA
 {

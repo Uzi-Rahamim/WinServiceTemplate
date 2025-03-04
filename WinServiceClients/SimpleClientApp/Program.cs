@@ -20,7 +20,7 @@ namespace SimpleClientApp
             {
                 using (var channel = new SdkClientChannel(loggerFactory))
                 {
-                    if (!await channel.Connect())
+                    if (!await channel.ConnectAsync())
                     {
                         Console.WriteLine("Failed to connect to server");
                         return;
@@ -31,11 +31,11 @@ namespace SimpleClientApp
 
                     //demoAPI.RegisterPulsEvent((msg) => { Console.WriteLine($"Pulse Event {msg}"); });
                     var message = "Hello from client";
-                    var echoMsg = await winServiceApi.GetEcho(message);
+                    var echoMsg = await winServiceApi.GetEchoAsync(message);
                     Console.WriteLine(($"Server 2 reply to {message} with: {echoMsg}"));
 
                     var pluginA_Api = new PluginA_Api(channel);
-                    await pluginA_Api.GetAPListStream((network) =>
+                    await pluginA_Api.GetAPListStreamAsync((network) =>
                          Console.WriteLine($"via SDK AP: {network.ssid} - {network.signalStrength}")
                          );
 

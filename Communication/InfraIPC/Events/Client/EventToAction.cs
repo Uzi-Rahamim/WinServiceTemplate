@@ -1,7 +1,7 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.Extensions;
 
-namespace Intel.IntelConnect.IPC.Events
+namespace Intel.IntelConnect.IPC.Events.Client
 {
     public class EventToAction<T> : IEvent where T : MessageHeader
     {

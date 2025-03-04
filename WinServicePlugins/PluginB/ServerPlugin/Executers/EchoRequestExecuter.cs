@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PluginB.Worker;
 using PluginB.Contract.Massages;
-using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPC.v1.Executer;
 
 namespace PluginB.Executers
 {
@@ -20,12 +20,12 @@ namespace PluginB.Executers
             return GetSchema();
         }
 
-        public static string Plugin_GetMessageType()
+        public static string Plugin_GetMethodName()
         {
-            return MessageType.PluginB_Echo;
+            return MethodName.PluginB_Echo;
         }
 
-        protected override Task<ResponseEchoMessage?> Execute(RequestEchoMessage requestMsg)
+        protected override Task<ResponseEchoMessage?> ExecuteAsync(RequestEchoMessage requestMsg)
         {
             // Send a response back to the client
             var responseMsg = requestMsg.message;

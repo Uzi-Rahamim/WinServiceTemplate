@@ -8,19 +8,19 @@ namespace APIClient.commands.test;
 public class Service_SendEchoCommand
 {
     [Command]
-    public static async Task Service_SentEcho([Argument(Description = "Your message")] string message)
+    public static async Task Service_SentEchoAsync([Argument(Description = "Your message")] string message)
     {
         Log.Information($"Service_SentEcho");
         using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
         {
-            if (!await channel.Connect())
+            if (!await channel.ConnectAsync())
             {
                 Log.Error("Failed to connect to server");
                 return;
             }
           
             var api = new WinServiceApi(channel);
-            var echoMsg = await api.GetEcho(message) ?? "echo fail";
+            var echoMsg = await api.GetEchoAsync(message) ?? "echo fail";
             Log.Information($"Server reply to {message} with: {echoMsg}");
         }
     }

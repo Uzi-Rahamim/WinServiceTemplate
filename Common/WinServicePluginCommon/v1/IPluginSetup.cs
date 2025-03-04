@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Intel.IntelConnect.PluginCommon
+namespace Intel.IntelConnect.PluginCommon.v1
 {
     public interface IPluginSetup
     {

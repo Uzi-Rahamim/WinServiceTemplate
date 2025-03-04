@@ -5,7 +5,7 @@ namespace Intel.IntelConnect.IPC.Listeners
 {
     public interface IClientMessageListener : IDisposable
     {
-        Task<bool> StartAsync(CancellationToken cancellationToken, TimeSpan timeout, long endpointId = 0);
+        Task<bool> StartAsync(CancellationToken cancellationToken, TimeSpan timeout);
     }
 
     public class ClientMessageListener : IClientMessageListener
@@ -30,7 +30,7 @@ namespace Intel.IntelConnect.IPC.Listeners
             _messageListener?.Dispose();
         }
 
-        public async Task<bool> StartAsync(CancellationToken cancellationToken, TimeSpan timeout, long endpointId = 0)
+        public async Task<bool> StartAsync(CancellationToken cancellationToken, TimeSpan timeout)
         {
             _logger.LogInformation("StartAsync");
             var channel = _channel;
@@ -43,7 +43,7 @@ namespace Intel.IntelConnect.IPC.Listeners
                 return false;
             }
             
-            _messageListener.StartListen(timeout, endpointId);
+            _messageListener.StartListen(timeout);
             return true;
         }
 

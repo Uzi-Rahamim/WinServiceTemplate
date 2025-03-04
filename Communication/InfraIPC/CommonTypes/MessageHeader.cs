@@ -1,11 +1,11 @@
 ﻿namespace Intel.IntelConnect.IPC.CommonTypes
 {
-    //public record struct MessageHeader(Opcode msgType) { }
+    //public record struct MessageHeader(Opcode methodName) { }
     public class MessageHeader
     {
-        public string msgType { get; set; }
+        public string methodName { get; set; }
 
-        public MessageHeader(string msgType) =>
-            this.msgType = msgType;
+        public MessageHeader(string methodName) =>
+            this.methodName = methodName;
     }
 }

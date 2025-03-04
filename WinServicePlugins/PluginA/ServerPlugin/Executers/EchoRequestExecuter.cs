@@ -1,4 +1,5 @@
 ﻿using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
 
@@ -16,12 +17,12 @@ namespace PluginA.Executers
             return GetSchema();
         }
 
-        public static string Plugin_GetMessageType()
+        public static string Plugin_GetMethodName()
         {
-            return MessageType.PluginA_Echo;
+            return MethodName.PluginA_Echo;
         }
 
-        protected override Task<ResponseEchoMessage?> Execute(RequestEchoMessage requestMsg)
+        protected override Task<ResponseEchoMessage?> ExecuteAsync(RequestEchoMessage requestMsg)
         {
             // Send a response back to the client
             var responseMsg = requestMsg.message;

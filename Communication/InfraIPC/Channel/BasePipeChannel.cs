@@ -1,5 +1,6 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Threading;
 using System.IO.Pipes;
 using System.Text;
 
@@ -8,12 +9,15 @@ namespace Intel.IntelConnect.IPC.Channel
     public abstract class BasePipeChannel : IChannel
     {
         public event Action? OnDisconnect;
-        public Guid ChannelId { get => Guid.NewGuid(); }
+        
+        public Guid ChannelId { get => _channelId; }
 
         private bool _disposed = false;
         private DateTime _lastMessageTimeStamp = DateTime.UtcNow;
         private readonly ILogger _logger;
-        
+        private readonly AsyncSemaphore _asyncLock = new AsyncSemaphore(1);
+        private readonly Guid _channelId = Guid.NewGuid();
+
         //BufferPool<BytesBufferItem> _buffPool;
         protected PipeStream PipeStream { get; set; }
 
@@ -22,6 +26,7 @@ namespace Intel.IntelConnect.IPC.Channel
         {
             _logger = logger;
             PipeStream = default!;
+            _logger.LogDebug("Creating new Channel {channelId}", _channelId);
             //_buffPool = new BufferPool<BytesBufferItem>(10, (returnItem) => new BytesBufferItem(1024, returnItem as Action<BaseBufferItem>));
         }
 
@@ -31,18 +36,17 @@ namespace Intel.IntelConnect.IPC.Channel
             disconnectEvent?.Invoke();
         }
 
-        public Task SendAsync(string message, CancellationToken cancellationToken)
+        public async Task SendAsync(string message, CancellationToken cancellationToken)
         {
-            lock (PipeStream)
+            using (await _asyncLock.EnterAsync())
             {
                 try
                 {
                     byte[] messageBytes = Encoding.UTF8.GetBytes(message);
                     byte[] dwordBytes = BitConverter.GetBytes((uint)messageBytes.Length);
-                    PipeStream.Write(dwordBytes, 0, dwordBytes.Length); //use in byte mode
-
-                    PipeStream.Write(messageBytes, 0, messageBytes.Length);
-                    return PipeStream.FlushAsync(cancellationToken);
+                    await PipeStream.WriteAsync(dwordBytes, 0, dwordBytes.Length); //use in byte mode
+                    await PipeStream.WriteAsync(messageBytes, 0, messageBytes.Length);
+                    await PipeStream.FlushAsync(cancellationToken);
                 }
                 catch (IOException)
                 {
@@ -126,7 +130,7 @@ namespace Intel.IntelConnect.IPC.Channel
         {
             if (_disposed)
                 return;
-            _logger.LogDebug("Dispose");
+            _logger.LogDebug("Dispose {channelId}", _channelId);
             _disposed = true;
             PipeStream.Dispose();
         }

@@ -1,7 +1,7 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 namespace PluginB.Contract.Massages
 {
-    public partial class MessageType
+    public partial class MethodName
     {
         public static readonly string PluginB_Echo = "PluginB.Echo";
     }
@@ -10,13 +10,13 @@ namespace PluginB.Contract.Massages
     {
         public string message { get; set; }
 
-        public RequestEchoMessage(string message) : base(MessageType.PluginB_Echo) => this.message = message;
+        public RequestEchoMessage(string message) : base(MethodName.PluginB_Echo) => this.message = message;
     }
 
     public class ResponseEchoMessage : MessageHeader
     {
         public string message { get; set; }
-        public ResponseEchoMessage(string message) : base(MessageType.PluginB_Echo) => this.message = message;
+        public ResponseEchoMessage(string message) : base(MethodName.PluginB_Echo) => this.message = message;
     }
 
 }

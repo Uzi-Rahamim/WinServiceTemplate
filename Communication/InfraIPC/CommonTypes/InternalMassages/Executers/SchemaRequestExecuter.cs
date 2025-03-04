@@ -1,4 +1,4 @@
-﻿using Intel.IntelConnect.IPC.Executer;
+﻿using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 
 namespace Intel.IntelConnect.IPC.CommonTypes.InternalMassages.Executers
@@ -10,7 +10,7 @@ namespace Intel.IntelConnect.IPC.CommonTypes.InternalMassages.Executers
             base(logger,cts) 
             => _schemaProviderList = schemaProviderList;
 
-        protected override async IAsyncEnumerable<ResponseSchemaMessage> Execute(RequestSchemaMessage requestMsg)
+        protected override async IAsyncEnumerable<ResponseSchemaMessage> ExecuteAsync(RequestSchemaMessage requestMsg)
         {
             // Simulate async work
             await Task.Yield();

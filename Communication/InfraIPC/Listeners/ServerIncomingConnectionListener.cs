@@ -22,12 +22,12 @@ namespace Intel.IntelConnect.IPC.Listeners
             _clientIdGenerator = clientIdGenerator;
         }
 
-        public Task Start(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.Run(() => StartListen(cancellationToken));
+            return Task.Run(() => StartListenAsync(cancellationToken));
         }
 
-        private async Task StartListen(CancellationToken cancellationToken)
+        private async Task StartListenAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Intel.IntelConnect.IPC.Listeners
 
                     // Create a NamedPipeServerStream to listen for connections
                     IServerChannel pipeServer = _serverChannelFactory.Create();
-                    _logger.LogInformation("Server {clientId} Waiting for a client to connect...", clientId);
+                    _logger.LogInformation("Server {ChannelId} Waiting for a client {clientId} to connect...", pipeServer.ChannelId, clientId);
 
                     // Wait for a client 
                     if (!await _serverMessageListener.StartAsync(cancellationToken, pipeServer, TimeSpan.FromSeconds(10), clientId))

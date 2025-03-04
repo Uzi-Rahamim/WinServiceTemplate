@@ -1,6 +1,6 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 
-namespace Intel.IntelConnect.IPC.Events
+namespace Intel.IntelConnect.IPC.Events.Client
 {
     public interface IEventManager
     {

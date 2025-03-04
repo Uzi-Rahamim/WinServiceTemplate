@@ -13,9 +13,9 @@ namespace Intel.IntelConnect.ClientSDK.v1
         //public DemoApi(ClientChannel client, ILogger<DemoApi> logger) => (_logger, _client) = (logger, client);
         public WinServiceApi(ISDKClientChannel client) => (_client) = (client);
 
-        public async IAsyncEnumerable<string> GetSchema()
+        public async IAsyncEnumerable<string> GetSchemaAsync()
         {
-            var responses = _client.RequestHandler.SendLongRequest<ResponseSchemaMessage, RequestSchemaMessage>(
+            var responses = _client.RequestHandler.SendLongRequestAsync<ResponseSchemaMessage, RequestSchemaMessage>(
                 new RequestSchemaMessage());
             await foreach (var response in responses)
             {
@@ -25,9 +25,9 @@ namespace Intel.IntelConnect.ClientSDK.v1
             }
         }
 
-        public async Task<string?> GetEcho(string message)
+        public async Task<string?> GetEchoAsync(string message)
         {
-            var response = await _client.RequestHandler.SendRequest<ResponseEchoMessage, RequestEchoMessage>(
+            var response = await _client.RequestHandler.SendRequestAsync<ResponseEchoMessage, RequestEchoMessage>(
                 new RequestEchoMessage(message));
             return response?.message;
         }

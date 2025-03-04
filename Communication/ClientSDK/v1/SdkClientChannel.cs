@@ -1,5 +1,4 @@
 ﻿using Intel.IntelConnect.IPC.Channel;
-using Intel.IntelConnect.IPC.Events;
 using Intel.IntelConnect.IPC.Listeners;
 using Intel.IntelConnect.IPC.Request;
 using Intel.IntelConnect.IPC.Utils;
@@ -7,6 +6,7 @@ using Intel.IntelConnect.IPCCommon.Consts;
 using Intel.IntelConnect.IPCCommon.Massages;
 using Microsoft.Extensions.Logging;
 using Intel.IntelConnect.IPC.Sdk.Types;
+using Intel.IntelConnect.IPC.Events.Client;
 
 namespace Intel.IntelConnect.ClientSDK.v1
 {
@@ -60,24 +60,24 @@ namespace Intel.IntelConnect.ClientSDK.v1
             
         }
 
-        public Task<bool> Connect()
+        public async Task<bool> ConnectAsync()
         {
-            var success = _clientMessageListener.StartAsync(
+            var success = await _clientMessageListener.StartAsync(
                 _cancellationToken,
-                TimeSpan.FromSeconds(PipeApiConsts.ConnectTimeoutInSec)).Result;
+                TimeSpan.FromSeconds(PipeApiConsts.ConnectTimeoutInSec));
             if (success)
             {
-                return SendSecurityMessage();
+                return await SendSecurityMessageAsync();
             }
             else
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
-        private async Task<bool> SendSecurityMessage()
+        private async Task<bool> SendSecurityMessageAsync()
         {
-            var response = await _clientRequestHnadler.SendOpenSessionRequest<ResponseSecurityMessage, RequestSecurityMessage>(new RequestSecurityMessage(string.Empty));
+            var response = await _clientRequestHnadler.SendOpenSessionRequestAsync<ResponseSecurityMessage, RequestSecurityMessage>(new RequestSecurityMessage(string.Empty));
             return response?.isValid ?? false;
         }
 

@@ -1,12 +1,13 @@
 ﻿using Intel.IntelConnect.IPC.Channel;
-using Intel.IntelConnect.IPC.Clients;
 using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.CommonTypes.InternalMassages;
+using Intel.IntelConnect.IPC.Events.Service;
+using Intel.IntelConnect.IPC.Executer;
 using Microsoft.Extensions.Logging;
 
-namespace Intel.IntelConnect.IPC.Executer
+namespace Intel.IntelConnect.IPC.v1.Executer
 {
-    public abstract class EventRegisterRequestExecuter<T> : BaseRequestExecuter<T, RegisterForEventMessage, NullMessage> 
+    public abstract class EventRegisterRequestExecuter<T> : BaseRequestExecuter<T, RegisterForEventMessage, NullMessage>
     {
         private readonly IEventDispatcher _eventDispatcher;
         protected EventRegisterRequestExecuter(ILogger<T> logger, IEventDispatcher eventDispatcher, CancellationTokenSource cancellationToken) : base(logger, cancellationToken)
@@ -14,25 +15,35 @@ namespace Intel.IntelConnect.IPC.Executer
             _eventDispatcher = eventDispatcher;
         }
 
-        protected override async Task<NullMessage?> Execute(IChannelSender channel, RegisterForEventMessage request, Func<NullMessage, Task> sendNextResponse)
+        protected override async Task<NullMessage?> ExecuteAsync(IChannelSender channel, RegisterForEventMessage request, Func<NullMessage, Task> sendNextResponse)
         {
 
             if (request.start)
             {
-                _eventDispatcher.RegisterForEvents(channel.ChannelId, channel, request.topics);
-                await StartEvents(request, _eventDispatcher);
+                await _eventDispatcher.SafeRegisterForEventsAsync(channel.ChannelId, channel, request.topics,
+                     (topics) =>
+                     {
+                         if (topics.Count() > 0)
+                             return StartEventsAsync(topics, _eventDispatcher);
+                         return Task.CompletedTask;
+                     });
             }
             else
             {
-                await StopEvents(request);
-                _eventDispatcher.UnregisterEvents(channel.ChannelId, request.topics);
+                await _eventDispatcher.SafeUnregisterEventsAsync(channel.ChannelId, request.topics,
+                    (topics) =>
+                    {
+                        if (topics.Count() > 0)
+                            return StopEventsAsync(topics);
+                        return Task.CompletedTask;
+                    });
             }
-            
+
             return null;
         }
 
-        protected abstract Task StartEvents(RegisterForEventMessage request, IEventDispatcher eventDispatcher);
+        protected abstract Task StartEventsAsync(IEnumerable<string> topics, IEventDispatcher eventDispatcher);
 
-        protected abstract Task StopEvents(RegisterForEventMessage request);
+        protected abstract Task StopEventsAsync(IEnumerable<string> topics);
     }
 }

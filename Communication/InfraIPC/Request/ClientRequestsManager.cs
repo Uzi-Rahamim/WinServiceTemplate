@@ -28,13 +28,13 @@ namespace Intel.IntelConnect.IPC.Request
             return _pendingRequests.TryGetValue(requestId, out request);
         }
 
-        public async IAsyncEnumerable<T> SendLongRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async IAsyncEnumerable<T> SendLongRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
-            var requestId = await SendNonBlock((requestId) => message.BuildRequestMessage(requestId));
+            var requestId = await SendNonBlockAsync((requestId) => message.BuildRequestMessage(requestId));
             FrameHeader? reply = null;
             do
             {
-                reply = await WaitForNextFrame(requestId);
+                reply = await WaitForNextFrameAsync(requestId);
                 if (reply.IsLastFrame() && !reply.IsErrorFrame()) //terminate 
                 {
                     yield break;
@@ -44,15 +44,15 @@ namespace Intel.IntelConnect.IPC.Request
             } while (!reply.IsLastFrame());
         }
 
-        public async Task<T?> SendRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async Task<T?> SendRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
-            var reply = await Send((requestId) => message.BuildRequestMessage(requestId));
+            var reply = await SendAsync((requestId) => message.BuildRequestMessage(requestId));
             return ExtructResponse<T>(reply);
         }
 
-        public async Task<T?> SendOpenSessionRequest<T, R>(R message) where T : MessageHeader where R : MessageHeader
+        public async Task<T?> SendOpenSessionRequestAsync<T, R>(R message) where T : MessageHeader where R : MessageHeader
         {
-            var reply = await Send((requestId) => message.BuildOpenSessionRequestMessage(requestId));
+            var reply = await SendAsync((requestId) => message.BuildOpenSessionRequestMessage(requestId));
             return ExtructResponse<T>(reply);
         }
 
@@ -81,41 +81,43 @@ namespace Intel.IntelConnect.IPC.Request
             return response;
         }
 
-        private Task<FrameHeader?> Send(Func<long, string> buildPayload)
+        private Task<FrameHeader?> SendAsync(Func<long, string> buildPayload)
         {
             long newRequestId = _requestIdGenerator.GetNextId();
             var payload = buildPayload(newRequestId);
             ClientRequest request = _requestFactory(newRequestId, payload); //new ClientRequest(newRequestId, payload);
-            return SendRequest(request);
+            return SendRequestAsync(request);
         }
 
-        private Task<FrameHeader> WaitForNextFrame(long requestId)
+        private Task<FrameHeader> WaitForNextFrameAsync(long requestId)
         {
             var request = _pendingRequests[requestId];
-            return request.WaitForResponse((isLastFrame) => { if (isLastFrame) RemoveRequest(requestId); });
+            return request.WaitForResponseAsync((isLastFrame) => { if (isLastFrame) RemoveRequest(requestId); });
         }
 
-        private async Task<long> SendNonBlock(Func<long, string> buildPayload)
+        private async Task<long> SendNonBlockAsync(Func<long, string> buildPayload)
         {
             long newRequestId = _requestIdGenerator.GetNextId();
             var payload = buildPayload(newRequestId);
             ClientRequest request = _requestFactory(newRequestId, payload); //new ClientRequest(newRequestId, payload);
-            await SendRequest(request, false);
+            await SendRequestAsync(request, false);
             return newRequestId;
         }
 
-        private Task<FrameHeader?> SendRequest(ClientRequest request, bool waitForRespose = true)
+        private async Task<FrameHeader?> SendRequestAsync(ClientRequest request, bool waitForRespose = true)
         {
             if (_pendingRequests.TryAdd(request.requestId, request))
             {
-                _channel.SendAsync(request.payload,CancellationToken.None).Wait();
+                await _channel.SendAsync(request.payload,CancellationToken.None);
                 if (waitForRespose)
                 {
-                    return WaitForNextFrame(request.requestId).
-                        ContinueWith(task => (FrameHeader?)task.Result); //convert to task nullable
+                    var frameHeader = await WaitForNextFrameAsync(request.requestId);
+                        //ContinueWith(task => (FrameHeader?)task.Result); //convert to task nullable
+
+                    return frameHeader;
                 }
             }
-            return Task.FromResult<FrameHeader?>(null);
+            return null;
         }
 
         private void RemoveRequest(long requestId)

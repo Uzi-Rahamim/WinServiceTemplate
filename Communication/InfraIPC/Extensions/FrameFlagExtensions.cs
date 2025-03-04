@@ -11,7 +11,7 @@ namespace Intel.IntelConnect.IPC.Extensions
 
         public static bool IsOpenSessionFrame(this FrameHeader frame)
         {
-            return frame.options.HasFlag(FrameOptions.OpenSession);
+            return frame.options.HasFlag(FrameOptions.OpenSessionMsg);
         }
 
         public static bool IsEventFrame(this FrameHeader frame)
@@ -21,19 +21,15 @@ namespace Intel.IntelConnect.IPC.Extensions
 
         public static bool IsRequestFrame(this FrameHeader frame)
         {
-            return frame.options.HasFlag(FrameOptions.Request);
+            return frame.options.HasFlag(FrameOptions.RequestMsg);
         }
 
         public static bool IsResponseFrame(this FrameHeader frame)
         {
-            return frame.options.HasFlag(FrameOptions.Response);
+            return frame.options.HasFlag(FrameOptions.ResponseMsg);
         }
 
-        public static bool IsDiscoveryFrame(this FrameHeader frame)
-        {
-            return frame.options.HasFlag(FrameOptions.Discovery);
-        }
-
+       
         public static bool IsErrorFrame(this FrameHeader frame)
         {
             return frame.options.HasFlag(FrameOptions.ErrorMsg);

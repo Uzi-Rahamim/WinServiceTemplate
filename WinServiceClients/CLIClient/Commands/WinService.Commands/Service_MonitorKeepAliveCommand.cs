@@ -8,12 +8,12 @@ namespace APIClient.commands.test
     public class Service_MonitorKeepAliveCommand
     {
         [Command]
-        public static async Task Service_Monitor()
+        public static async Task Service_MonitorAsync()
         {
             Log.Information($"Service_Monitor");
             using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
-                if (!await channel.Connect())
+                if (!await channel.ConnectAsync())
                 {
                     Log.Error("Failed to connect to server");
                     return;

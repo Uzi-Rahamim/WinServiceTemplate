@@ -1,5 +1,4 @@
 ﻿using Intel.IntelConnect.IPC.Channel;
-using Intel.IntelConnect.IPC.Clients;
 using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.CommonTypes.InternalMassages;
 using Intel.IntelConnect.IPC.Extensions;
@@ -13,7 +12,7 @@ namespace Intel.IntelConnect.IPC.Executer
     {
         protected ILogger<T> Logger { get; private set; }
 
-        protected abstract Task<Rs?> Execute(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse);
+        protected abstract Task<Rs?> ExecuteAsync(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse);
 
         protected readonly CancellationToken _cancellationToken;
 
@@ -52,11 +51,11 @@ namespace Intel.IntelConnect.IPC.Executer
             _cancellationToken = cancellationToken.Token;
         }
 
-        private async Task<Rs?> SafeExecute(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse, Func<string, int, Task> onError)
+        private async Task<Rs?> SafeExecuteAsync(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse, Func<string, int, Task> onError)
         {
             try
             {
-                return await Execute(channel, request, sendNextResponse);
+                return await ExecuteAsync(channel, request, sendNextResponse);
             }
             catch (Exception ex)
             {
@@ -66,14 +65,14 @@ namespace Intel.IntelConnect.IPC.Executer
 
         }
 
-        public async Task<bool> Execute(IChannelSender channel, long requestId, string requestJson)
+        public async Task<bool> ExecuteAsync(IChannelSender channel, long requestId, string requestJson)
         {
             try
             {
                 var requestMsg = requestJson.FromJson<Rq>();
 
                 Logger.LogDebug("Executer --> SafeExecute");
-                var response = await SafeExecute(
+                var response = await SafeExecuteAsync(
                     channel,
                     requestMsg,
                     (nextResponse) =>

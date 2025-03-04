@@ -1,4 +1,4 @@
-﻿using Intel.IntelConnect.IPC.Executer;
+﻿using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
 using PluginA.Contract.Types;
@@ -14,12 +14,12 @@ namespace PluginA.Executers
             return GetSchema();
         }
 
-        public static string Plugin_GetMessageType()
+        public static string Plugin_GetMethodName()
         {
-            return MessageType.APList;
+            return MethodName.APList;
         }
 
-        protected override async IAsyncEnumerable<RespnseWiFiNetworksMessage> Execute(RequestWiFiNetworksMessage request)
+        protected override async IAsyncEnumerable<RespnseWiFiNetworksMessage> ExecuteAsync(RequestWiFiNetworksMessage request)
         {
             for (int page = 0; page < 2; page++)
             {

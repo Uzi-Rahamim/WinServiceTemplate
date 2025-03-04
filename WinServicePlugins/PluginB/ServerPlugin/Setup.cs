@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PluginB.Worker;
 using System.Reflection;
-using Intel.IntelConnect.PluginCommon;
+using Intel.IntelConnect.PluginCommon.v1;
 
 namespace PluginB
 {

@@ -4,13 +4,13 @@
     {
         public string message { get; set; }
 
-        public RequestEchoMessage(string message) : base(FrameworkMessageTypes.Echo) => this.message = message;
+        public RequestEchoMessage(string message) : base(FrameworkMethodName.Echo) => this.message = message;
     }
 
     public class ResponseEchoMessage : MessageHeader
     {
         public string message { get; set; }
-        public ResponseEchoMessage(string message) : base(FrameworkMessageTypes.Echo) => this.message = message;
+        public ResponseEchoMessage(string message) : base(FrameworkMethodName.Echo) => this.message = message;
     }
 
 }

@@ -1,15 +1,16 @@
 ﻿using Intel.IntelConnect.IPC.Channel;
 using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.Executer;
 using Microsoft.Extensions.Logging;
 
-namespace Intel.IntelConnect.IPC.Executer
+namespace Intel.IntelConnect.IPC.v1.Executer
 {
     public abstract class StreamResponseRequestExecuter<T, Rq, Rs> : BaseRequestExecuter<T, Rq, Rs> where Rq : MessageHeader where Rs : MessageHeader
     {
         protected StreamResponseRequestExecuter(ILogger<T> logger, CancellationTokenSource cancellationToken) : base(logger, cancellationToken) { }
-        protected override async Task<Rs?> Execute(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse)
+        protected override async Task<Rs?> ExecuteAsync(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse)
         {
-            var responseStream = Execute(request);
+            var responseStream = ExecuteAsync(request);
 
             await foreach (var response in responseStream)
             {
@@ -18,6 +19,6 @@ namespace Intel.IntelConnect.IPC.Executer
             return null;
         }
 
-        protected abstract IAsyncEnumerable<Rs> Execute(Rq request);
+        protected abstract IAsyncEnumerable<Rs> ExecuteAsync(Rq request);
     }
 }

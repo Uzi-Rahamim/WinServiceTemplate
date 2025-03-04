@@ -2,7 +2,7 @@
 
 namespace PluginB.Contract.Massages
 {
-    public partial class MessageType
+    public partial class MethodName
     {
         public static readonly string NotifyEvant = "NotifyEvant";
     }
@@ -11,7 +11,7 @@ namespace PluginB.Contract.Massages
     {
         public string message { get; set; }
 
-        public NotifyEvantMessage(string message) : base(MessageType.NotifyEvant) => this.message = message;
+        public NotifyEvantMessage(string message) : base(MethodName.NotifyEvant) => this.message = message;
     }
 
 }

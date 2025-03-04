@@ -1,8 +1,9 @@
-﻿using Intel.IntelConnect.IPC.Clients;
-using Intel.IntelConnect.IPC.CommonTypes;
+﻿using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.Executer;
+using Intel.IntelConnect.IPC.Events.Service;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
+using Intel.IntelConnect.IPC.v1.Executer;
 
 namespace PluginA.Executers
 {
@@ -18,13 +19,13 @@ namespace PluginA.Executers
             return GetSchema();
         }
 
-        public static string Plugin_GetMessageType()
+        public static string Plugin_GetMethodName()
         {
-            return MessageType.PluginA_RegisterEvent;
+            return MethodName.PluginA_RegisterEvent;
         }
 
 
-        protected override Task StartEvents(RegisterForEventMessage request, IEventDispatcher eventDispatcher)
+        protected override Task StartEventsAsync(IEnumerable<string> topics, IEventDispatcher eventDispatcher)
         {
             Logger.LogInformation("StartEvents .... ");
 
@@ -35,7 +36,7 @@ namespace PluginA.Executers
                 while (true)
                 {
                     Logger.LogInformation("DispatchEvent");
-                    var success = await eventDispatcher.DispatchEvent(new GetCpuDataEventMessage(i++));
+                    var success = await eventDispatcher.DispatchEventAsync(new GetCpuDataEventMessage(i++));
                     if (!success)
                     {
                         Logger.LogWarning("DispatchEvent stop - no Clients");
@@ -47,7 +48,7 @@ namespace PluginA.Executers
             return Task.CompletedTask;
         }
 
-        protected override Task StopEvents(RegisterForEventMessage request)
+        protected override Task StopEventsAsync(IEnumerable<string> topics)
         {
             Logger.LogInformation("StopEvents .... ");
             return Task.CompletedTask;

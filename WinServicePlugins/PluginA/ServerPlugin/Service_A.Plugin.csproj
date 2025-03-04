@@ -33,6 +33,6 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Intel\ICPS\ExecuterPlugins&quot; /v ServiceA.Plugin /t REG_SZ /d &quot;$(TargetPath)&quot; /f" />
+	  <Exec Command="reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Intel\IntelConnectWinService\ExecuterPlugins&quot; /v ServiceA.Plugin /t REG_SZ /d &quot;$(TargetPath)&quot; /f" />
 	</Target>
 </Project>

@@ -9,14 +9,14 @@ namespace ClientCLI.Commands.PluginA.Commands;
 public class PluginA_GetAPListCommand
 {
     [Command]
-    public static async Task PluginA_GetAPList()
+    public static async Task PluginA_GetAPListAsync()
     {
         try
         {
             Log.Information($"PluginA_GetAPList");
             using (var channel = new SdkClientChannel(LoggerFactory.Create(builder => builder.AddSerilog())))
             {
-                if (!await channel.Connect())
+                if (!await channel.ConnectAsync())
                 {
                     Log.Error("Failed to connect to server");
                     return;

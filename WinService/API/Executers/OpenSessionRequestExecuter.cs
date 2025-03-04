@@ -1,14 +1,14 @@
-﻿using Intel.IntelConnect.IPC.Executer;
+﻿using Intel.IntelConnect.IPC.v1.Executer;
 using Intel.IntelConnect.IPCCommon.Massages;
 using System.Reflection;
 
-namespace Intel.IntelConnectWindowsService.API.Executers
+namespace Intel.IntelConnect.WindowsService.API.Executers
 {
     public class OpenSessionRequestExecuter : SimpleRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage, ResponseSecurityMessage>
     {
         public OpenSessionRequestExecuter(ILogger<OpenSessionRequestExecuter> logger, CancellationTokenSource cts, IServiceProvider serviceProvider) : base(logger, cts) { }
 
-        protected override async Task<ResponseSecurityMessage?> Execute(RequestSecurityMessage requestMsg)
+        protected override async Task<ResponseSecurityMessage?> ExecuteAsync(RequestSecurityMessage requestMsg)
         {
             var hostVersion = Assembly.GetEntryAssembly()!.GetName().Version;
 

@@ -4,7 +4,7 @@
     {
         public string Message { get; set; }
         public int Code { get; set; }
-        public ErrorMessage(string message, int code) : base(FrameworkMessageTypes.Error)
+        public ErrorMessage(string message, int code) : base(FrameworkMethodName.Error)
         {
             Message = message;
             Code = code;

@@ -1,5 +1,5 @@
-﻿using Intel.IntelConnect.IPC.Events;
-using Intel.IntelConnect.IPC.Request;
+﻿using Intel.IntelConnect.IPC.Request;
+using Intel.IntelConnect.IPC.Events.Client;
 
 namespace Intel.IntelConnect.IPC.Sdk.Types
 {

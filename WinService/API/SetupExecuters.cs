@@ -1,16 +1,14 @@
-﻿using Intel.IntelConnectWindowsService.API.Executers;
+﻿using Intel.IntelConnect.WindowsService.API.Executers;
 using Intel.IntelConnect.IPC.Channel;
-using Intel.IntelConnect.IPC.Clients;
 using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.CommonTypes.InternalMassages.Executers;
 using Intel.IntelConnect.IPC.Executer;
 using Intel.IntelConnect.IPC.Listeners;
 using Intel.IntelConnect.IPC.Utils;
 using Intel.IntelConnect.IPCCommon.Consts;
-using Intel.IntelConnect.IPCCommon.Massages;
-using Microsoft.Extensions.DependencyInjection;
+using Intel.IntelConnect.IPC.Events.Service;
 
-namespace Intel.IntelConnectWindowsService.API;
+namespace Intel.IntelConnect.WindowsService.API;
 
 internal class SetupExecuters
 {
@@ -18,15 +16,15 @@ internal class SetupExecuters
 
     public void Configure(ServiceProvider globalServiceProvider)
     {
-        RegisterRequest<SchemaRequestExecuter>(FrameworkMessageTypes.RequestSchema, SchemaRequestExecuter.GetSchema);
-        RegisterRequest<OpenSessionRequestExecuter>(FrameworkMessageTypes.OpenSession, OpenSessionRequestExecuter.GetSchema);
-        RegisterRequest<EchoRequestExecuter>(FrameworkMessageTypes.Echo, EchoRequestExecuter.GetSchema);
+        RegisterRequest<SchemaRequestExecuter>(FrameworkMethodName.RequestSchema, SchemaRequestExecuter.GetSchema);
+        RegisterRequest<OpenSessionRequestExecuter>(FrameworkMethodName.OpenSession, OpenSessionRequestExecuter.GetSchema);
+        RegisterRequest<EchoRequestExecuter>(FrameworkMethodName.Echo, EchoRequestExecuter.GetSchema);
 
         _serviceCollection.AddTransient<ISequenceGenerator, SequenceGenerator>();
         //_serviceCollection.AddSingleton<IEventDispatcher, EventDispatcher>();
         _serviceCollection.AddSingleton(sp => globalServiceProvider.GetRequiredService<IEventDispatcher>());
         _serviceCollection.AddSingleton<IExecuterManager, ExecuterManager>();
-        _serviceCollection.AddSingleton<IServerMessageListener, ServerMessageListener>();
+        _serviceCollection.AddTransient<IServerMessageListener, ServerMessageListener>();
         _serviceCollection.AddSingleton<IServerChannelFactory>((provider)=>new ServerChannelFactory(
             provider.GetRequiredService<ILogger<ClientPipeChannel>>(), 
             PipeApiConsts.PipeName));

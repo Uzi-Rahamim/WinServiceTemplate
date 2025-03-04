@@ -1,7 +1,7 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 using System.Collections.Concurrent;
 
-namespace Intel.IntelConnect.IPC.Events
+namespace Intel.IntelConnect.IPC.Events.Client
 {
     public class EventManager : IEventManager
     {
@@ -19,11 +19,11 @@ namespace Intel.IntelConnect.IPC.Events
 
         public void HandleEvent(FrameHeader frame)
         {
-            if (!events.ContainsKey(frame.msgType))
+            if (!events.ContainsKey(frame.methodName))
             {
                 return;
             }
-            var cmd = events[frame.msgType];
+            var cmd = events[frame.methodName];
             cmd.Execute(frame);
         }
     }

@@ -29,32 +29,32 @@ namespace Intel.IntelConnect.IPC.Extensions
         public static string BuildMessage<T>(this T message, long requestId, FrameOptions options) where T : MessageHeader
         {
             string payload = message.ToJson();
-            return new FrameHeader(requestId, options, message.msgType, payload).ToJson();
+            return new FrameHeader(requestId, options, message.methodName, payload).ToJson();
         }
 
         public static string BuildOpenSessionRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.OpenSession | FrameOptions.Request);
+            return message.BuildMessage(requestId, FrameOptions.OpenSessionMsg | FrameOptions.RequestMsg);
         }
 
         public static string BuildRequestMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.Request);
+            return message.BuildMessage(requestId, FrameOptions.RequestMsg);
         }
 
         public static string BuildResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.Response | FrameOptions.LastFrame);
+            return message.BuildMessage(requestId, FrameOptions.ResponseMsg | FrameOptions.LastFrame);
         }
 
         public static string BuildErrorMessage<T>(this T message, long requestId) where T : ErrorMessage
         {
-            return message.BuildMessage(requestId, FrameOptions.Response | FrameOptions.ErrorMsg);
+            return message.BuildMessage(requestId, FrameOptions.ResponseMsg | FrameOptions.ErrorMsg);
         }
 
         public static string BuildContinuingResponseMessage<T>(this T message, long requestId) where T : MessageHeader
         {
-            return message.BuildMessage(requestId, FrameOptions.Response);
+            return message.BuildMessage(requestId, FrameOptions.ResponseMsg);
         }
 
         public static string BuildServerEventMessage<T>(this T message) where T : MessageHeader
@@ -64,7 +64,7 @@ namespace Intel.IntelConnect.IPC.Extensions
      
         public static bool IsNullMessage(this FrameHeader frame)
         {
-            return frame.msgType.Contains(FrameworkMessageTypes.Empty);
+            return frame.methodName.Contains(FrameworkMethodName.Empty);
         }
     }
 }

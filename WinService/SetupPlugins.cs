@@ -1,13 +1,13 @@
-﻿using Intel.IntelConnectWindowsService.API;
-using Intel.IntelConnect.IPC.Clients;
+﻿using Intel.IntelConnect.WindowsService.API;
 using Intel.IntelConnect.IPC.Executer;
 using Intel.IntelConnect.IPCCommon.Consts;
-using Intel.IntelConnect.PluginCommon;
 using Serilog;
 using Utilities;
 using Utilities.PluginUtils;
+using Intel.IntelConnect.IPC.Events.Service;
+using Intel.IntelConnect.PluginCommon.v1;
 
-namespace Intel.IntelConnectWindowsService
+namespace Intel.IntelConnect.WindowsService
 {
     internal class SetupPlugins
     {
@@ -30,17 +30,17 @@ namespace Intel.IntelConnectWindowsService
             return new SetupPlugins(serviceCollection, globalServiceProvider);
         }
 
-        public async Task LoadPlugins()
+        public async Task LoadPluginsAsync()
         {
             var pluginFileNames = RegistryUtils.GetKeySubStringValues(RegistryConsts.pluginKeyPath);
 
             foreach (var pluginFileName in pluginFileNames)
             {
                 var serviceCollection = CreateNewCollection();
-                await LoadPlugin(pluginFileName, serviceCollection);
+                await LoadPluginAsync(pluginFileName, serviceCollection);
             }
         }
-        private async Task LoadPlugin(string pluginFileName, IServiceCollection serviceCollection)
+        private async Task LoadPluginAsync(string pluginFileName, IServiceCollection serviceCollection)
         {
 
             _logger.LogInformation("Found plugin  - {pluginFileName}", pluginFileName);
@@ -62,7 +62,7 @@ namespace Intel.IntelConnectWindowsService
                 }
 
                 _logger.LogInformation("Loading plugin setup - {type.FullName}", pluginSetupType.FullName);
-                if (!await LoadPluginSetup(serviceCollection, pluginSetupType))
+                if (!await LoadPluginSetupAsync(serviceCollection, pluginSetupType))
                 {
                     _logger.LogError("Loading plugin setup - {type.FullName} failed", pluginSetupType.FullName);
                     return;
@@ -83,7 +83,7 @@ namespace Intel.IntelConnectWindowsService
             }
         }
 
-        private async Task<bool> LoadPluginSetup(IServiceCollection serviceCollection, Type pluginSetupType)
+        private async Task<bool> LoadPluginSetupAsync(IServiceCollection serviceCollection, Type pluginSetupType)
         {
             // Create an instance by passing constructor arguments
             IPluginSetup? pluginSetup = Activator.CreateInstance(pluginSetupType) as IPluginSetup;
@@ -109,10 +109,10 @@ namespace Intel.IntelConnectWindowsService
                 var schema = (string)(type.GetMethod("Plugin_GetSchema")?.Invoke(null, null) ?? "missing Schema");
 
                 //Get static MessageType from plugin
-                var messageType = (string?)type.GetMethod("Plugin_GetMessageType")?.Invoke(null, null);
+                var messageType = (string?)type.GetMethod("Plugin_GetMethodName")?.Invoke(null, null);
                 if (messageType is null)
                 {
-                    throw new ApplicationException("Plugin_GetMessageType is missing");
+                    throw new ApplicationException("Plugin_GetMethodName is missing");
                 }
                 ExecuterRegister.RegisterSchema(_serviceCollection, messageType, () => schema);
 

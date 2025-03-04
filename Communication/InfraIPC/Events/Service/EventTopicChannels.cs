@@ -4,7 +4,7 @@ using Intel.IntelConnect.IPC.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
-namespace Intel.IntelConnect.IPC.Clients
+namespace Intel.IntelConnect.IPC.Events.Service
 {
     class EventTopicChannels
     {
@@ -16,17 +16,22 @@ namespace Intel.IntelConnect.IPC.Clients
             _logger = logger;
         }
 
-        public void AddClient(Guid clientId, IChannelSender client)
+        public void AddClient(Guid channelId, IChannelSender client)
         {
-            _clients.TryAdd(clientId, client);
+            _clients.TryAdd(channelId, client);
         }
 
-        public void RemoveClient(Guid clientId)
+        public int Count()
         {
-            _clients.TryRemove(clientId, out _);
+            return _clients.Count();
         }
 
-        public async Task<bool> DispatchEvent<R>(R eventMessage) where R : MessageHeader
+        public void RemoveClient(Guid channelId)
+        {
+            _clients.TryRemove(channelId, out _);
+        }
+
+        public async Task<bool> DispatchEventAsync<R>(R eventMessage) where R : MessageHeader
         {
             var channelsKeys = _clients.ToList();
             if (channelsKeys.Count == 0)
@@ -54,11 +59,18 @@ namespace Intel.IntelConnect.IPC.Clients
                 }
                 catch (TaskCanceledException)
                 {
-                    _logger.LogWarning("DispatchEvent - operation was aborted");
+                    _logger.LogWarning("DispatchEvent - operation was aborted {channelId}", channelId);
+                    RemoveClient(channelId);
+                }
+                catch (IOException ex)
+                {
+                    _logger.LogError(ex, "DispatchEvent - failed to send event , pipe is broken {channelId}", channelId);
+                    RemoveClient(channelId);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Server fail to send event");
+                    _logger.LogError(ex, "DispatchEvent - failed to send event {channelId}", channelId);
+                    RemoveClient(channelId);
                 }
             }
             return true;

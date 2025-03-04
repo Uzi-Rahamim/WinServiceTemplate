@@ -1,10 +1,10 @@
 ﻿using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.CommonTypes.InternalMassages;
-using Intel.IntelConnect.IPC.Events;
 using PluginA.ClientSDK.CommonTypes;
 using PluginA.ClientSDK.Convertors;
 using PluginA.Contract.Massages;
 using Intel.IntelConnect.IPC.Sdk.Types;
+using Intel.IntelConnect.IPC.Events.Client;
 namespace PluginA.ClientSDK.v1
 {
     public class PluginA_Api
@@ -13,9 +13,9 @@ namespace PluginA.ClientSDK.v1
         private readonly ISDKClientChannel _client;
         public PluginA_Api(ISDKClientChannel client) => (_client) = (client);
 
-        public async Task<string?> GetEcho(string message)
+        public async Task<string?> GetEchoAsync(string message)
         {
-            var response = await _client.RequestHandler.SendRequest<ResponseEchoMessage, RequestEchoMessage>(
+            var response = await _client.RequestHandler.SendRequestAsync<ResponseEchoMessage, RequestEchoMessage>(
                 new RequestEchoMessage(message));
             return response?.message;
         }
@@ -24,7 +24,7 @@ namespace PluginA.ClientSDK.v1
 #if NET8_0_OR_GREATER
         public async IAsyncEnumerable<WiFiNetwork> GetAPListAsync()
         {
-            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+            var responses = _client.RequestHandler.SendLongRequestAsync<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
                 new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
@@ -37,9 +37,9 @@ namespace PluginA.ClientSDK.v1
             }
         }
 #elif NETFRAMEWORK
-        public async Task GetAPListStream(Action<WiFiNetwork> setNextResult)
+        public async Task GetAPListStreamAsync(Action<WiFiNetwork> setNextResult)
         {
-            var responses = _client.RequestHandler.SendLongRequest<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
+            var responses = _client.RequestHandler.SendLongRequestAsync<RespnseWiFiNetworksMessage, RequestWiFiNetworksMessage>(
                 new RequestWiFiNetworksMessage());
             await foreach (var response in responses)
             {
@@ -54,25 +54,25 @@ namespace PluginA.ClientSDK.v1
         }
 #endif
 
-        public async Task RegisterCpuEvent(Action<long> action)
+        public async Task RegisterCpuEventAsync(Action<long> action)
         {
             // Start service producing events 
-            var response = await _client.RequestHandler.SendRequest<NullMessage, RegisterForEventMessage>(
-               new RegisterForEventMessage(MessageType.PluginA_RegisterEvent,true, [MessageType.PluginA_CpuData]));
+            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
+               new RegisterForEventMessage(MethodName.PluginA_RegisterEvent,true, [TopicName.PluginA_CpuData]));
 
             // listen for events on the client side
-            _client.EventHandler.RegisterEvent(MessageType.PluginA_CpuData, 
+            _client.EventHandler.RegisterEvent(TopicName.PluginA_CpuData, 
                 new EventToAction<GetCpuDataEventMessage>((pulseMsg) => action(pulseMsg.usage)));
         }
 
-        public async Task UnregisterCpuEvent()
+        public async Task UnregisterCpuEventAsync()
         {
             // Stop service producing events 
-            var response = await _client.RequestHandler.SendRequest<NullMessage, RegisterForEventMessage>(
-               new RegisterForEventMessage(MessageType.PluginA_RegisterEvent, false, [MessageType.PluginA_CpuData]));
+            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
+               new RegisterForEventMessage(MethodName.PluginA_RegisterEvent, false, [TopicName.PluginA_CpuData]));
 
             // stop listen for events on the client side
-            _client.EventHandler.UnregisterEvent(MessageType.PluginA_CpuData);
+            _client.EventHandler.UnregisterEvent(TopicName.PluginA_CpuData);
         }
     }
 }
