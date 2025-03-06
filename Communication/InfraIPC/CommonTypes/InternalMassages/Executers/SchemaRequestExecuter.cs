@@ -1,9 +1,11 @@
-﻿using Intel.IntelConnect.IPC.v1.Executer;
+﻿using Intel.IntelConnect.IPC.Attributes;
+using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 
 namespace Intel.IntelConnect.IPC.CommonTypes.InternalMassages.Executers
 {
-    public class SchemaRequestExecuter : StreamResponseRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
+    [Executer<RequestSchemaMessage, ResponseSchemaMessage>(FrameworkMethodName.RequestSchema)]
+    public class SchemaRequestExecuter : StreamRequestExecuter<SchemaRequestExecuter, RequestSchemaMessage,ResponseSchemaMessage>
     {
         IEnumerable<IRequestSchemaProvider> _schemaProviderList;
         public SchemaRequestExecuter(ILogger<SchemaRequestExecuter> logger, CancellationTokenSource cts, IEnumerable<IRequestSchemaProvider> schemaProviderList) : 

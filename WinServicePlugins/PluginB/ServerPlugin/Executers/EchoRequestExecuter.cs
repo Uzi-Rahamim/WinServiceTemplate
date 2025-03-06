@@ -2,9 +2,11 @@
 using PluginB.Worker;
 using PluginB.Contract.Massages;
 using Intel.IntelConnect.IPC.v1.Executer;
+using Intel.IntelConnect.IPC.Attributes;
 
 namespace PluginB.Executers
 {
+    [Executer<RequestEchoMessage, ResponseEchoMessage>(MethodName.PluginB_Echo)]
     public class EchoRequestExecuter : SimpleRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage>
     {
         Worker.SimpleWorker _simpleWorker;
@@ -13,16 +15,6 @@ namespace PluginB.Executers
         {
             logger.LogInformation("EchoRequestExecuter created");
             _simpleWorker = simpleWorker;
-        }
-
-        public static string Plugin_GetSchema()
-        {
-            return GetSchema();
-        }
-
-        public static string Plugin_GetMethodName()
-        {
-            return MethodName.PluginB_Echo;
         }
 
         protected override Task<ResponseEchoMessage?> ExecuteAsync(RequestEchoMessage requestMsg)

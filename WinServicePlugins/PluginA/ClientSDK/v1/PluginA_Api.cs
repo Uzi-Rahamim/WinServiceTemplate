@@ -60,21 +60,21 @@ namespace PluginA.ClientSDK.v1
         public async Task RegisterCpuEventAsync(Action<long> action)
         {
             // Start service producing events 
-            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
-               MethodName.PluginA_RegisterEvent,
-               new RegisterForEventMessage(true, [TopicName.PluginA_CpuData]));
+            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, EventRegistrationMessage>(
+               MethodName.PluginA_EventRegistration,
+               new EventRegistrationMessage(true, [TopicName.PluginA_CpuData]));
 
             // listen for events on the client side
             _client.EventHandler.RegisterEvent(TopicName.PluginA_CpuData, 
-                new EventToAction<GetCpuDataEventMessage>((pulseMsg) => action(pulseMsg.usage)));
+                new EventToAction<CpuDataEventMessage>((pulseMsg) => action(pulseMsg.usage)));
         }
 
         public async Task UnregisterCpuEventAsync()
         {
             // Stop service producing events 
-            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, RegisterForEventMessage>(
-                MethodName.PluginA_UnregisterEvent,
-               new RegisterForEventMessage(false, [TopicName.PluginA_CpuData]));
+            var response = await _client.RequestHandler.SendRequestAsync<NullMessage, EventRegistrationMessage>(
+                MethodName.PluginA_EventRegistration,
+               new EventRegistrationMessage(false, [TopicName.PluginA_CpuData]));
 
             // stop listen for events on the client side
             _client.EventHandler.UnregisterEvent(TopicName.PluginA_CpuData);

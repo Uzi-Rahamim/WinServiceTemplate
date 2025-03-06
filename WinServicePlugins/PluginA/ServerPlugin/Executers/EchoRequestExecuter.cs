@@ -1,10 +1,12 @@
-﻿using Intel.IntelConnect.IPC.Executer;
+﻿using Intel.IntelConnect.IPC.Attributes;
+using Intel.IntelConnect.IPC.Executer;
 using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
 
 namespace PluginA.Executers
 {
+    [Executer<RequestEchoMessage, ResponseEchoMessage>(MethodName.PluginA_Echo)]
     public class EchoRequestExecuter : SimpleRequestExecuter<EchoRequestExecuter, RequestEchoMessage, ResponseEchoMessage> , IRequestExecuter
     {
         public EchoRequestExecuter(ILogger<EchoRequestExecuter> logger, CancellationTokenSource cts) : 
@@ -12,16 +14,7 @@ namespace PluginA.Executers
             logger.LogInformation("EchoRequestExecuter created");
         }
 
-        public static string Plugin_GetSchema()
-        {
-            return GetSchema();
-        }
-
-        public static string Plugin_GetMethodName()
-        {
-            return MethodName.PluginA_Echo;
-        }
-
+     
         protected override Task<ResponseEchoMessage?> ExecuteAsync(RequestEchoMessage requestMsg)
         {
             // Send a response back to the client

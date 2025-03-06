@@ -3,8 +3,6 @@ using Intel.IntelConnect.IPC.CommonTypes;
 using Intel.IntelConnect.IPC.CommonTypes.InternalMassages;
 using Intel.IntelConnect.IPC.Extensions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Reflection;
 
 namespace Intel.IntelConnect.IPC.Executer
 {
@@ -15,34 +13,6 @@ namespace Intel.IntelConnect.IPC.Executer
         protected abstract Task<Rs?> ExecuteAsync(IChannelSender channel, Rq request, Func<Rs, Task> sendNextResponse);
 
         protected readonly CancellationToken _cancellationToken;
-
-        public static string GetSchema()
-        {
-            var properties = new
-            {
-                request = new
-                {
-                    name = typeof(Rq).Name,
-                    properties = typeof(Rq).GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new
-                    {
-                        name = p.Name,
-                        type = p.PropertyType.Name
-                    }).ToList() // Convert PropertyInfo to a simple structure
-                },
-                response = new
-                {
-                    name = typeof(Rs).Name,
-                    properties = typeof(Rs).GetProperties(BindingFlags.Public | BindingFlags.Instance).Select(p => new
-                    {
-                        name = p.Name,
-                        type = p.PropertyType.Name
-                    }).ToList() // Convert PropertyInfo to a simple structure
-                }
-            };
-
-            // Convert the type information (properties) to JSON
-            return JsonConvert.SerializeObject(properties, Formatting.Indented);
-        }
       
         public BaseRequestExecuter(ILogger<T> logger, CancellationTokenSource cancellationToken)
         {

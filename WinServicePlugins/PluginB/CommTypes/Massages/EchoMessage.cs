@@ -3,7 +3,7 @@ namespace PluginB.Contract.Massages
 {
     public partial class MethodName
     {
-        public static readonly string PluginB_Echo = "PluginB.Echo";
+        public const string PluginB_Echo = "PluginB.Echo";
     }
 
     public class RequestEchoMessage : MessageHeader

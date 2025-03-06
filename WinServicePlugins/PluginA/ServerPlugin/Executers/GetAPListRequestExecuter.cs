@@ -1,23 +1,16 @@
-﻿using Intel.IntelConnect.IPC.v1.Executer;
+﻿using Intel.IntelConnect.IPC.Attributes;
+using Intel.IntelConnect.IPC.v1.Executer;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
 using PluginA.Contract.Types;
 
 namespace PluginA.Executers
 {
-    public class GetAPListRequestExecuter : StreamResponseRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
+    [Executer<RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>(MethodName.APList)]
+    public class GetAPListRequestExecuter : StreamRequestExecuter<GetAPListRequestExecuter, RequestWiFiNetworksMessage, RespnseWiFiNetworksMessage>
     {
         public GetAPListRequestExecuter(ILogger<GetAPListRequestExecuter> logger, CancellationTokenSource cts) : base(logger, cts) { }
 
-        public static string Plugin_GetSchema()
-        {
-            return GetSchema();
-        }
-
-        public static string Plugin_GetMethodName()
-        {
-            return MethodName.APList;
-        }
 
         protected override async IAsyncEnumerable<RespnseWiFiNetworksMessage> ExecuteAsync(RequestWiFiNetworksMessage request)
         {

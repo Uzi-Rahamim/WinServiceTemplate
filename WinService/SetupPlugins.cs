@@ -6,6 +6,9 @@ using Utilities;
 using Utilities.PluginUtils;
 using Intel.IntelConnect.IPC.Events.Service;
 using Intel.IntelConnect.PluginCommon.v1;
+using System.Reflection.Metadata;
+using Intel.IntelConnect.IPC.Attributes;
+using System;
 
 namespace Intel.IntelConnect.WindowsService
 {
@@ -75,7 +78,7 @@ namespace Intel.IntelConnect.WindowsService
                     LoadExecuters(serviceCollection, type);
                 }
 
-               // serviceCollection.BuildServiceProvider();
+                // serviceCollection.BuildServiceProvider();
             }
             catch (Exception ex)
             {
@@ -105,20 +108,17 @@ namespace Intel.IntelConnect.WindowsService
         {
             try
             {
-                //Get static Schema from plugin
-                var schema = (string)(type.GetMethod("Plugin_GetSchema")?.Invoke(null, null) ?? "missing Schema");
+                //    //Get static MessageType from plugin
+                //    methodName = (string?)type.GetMethod("Plugin_GetMethodName")?.Invoke(null, null);
 
-                //Get static MessageType from plugin
-                var messageType = (string?)type.GetMethod("Plugin_GetMethodName")?.Invoke(null, null);
-                if (messageType is null)
-                {
-                    throw new ApplicationException("Plugin_GetMethodName is missing");
-                }
-                ExecuterRegister.RegisterSchema(_serviceCollection, messageType, () => schema);
+                ExecuterAttribute.GetValues(type, out var methodName, out var schema);
+                if (String.IsNullOrEmpty(methodName))
+                    throw new Exception("Method Name not found");
 
+                ExecuterRegister.RegisterSchema(_serviceCollection, methodName, () => schema??string.Empty);
                 var registerExecuter = typeof(ExecuterRegister).GetMethod("RegisterPluginExecuter")?.MakeGenericMethod(type); //make generic method
                 // Invoke the method
-                registerExecuter?.Invoke(null, new object[] { _serviceCollection, serviceCollection, messageType });
+                registerExecuter?.Invoke(null, new object[] { _serviceCollection, serviceCollection, methodName });
             }
             catch (Exception ex)
             {
@@ -133,8 +133,8 @@ namespace Intel.IntelConnect.WindowsService
             {
                 builder.AddSerilog(); // Adds Serilog as the logging provider
             });
-            serviceCollection.AddSingleton(sp=> _globalServiceProvider.GetRequiredService<IEventDispatcher>());
-            serviceCollection.AddSingleton(sp=> _globalServiceProvider.GetRequiredService<CancellationTokenSource>());
+            serviceCollection.AddSingleton(sp => _globalServiceProvider.GetRequiredService<IEventDispatcher>());
+            serviceCollection.AddSingleton(sp => _globalServiceProvider.GetRequiredService<CancellationTokenSource>());
             return serviceCollection;
         }
     }

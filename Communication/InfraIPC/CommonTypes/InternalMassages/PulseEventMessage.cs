@@ -6,10 +6,10 @@
     }
 
 
-    public class RegisterForEventMessage : MessageHeader
+    public class EventRegistrationMessage : MessageHeader
     {
         public IEnumerable<string> topics { get; set; }
         public bool start { get; set; }
-        public RegisterForEventMessage(bool start, IEnumerable<string> topics) => (this.topics, this.start) = (topics, start);
+        public EventRegistrationMessage(bool start, IEnumerable<string> topics) => (this.topics, this.start) = (topics, start);
     }
 }

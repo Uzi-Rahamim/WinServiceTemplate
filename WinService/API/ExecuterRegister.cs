@@ -7,32 +7,32 @@ namespace Intel.IntelConnect.WindowsService.API
     {
         public static void RegisterSchema(
             IServiceCollection hostServiceCollection,
-            string messageType,
+            string methodName,
             Func<string> getSchema) 
         {
             hostServiceCollection.AddTransient<IRequestSchemaProvider>(serviceProvider =>
             {
-                return new RequestSchemaProvider(messageType, getSchema);
+                return new RequestSchemaProvider(methodName, getSchema);
             });
         }
 
         public static void RegisterExecuter<T>(
             IServiceCollection pluginsServiceCollection,
-            string messageType) where T : class, IRequestExecuter
+            string methodName) where T : class, IRequestExecuter
         {
             // Register the IRequestExecuter implementation as Transient
             pluginsServiceCollection.AddSingleton<T>();
             pluginsServiceCollection.AddSingleton<IRequestExecuterFactory>(serviceProvider =>
             {
                 var factory = () => serviceProvider.GetRequiredService<T>();
-                return new RequestExecuterFactory(messageType, factory);
+                return new RequestExecuterFactory(methodName, factory);
             });
         }
 
         public static void RegisterPluginExecuter<T>(
             IServiceCollection mainCollection,
             IServiceCollection pluginsCollection,
-            string messageType) where T : class, IRequestExecuter
+            string methodName) where T : class, IRequestExecuter
         {
             // Register the IRequestExecuter implementation as Transient
             pluginsCollection.AddSingleton<T>();
@@ -40,7 +40,7 @@ namespace Intel.IntelConnect.WindowsService.API
             {
                 var pluginProvider = pluginsCollection.BuildServiceProvider();
                 var factory = () => pluginProvider.GetRequiredService<T>();
-                return new RequestExecuterFactory(messageType, factory);
+                return new RequestExecuterFactory(methodName, factory);
             });
         }
     }

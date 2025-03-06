@@ -7,6 +7,8 @@ using Intel.IntelConnect.IPC.Listeners;
 using Intel.IntelConnect.IPC.Utils;
 using Intel.IntelConnect.IPCCommon.Consts;
 using Intel.IntelConnect.IPC.Events.Service;
+using System.Security.Cryptography.Pkcs;
+using Intel.IntelConnect.IPC.Attributes;
 
 namespace Intel.IntelConnect.WindowsService.API;
 
@@ -16,9 +18,9 @@ internal class SetupExecuters
 
     public void Configure(ServiceProvider globalServiceProvider)
     {
-        RegisterRequest<SchemaRequestExecuter>(FrameworkMethodName.RequestSchema, SchemaRequestExecuter.GetSchema);
-        RegisterRequest<OpenSessionRequestExecuter>(FrameworkMethodName.OpenSession, OpenSessionRequestExecuter.GetSchema);
-        RegisterRequest<EchoRequestExecuter>(FrameworkMethodName.Echo, EchoRequestExecuter.GetSchema);
+        RegisterRequest<SchemaRequestExecuter>();
+        RegisterRequest<OpenSessionRequestExecuter>();
+        RegisterRequest<EchoRequestExecuter>();
 
         _serviceCollection.AddTransient<ISequenceGenerator, SequenceGenerator>();
         //_serviceCollection.AddSingleton<IEventDispatcher, EventDispatcher>();
@@ -41,10 +43,13 @@ internal class SetupExecuters
         this._serviceCollection = serviceCollection;
     }
 
-    private void RegisterRequest<T>(string messageType,Func<string > getSchema) where T : class, IRequestExecuter
+    private void RegisterRequest<T>() where T : class, IRequestExecuter
     {
-        ExecuterRegister.RegisterSchema(_serviceCollection, messageType, getSchema);
-        ExecuterRegister.RegisterExecuter<T>(_serviceCollection, messageType);
+        ExecuterAttribute.GetValues(typeof(T), out var methodName, out var schema);
+        if (String.IsNullOrEmpty(methodName))
+            throw new Exception("Method Name not found");
+        ExecuterRegister.RegisterSchema(_serviceCollection, methodName, () => schema ?? string.Empty);
+        ExecuterRegister.RegisterExecuter<T>(_serviceCollection, methodName);
     }
 
 }

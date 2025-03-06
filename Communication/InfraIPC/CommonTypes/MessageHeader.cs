@@ -3,13 +3,14 @@
     
     public abstract class MessageHeader
     {
-        //informative only
-        public string messageName { get; set; }
+        //optional informative only
+        public string? messageName { get; set; } = null;
 
         protected MessageHeader() {
-
-            // Set the derived class name using reflection
+#if DEBUG
+            // Set the derived class name using reflection (only for debug)
             messageName = this.GetType().FullName?? this.GetType().Name;
+#endif
         }
     }
 
@@ -18,6 +19,5 @@
         public string topic { get; }
 
         protected EventMessageHeader(string topic) => this.topic = topic;
-
     }
 }

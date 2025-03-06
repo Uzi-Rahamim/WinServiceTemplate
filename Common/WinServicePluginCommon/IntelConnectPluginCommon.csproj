@@ -9,11 +9,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<!--<Authors>Intel.Uzi</Authors>-->
-		<!--<VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.250219.2</VersionPrefix>
-		<VersionSuffix Condition="'$(Configuration)' == 'Debug'">debug</VersionSuffix>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>-->
+		<RootNamespace>Intel.IntelConnect.PluginCommon</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/Uzi-Rahamim/CommPackages</RepositoryUrl>
 	</PropertyGroup>

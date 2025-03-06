@@ -4,27 +4,19 @@ using Intel.IntelConnect.IPC.Events.Service;
 using Microsoft.Extensions.Logging;
 using PluginA.Contract.Massages;
 using Intel.IntelConnect.IPC.v1.Executer;
+using Intel.IntelConnect.IPC.Attributes;
 
 namespace PluginA.Executers
 {
-    public class EventRequestExecuter : EventRegisterRequestExecuter<EventRequestExecuter> , IRequestExecuter
+    [Executer(MethodName.PluginA_EventRegistration)]
+    public class EventRequestExecuter : RegisterEventExecuter<EventRequestExecuter> , IRequestExecuter
     {
         public EventRequestExecuter(ILogger<EventRequestExecuter> logger, IEventDispatcher eventDispatcher, CancellationTokenSource cts) : 
             base(logger, eventDispatcher, cts) {
             logger.LogInformation("EventRequestExecuter created");
         }
 
-        public static string Plugin_GetSchema()
-        {
-            return GetSchema();
-        }
-
-        public static string Plugin_GetMethodName()
-        {
-            return MethodName.PluginA_RegisterEvent;
-        }
-
-
+     
         protected override Task StartEventsAsync(IEnumerable<string> topics, IEventDispatcher eventDispatcher)
         {
             Logger.LogInformation("StartEvents .... ");
@@ -36,7 +28,7 @@ namespace PluginA.Executers
                 while (true)
                 {
                     Logger.LogInformation("DispatchEvent");
-                    var success = await eventDispatcher.DispatchEventAsync(new GetCpuDataEventMessage(i++));
+                    var success = await eventDispatcher.DispatchEventAsync( new CpuDataEventMessage(i++));
                     if (!success)
                     {
                         Logger.LogWarning("DispatchEvent stop - no Clients");

@@ -9,7 +9,6 @@ namespace PluginA.Contract.Massages
     public class RequestEchoMessage : MessageHeader
     {
         public string message { get; set; }
-
         public RequestEchoMessage(string message) => this.message = message;
     }
 

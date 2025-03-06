@@ -1,9 +1,12 @@
-﻿using Intel.IntelConnect.IPC.v1.Executer;
+﻿using Intel.IntelConnect.IPC.Attributes;
+using Intel.IntelConnect.IPC.CommonTypes;
+using Intel.IntelConnect.IPC.v1.Executer;
 using Intel.IntelConnect.IPCCommon.Massages;
 using System.Reflection;
 
 namespace Intel.IntelConnect.WindowsService.API.Executers
 {
+    [Executer<RequestSecurityMessage, ResponseSecurityMessage>(FrameworkMethodName.OpenSession)]
     public class OpenSessionRequestExecuter : SimpleRequestExecuter<OpenSessionRequestExecuter, RequestSecurityMessage, ResponseSecurityMessage>
     {
         public OpenSessionRequestExecuter(ILogger<OpenSessionRequestExecuter> logger, CancellationTokenSource cts, IServiceProvider serviceProvider) : base(logger, cts) { }

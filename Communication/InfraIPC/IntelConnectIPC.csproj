@@ -9,11 +9,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<!--<Authors>Intel.Uzi</Authors>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
-		<VersionPrefix Condition="'$(VersionPrefix)' == ''">1.0.250219.2</VersionPrefix>
-		<VersionSuffix Condition="'$(Configuration)' == 'Debug'">debug</VersionSuffix>-->
+		<RootNamespace>Intel.IntelConnect.IPC</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/Uzi-Rahamim/CommPackages</RepositoryUrl>
 	</PropertyGroup>
@@ -22,10 +18,6 @@
 		<PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.13.2" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Clients\" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">

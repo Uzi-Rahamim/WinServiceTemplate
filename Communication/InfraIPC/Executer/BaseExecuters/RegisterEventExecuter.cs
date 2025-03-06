@@ -7,15 +7,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Intel.IntelConnect.IPC.v1.Executer
 {
-    public abstract class EventRegisterRequestExecuter<T> : BaseRequestExecuter<T, RegisterForEventMessage, NullMessage>
+    public abstract class RegisterEventExecuter<T> : BaseRequestExecuter<T, EventRegistrationMessage, NullMessage>
     {
         private readonly IEventDispatcher _eventDispatcher;
-        protected EventRegisterRequestExecuter(ILogger<T> logger, IEventDispatcher eventDispatcher, CancellationTokenSource cancellationToken) : base(logger, cancellationToken)
+        protected RegisterEventExecuter(ILogger<T> logger, IEventDispatcher eventDispatcher, CancellationTokenSource cancellationToken) : base(logger, cancellationToken)
         {
             _eventDispatcher = eventDispatcher;
         }
 
-        protected override async Task<NullMessage?> ExecuteAsync(IChannelSender channel, RegisterForEventMessage request, Func<NullMessage, Task> sendNextResponse)
+        protected override async Task<NullMessage?> ExecuteAsync(IChannelSender channel, EventRegistrationMessage request, Func<NullMessage, Task> sendNextResponse)
         {
 
             if (request.start)
